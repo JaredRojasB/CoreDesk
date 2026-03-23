@@ -85,7 +85,7 @@ with st.container():
     with col_l2:
         try:
             # Buscamos tu logo exactamente como se llama en el explorador
-            st.image(Image.open("Logo CoreDesk.png"), use_container_width=True)
+            st.image(Image.open("logo.png"), use_container_width=True)
         except:
             st.markdown("<h1 style='text-align: center;'>🛡️</h1>", unsafe_allow_html=True)
     st.markdown("<p class='core-title' style='text-align: center;'>CoreDesk</p>", unsafe_allow_html=True)
@@ -151,7 +151,7 @@ else:
         /* El botón de finalizar por su key 'btn_finalizar' */
         div[data-testid="stButton"][aria-label="FINALIZAR"] > button {
             background-color: #d9534f;
-            color: white;
+            color: red;
             position: absolute;
             top: 10px;
             right: 10px;
