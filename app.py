@@ -9,7 +9,7 @@ from PIL import Image
 # --- 1. CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
     page_title="CoreDesk Support AI", 
-    page_icon="🛡️", 
+    page_icon="Logo CoreDesk.png", 
     layout="centered"
 )
 
