@@ -10,8 +10,9 @@ import styles
 import auth
 
 # --- CONFIGURACIÓN ---
+# Usamos layout="wide" para un mejor diseño responsivo del chat
 st.set_page_config(page_title="CoreDesk Support AI", page_icon="🛡️", layout="wide")
-styles.aplicar_estilos() # Aplicamos la pintura GLOBAL
+styles.aplicar_estilos() # Aplicamos la pintura GLOBAL organizada por secciones
 
 # --- IA SETUP ---
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
@@ -22,9 +23,8 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 if "messages" not in st.session_state: st.session_state.messages = []
 if "user_data" not in st.session_state: st.session_state.user_data = None
 
-# --- CARGA DE LOGO (Una sola vez para uso global) ---
-# Intentamos cargar la imagen una sola vez al inicio para ahorrar recursos
-# Asegúrate de que el nombre sea idéntico al de tu explorador de archivos
+# --- CARGA DE LOGO (Referencia a 'logo.png') ---
+# Asegúrate de que el archivo se llame exactamente 'logo.png' en tu Codespace
 logo_path = "logo.png"
 logo_available = False
 try:
@@ -36,7 +36,7 @@ except:
 
 # --- LÓGICA DE NAVEGACIÓN ---
 
-# Caso A: Pantalla de Registro (Logo GRANDE y CENTRADO)
+# Caso A: Pantalla de Registro (Logo GRANDE y CENTRADO como Banner)
 if st.session_state.user_data is None:
     # Banner Principal (Solo visible en registro)
     col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
@@ -52,47 +52,56 @@ if st.session_state.user_data is None:
     # Mostramos el formulario de auth (este ya está limpio en su propio archivo)
     auth.mostrar_registro()
 
-# Caso B: Pantalla de Chat Activo (Logo PEQUEÑO en esquina)
+# Caso B: Pantalla de Chat Activo (Logo PEQUEÑO en IZQUIERDA)
 else:
     # BARRA SUPERIOR DEL CHAT
-    # Separamos en 3 columnas: Usuario, Logo Pequeño, Botón Finalizar
-    c1, c2, c3 = st.columns([10, 2, 2]) # Ajustamos anchos para balancear
+    # Separamos en 3 columnas: Logo (Pequño y a la izq), Usuario, Botón Finalizar (Rojo y a la der)
+    # columns([1, 12, 1]) da un ancho sutil al logo, balanceando la interfaz
+    c_logo, c_user, c_fin = st.columns([1, 12, 1]) 
     
-    with c1:
-        st.write(f"Usuario: **{st.session_state.user_data['nombre']}** | {st.session_state.user_data['empresa']}")
-    
-    with c2:
-        # AQUÍ PONEMOS EL LOGO PEQUEÑO Y RESPONSIVO
+    with c_logo:
+        # AQUÍ PONEMOS EL LOGO PEQUEÑO Y RESPONSIVO (A LA IZQUIERDA)
         if logo_available:
-            # Creamos un contenedor HTML para el CSS responsivo
+            # Creamos un contenedor HTML para el CSS responsivo (.chat-logo-container)
             st.markdown('<div class="chat-logo-container">', unsafe_allow_html=True)
-            st.image(logo_img, use_container_width=True) # El CSS controlará el max-width
+            st.image(logo_img, use_container_width=True) # El CSS controlará el max-width (80px)
             st.markdown('</div>', unsafe_allow_html=True)
     
-    with c3:
+    with c_user:
+        # Información del usuario centrada sutilmente
+        st.write(f"Soporte Activo: **{st.session_state.user_data['nombre']}** | {st.session_state.user_data['empresa']}")
+    
+    with c_fin:
+        # AQUÍ ESTÁ EL BOTÓN FINALIZAR (ROJO)
+        # Envolvemos en el div para aplicar el CSS (.btn-finalizar)
         st.markdown('<div class="btn-finalizar">', unsafe_allow_html=True)
-        if st.button("FINALIZAR"):
-            st.session_state.user_data = None
-            st.session_state.messages = []
-            st.rerun()
+        if st.button("FINALIZAR", key="finalizar_chat_btn"):
+            with st.spinner("Cerrando ticket de forma segura..."):
+                time.sleep(0.5)
+                st.session_state.user_data = None
+                st.session_state.messages = []
+                st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---") # Línea divisoria
 
-    # HISTORIAL DE MENSAJES
+    # HISTORIAL DE MENSAJES (Ahora con padding para el input fijo)
     for m in st.session_state.messages:
         with st.chat_message(m["role"]): 
             st.markdown(m["content"])
 
-    # ENTRADA DE CHAT CON CLIP
+    # ENTRADA DE CHAT CON CLIP Y BARRA FIJA (Controlado por CSS)
     col_clip, col_txt = st.columns([1, 15])
     with col_clip:
-        with st.popover("📎"):
-            st.write("Adjuntar:")
+        # Usamos popover para el menú desplegable del clip
+        menu_archivos = st.popover("📎", help="Adjuntar archivos")
+        with menu_archivos:
+            st.write("Selecciona archivo:")
+            # Botón inactivo por ahora
             st.button("📷 Imagen del problema (Hardware)", disabled=True)
-    
+
     with col_txt:
-        if prompt := st.chat_input("Escribe tu duda técnica aquí..."):
+        if prompt := st.chat_input("Escribe tu duda técnica aquí...", key="chat_input_val"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"): 
                 st.markdown(prompt)
@@ -100,10 +109,17 @@ else:
             with st.chat_message("assistant"):
                 with st.spinner("CoreDesk AI analizando..."):
                     try:
-                        ctx = f"Eres Soporte CoreDesk. Guía paso a paso a {st.session_state.user_data['nombre']}."
+                        system_prompt = f"""
+                        Eres Soporte CoreDesk. Guía paso a paso a {st.session_state.user_data['nombre']}.
+                        1. Identifícate como 'Asistente IA de CoreDesk'.
+                        2. Responde con un formato de 'GUÍA PASO A PASO'.
+                        3. Usa negritas para componentes de hardware y comandos.
+                        4. Al final pregunta EXACTAMENTE: '¿Te funcionó la información que te di?'
+                        """
                         chat = model.start_chat(history=[])
-                        res = chat.send_message(f"{ctx}\n{prompt}").text
-                        st.markdown(res)
-                        st.session_state.messages.append({"role": "assistant", "content": res})
+                        full_prompt = f"{system_prompt}\nProblema: {prompt}"
+                        response = chat.send_message(full_prompt)
+                        st.markdown(response.text)
+                        st.session_state.messages.append({"role": "assistant", "content": response.text})
                     except Exception as e:
-                        st.error(f"Error de conexión: {e}")
+                        st.error(f"Error de red: {e}")
