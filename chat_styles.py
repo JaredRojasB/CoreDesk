@@ -4,35 +4,38 @@ def aplicar_chat():
     st.markdown("""
         <style>
         /* Fondo Blanco Puro */
-        .stApp { background-color: #FFFFFF; }
+        .stApp { background-color: #FFFFFF !important; }
         
-        /* Ocultar elementos nativos de Streamlit */
-        div[data-testid="stHeader"], div[data-testid="stSidebarNav"] { display: none; }
-        
-        /* MATAR DEFINITIVAMENTE ICONOS NARANJAS (smart_toy / expand_more) */
-        [data-testid="stIconMaterial"], .st-emotion-cache-1ae8k9u, span[data-testid="stWidgetLabel"] { 
+        /* 🚫 BLOQUEO TOTAL DE CAPA GRIS Y OVERLAYS 🚫 */
+        /* Eliminamos cualquier capa que Streamlit ponga encima al cargar */
+        div[data-testid="stStatusWidgetOverlay"], 
+        .st-emotion-cache-p5m09v, 
+        .st-emotion-cache-1ae8k9u,
+        div[class*="stStatusWidget"] {
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* Ocultar iconos basura naranja (smart_toy / expand_more) */
+        [data-testid="stIconMaterial"], span[data-testid="stWidgetLabel"] { 
             display: none !important; 
         }
 
-        /* 🛡️ FIX DEFINITIVO DE CAPA GRIS Y CARGA 🛡️ */
-        /* Ocultar el icono cargando (el mono/bicicleta) */
-        [data-testid="stStatusWidget"] {
-            display: none !important;
-            visibility: hidden !important;
+        /* Tarjeta de Usuario Profesional */
+        .user-card-pro {
+            background: white; border-radius: 10px; padding: 15px;
+            border-left: 6px solid #0E3255; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-top: 10px; margin-bottom: 20px;
         }
 
-        /* Ocultar TODAS las capas grises de carga, forzando transparencia total */
-        div[data-testid="stStatusWidgetOverlay"], 
-        .st-emotion-cache-p5m09v, 
-        .st-emotion-cache-1ae8k9u {
-            background-color: rgba(255, 255, 255, 0) !important; /* Transparente puro */
-            opacity: 0 !important;
-            pointer-events: none !important; /* Permite hacer clic a través de ella */
-        }
-        
-        /* Asegurar que el fondo del chat no cambie */
-        [data-testid="stChatMessage"] {
-            background-color: #FFFFFF !important;
+        /* Input de Chat Limpio */
+        div[data-testid="stChatInput"] {
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 10px !important;
         }
         </style>
     """, unsafe_allow_html=True)
