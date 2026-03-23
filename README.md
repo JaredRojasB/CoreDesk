@@ -1,2 +1,2 @@
 # CoreDesk
-Este proyecto esta realizado para las empresas que buscan mejorar en el ámbito tecnológico, en una ETA, y mejorar su departamento de IT, permitiéndoles usar herramientas de IA y soporte para atender tickets de usuarios de la empresa.
+CoreDesk es una plataforma integral de gestión de servicios (Service Desk), diseñada para centralizar, automatizar y optimizar la resolución de incidencias y solicitudes tecnológicas dentro de un entorno corporativo. A diferencia de los sistemas tradicionales de seguimiento, CoreDesk nace con la visión de transformar el soporte técnico en una unidad de eficiencia estratética. 
