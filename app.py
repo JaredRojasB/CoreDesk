@@ -85,7 +85,7 @@ else:
 
         # Respuesta de la IA
         with st.chat_message("assistant"):
-            with st.spinner("Analizando con CoreDesk AI..."):
+            with st.spinner("Analizando tu problema para darte una solución"):
                 try:
                     contexto = f"""
                     Eres el experto de Soporte Técnico de CoreDesk. 
