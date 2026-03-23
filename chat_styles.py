@@ -1,9 +1,9 @@
 import streamlit as st
 
-def aplicar_chat(): # Asegúrate de que el nombre sea exactamente este
+def aplicar_chat(): 
     st.markdown("""
         <style>
-        /* --- 1. LOGO IZQUIERDA Y CABECERA --- */
+        /* --- 1. CABECERA Y LOGO --- */
         .header-fixed {
             position: fixed; top: 0; left: 0; width: 100%; height: 75px;
             background: white; z-index: 999; display: flex;
@@ -20,25 +20,46 @@ def aplicar_chat(): # Asegúrate de que el nombre sea exactamente este
             margin-top: 20px;
         }
 
-        /* --- 3. BARRA DE CHAT Y CLIP INTEGRADO (AZUL) --- */
-        div[data-testid="stChatInput"] {
-            padding-left: 50px !important;
+        /* --- 3. BARRA DE CHAT Y BOTÓN "+" (CLIP) --- */
+        /* Ajuste para que el texto no se encime con el icono */
+        div[data-testid="stChatInput"] textarea {
+            padding-right: 55px !important; 
         }
-        /* Posicionamos el popover del clip al ladito de la flecha/inicio */
+        
+        /* Posicionamos el popover (+) a la DERECHA, junto a la flecha de enviar */
         .stPopover {
             position: fixed !important;
             bottom: 38px !important;
-            left: calc(10% + 25px) !important;
+            right: calc(10% + 60px) !important; /* Ajustado para estar al lado de la flecha */
             z-index: 1001 !important;
         }
         .stPopover button { 
-            background: transparent !important; 
+            background: #f0f2f6 !important; 
             color: #0E3255 !important; 
+            border-radius: 50% !important;
             border: none !important;
-            font-size: 24px !important;
+            font-size: 20px !important;
+            width: 35px !important;
+            height: 35px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
-        /* --- 4. BOTÓN X FLOTANTE ROJO (Inferior Izquierda) --- */
+        /* --- 4. COLORES DE BURBUJAS (Identidad CoreDesk) --- */
+        /* Usuario (Azul CoreDesk) */
+        [data-testid="stChatMessage"]:not([data-testid="stChatMessageAssistant"]) {
+            background-color: #0E3255 !important;
+            color: white !important;
+            border-radius: 15px 15px 0px 15px !important;
+        }
+        /* Bot (Gris claro) */
+        [data-testid="stChatMessageAssistant"] {
+            background-color: #f1f3f5 !important;
+            border-radius: 15px 15px 15px 0px !important;
+        }
+
+        /* --- 5. BOTÓN X FLOTANTE ROJO --- */
         #finalizar-btn-flotante {
             position: fixed; bottom: 40px; left: 40px;
             width: 65px; height: 65px; background-color: #FF4B4B;
@@ -56,7 +77,7 @@ def aplicar_chat(): # Asegúrate de que el nombre sea exactamente este
             border-radius: 5px; font-size: 14px; white-space: nowrap;
         }
 
-        /* --- 5. ELIMINAR CUADROS NARANJAS (smart_toy / expand_more) --- */
+        /* --- 6. ELIMINAR ICONOS NARANJAS --- */
         [data-testid="stIconMaterial"], .st-emotion-cache-1ae8k9u, span[data-testid="stWidgetLabel"] { 
             display: none !important; 
         }
