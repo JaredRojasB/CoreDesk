@@ -21,9 +21,21 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. CONFIGURACIÓN DE IA (FIX DEL ERROR 404) ---
+# --- 2. CONFIGURACIÓN DE IA (SOLUCIÓN DEFINITIVA AL 404) ---
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
+
+# Lógica para encontrar el nombre exacto del modelo que Google permite en tu cuenta
+if "model_name" not in st.session_state:
+    try:
+        # Listamos los modelos y buscamos el que tenga 'flash' en el nombre
+        modelos_disponibles = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+        st.session_state.model_name = next((m for m in modelos_disponibles if "flash" in m), modelos_disponibles[0])
+    except Exception:
+        # Si falla el listado, usamos el nombre estándar como último recurso
+        st.session_state.model_name = "gemini-1.5-flash"
+
+model = genai.GenerativeModel(st.session_state.model_name)
 
 # Usamos el nombre del modelo sin el prefijo 'models/' para mayor compatibilidad
 model = genai.GenerativeModel("gemini-1.5-flash")
