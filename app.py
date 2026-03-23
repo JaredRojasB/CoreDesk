@@ -42,7 +42,11 @@ st.markdown("""
         background-color: #ffffff;
         color: #0E3255;
     }
-    /* Animación de carga personalizada */
+    /* Estilo de los Chat Bubbles */
+    .stChatMessage {
+        border-radius: 20px;
+    }
+    /* Personalización del Spinner */
     .stSpinner > div {
         border-top-color: #0E3255 !important;
     }
@@ -89,6 +93,7 @@ with st.container():
     col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
     with col_logo2:
         try:
+            # Asegúrate de que el archivo se llame exactamente 'logo.png'
             logo_img = Image.open("logo.png")
             st.image(logo_img, use_container_width=True)
         except:
@@ -108,21 +113,26 @@ if st.session_state.user_data is None:
         btn_ingresar = st.form_submit_button("INICIAR SOPORTE")
         
         if btn_ingresar:
-            # Animación de carga inmediata al validar
-            with st.spinner("Validando credenciales con el servidor CoreDesk..."):
-                time.sleep(1) # Pequeña pausa para que se vea la animación
+            # --- AQUÍ ESTÁ LA SOLUCIÓN ---
+            # Envolvemos TODA la validación en el spinner
+            with st.spinner("Validando credenciales en el servidor CoreDesk..."):
+                # Pequeña pausa forzada para que el usuario alcance a ver la animación
+                # y sienta que el sistema está trabajando.
+                time.sleep(1) 
+                
                 if not nombre or not empresa or not correo:
                     st.error("❌ Por favor, llena todos los campos.")
                 elif not es_correo_valido(correo):
                     st.error("❌ Ingresa un correo válido (Gmail, Outlook o Hotmail).")
                 else:
+                    # Si todo está bien, guardamos y recargamos
                     st.session_state.user_data = {"nombre": nombre, "empresa": empresa, "correo": correo}
                     st.success("✅ Acceso concedido.")
                     st.rerun()
 
 else:
     # --- INTERFAZ DE CHAT ---
-    st.markdown(f"**Sesión de:** {st.session_state.user_data['nombre']} | **Soporte:** {st.session_state.user_data['empresa']}")
+    st.markdown(f"**Sesión:** {st.session_state.user_data['nombre']} | **Soporte:** {st.session_state.user_data['empresa']}")
     
     st.file_uploader("📷 Adjuntar evidencia (Deshabilitado)", type=["png", "jpg"], disabled=True)
 
@@ -135,14 +145,14 @@ else:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Círculo de carga mientras la IA "piensa"
+        # Carga mientras la IA "piensa"
         with st.chat_message("assistant"):
             with st.spinner("CoreDesk AI analizando hardware y software..."):
                 try:
                     system_prompt = f"""
                     Eres el experto senior de Soporte Técnico de CoreDesk. 
                     Guía PASO A PASO a {st.session_state.user_data['nombre']}.
-                    Usa negritas para comandos y nombres de partes.
+                    Usa negritas para componentes de hardware o comandos de software.
                     Al final pregunta: '¿Te funcionó la información que te di?'
                     """
                     chat = model.start_chat(history=[])
