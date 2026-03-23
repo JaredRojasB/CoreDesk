@@ -1,60 +1,51 @@
 import streamlit as st
 
-def aplicar_chat():
+def aplicar_estilos_chat():
     st.markdown("""
         <style>
-        /* --- 1. HEADER (Logo Izquierda) --- */
-        .header-fixed {
-            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
-            background: white; z-index: 1000; display: flex;
-            align-items: center; padding: 0 5%; border-bottom: 1px solid #EEE;
-        }
-        .logo-header { max-height: 50px; width: auto; }
-
-        /* --- 2. TARJETA DE USUARIO Y CONTADOR --- */
-        .user-card {
-            margin-top: 80px; background: white; padding: 15px;
-            border-radius: 10px; border-left: 5px solid #0E3255;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        /* --- 1. TARJETA DE USUARIO FORMAL CON CONTADOR --- */
+        .user-card-formal {
+            background-color: #ffffff; padding: 15px 25px;
+            border-radius: 12px; box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid #0E3255; margin-bottom: 25px;
             display: flex; justify-content: space-between; align-items: center;
         }
 
-        /* --- 3. BARRA DE CHAT (Clip integrado a la izquierda) --- */
-        div[data-testid="stChatInput"] {
-            padding-left: 55px !important; /* Espacio para el clip */
+        /* --- 2. CLIP INTEGRADO EN LA BARRA (A la izquierda) --- */
+        /* Ajustamos el padding del input para que el texto no tape al clip */
+        div[data-testid="stChatInput"] textarea {
+            padding-left: 50px !important;
         }
+        
+        /* Posicionamos el clip (popover) exactamente sobre la barra */
         .stPopover {
             position: fixed !important;
-            bottom: 42px !important; /* Ajuste para alinear con la flecha */
-            left: calc(10% + 25px) !important; 
+            bottom: 42px !important; /* Altura de la barra */
+            left: calc(10% + 25px) !important; /* Alineado al inicio del input */
             z-index: 1001 !important;
         }
-        .stPopover button {
-            background: transparent !important;
-            color: #0E3255 !important;
-            border: none !important;
-            font-size: 22px !important;
-        }
+        .stPopover button { background: transparent !important; color: #0E3255 !important; border: none !important; }
 
-        /* --- 4. BOTÓN X FLOTANTE ROJO (Inferior Izquierda) --- */
-        #btn-exit-flotante {
-            position: fixed; bottom: 30px; left: 30px;
-            width: 65px; height: 65px; background: #FF4B4B;
+        /* --- 3. BOTÓN FLOTANTE 'X' (Inferior Izquierda) --- */
+        #finalizar-btn-flotante {
+            position: fixed; bottom: 40px; left: 40px;
+            width: 70px; height: 70px; background-color: #FF4B4B;
             border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; color: white; font-size: 35px;
-            text-decoration: none; z-index: 1005; font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
-            transition: 0.3s ease;
+            justify-content: center; box-shadow: 0px 5px 15px rgba(255, 75, 75, 0.4);
+            cursor: pointer; z-index: 1001; transition: 0.3s ease;
+            text-decoration: none; border: none;
         }
-        #btn-exit-flotante:hover { transform: scale(1.1) rotate(90deg); background: #E04141; }
-        #btn-exit-flotante:hover::after {
-            content: 'Finalizar chat'; position: absolute; left: 80px;
-            background: #333; color: white; padding: 5px 12px;
+        #finalizar-btn-flotante:hover { transform: scale(1.1) rotate(90deg); background-color: #e04141; }
+        
+        /* Leyenda al pasar el mouse */
+        #finalizar-btn-flotante:hover::after {
+            content: 'Finalizar chat'; position: absolute; left: 85px;
+            background-color: #333; color: white; padding: 5px 12px;
             border-radius: 5px; font-size: 14px; white-space: nowrap;
         }
 
-        /* --- 5. LIMPIEZA DE ICONOS BASURA (smart_toy, etc) --- */
-        [data-testid="stIconMaterial"], span[data-testid="stWidgetLabel"], .st-emotion-cache-1ae8k9u { 
+        /* --- 4. FIX ICONOS NARANJAS --- */
+        [data-testid="stIconMaterial"], .st-emotion-cache-1ae8k9u, span[data-testid="stWidgetLabel"] { 
             display: none !important; 
         }
         </style>
