@@ -3,101 +3,63 @@ import streamlit as st
 def aplicar_chat():
     st.markdown("""
         <style>
-        /* ==========================================
-           1. CABECERA FIJA Y LOGO (Izq)
-           ========================================== */
-        .stApp { padding-top: 80px; padding-bottom: 120px; } /* Espacio para header y input */
-
+        /* --- 1. AJUSTE DE PANTALLA --- */
+        .stApp { padding-top: 80px; padding-bottom: 120px; }
+        
+        /* --- 2. CABECERA --- */
         .header-fixed {
             position: fixed; top: 0; left: 0; width: 100%; height: 70px;
-            background-color: white; z-index: 999;
-            box-shadow: 0px 2px 10px rgba(0,0,0,0.03);
+            background-color: white; z-index: 1000;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
             display: flex; align-items: center; padding: 0 5%;
         }
-        .logo-chat { max-height: 50px; width: auto; }
 
-        /* ==========================================
-           2. TARJETA DE USUARIO CON CONTADOR
-           ========================================== */
-        .user-card-formal {
-            background-color: #ffffff; padding: 15px 20px;
-            border-radius: 12px; box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
-            border-left: 5px solid #0E3255; margin-bottom: 25px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .user-card-data { color: #0E3255; font-size: 16px; font-weight: 600; }
-        .counter-box { text-align: right; color: #6c757d; font-size: 12px; }
-
-        /* ==========================================
-           3. IDENTIDAD DE CHAT (Burbujas)
-           ========================================== */
-        .stChatMessage { 
-            border-radius: 20px; background-color: #fcfcfc;
-            box-shadow: 0px 1px 4px rgba(0,0,0,0.02); margin-bottom: 12px;
-        }
-
-        /* ==========================================
-           4. BARRA DE CHAT FIJA CON EL CLIP INTEGRADO
-           ========================================= */
+        /* --- 3. BARRA DE CHAT PRO (CLIP INTEGRADO) --- */
+        /* Contenedor del input de Streamlit */
         div[data-testid="stChatInput"] {
-            position: fixed; bottom: 30px; z-index: 998;
-            background-color: white; border-top: 1px solid #eee;
-            padding: 10px 0; width: 85%;
-            left: 50%; transform: translateX(-50%);
-            border-radius: 15px; box-shadow: 0px -5px 15px rgba(0,0,0,0.03);
-            padding-left: 55px !important; /* Espacio para el clip dentro */
+            position: fixed; bottom: 30px; z-index: 999;
+            width: 80% !important; left: 50% !important;
+            transform: translateX(-50%) !important;
+            background-color: white !important;
+            border-radius: 15px !important;
+            padding-left: 50px !important; /* Espacio para el + */
         }
 
-        /* El clip (Popover) LITERALMENTE dentro del input (al inicio) */
-        button[data-testid="stBaseButton-headerNoPadding"] {
-            position: absolute; left: 10px; top: 50%;
-            transform: translateY(-50%);
-            border-radius: 5px; background-color: transparent !important;
-            color: #0E3255 !important; /* Azul CoreDesk */
-            font-size: 20px !important; z-index: 1000;
-        }
-
-        /* ==========================================
-           5. BOTÓN FLOTANTE 'X' (FIX DEFINITIVO)
-           ========================================= */
-        /* Usamos CSS crudo para crear el botón, no un botón de Streamlit */
-        #finalizar-btn-flotante {
+        /* El botón "+" o Clip (Popover) */
+        /* Lo movemos con absolute para que entre en la barra */
+        div[data-testid="stChatInput"] + div, 
+        .stPopover {
             position: fixed;
-            bottom: 40px;
-            left: 40px;
-            width: 70px;
-            height: 70px;
-            background-color: #FF4B4B;
-            border-radius: 50%;
-            box-shadow: 0px 5px 15px rgba(255, 75, 75, 0.4);
-            cursor: pointer;
+            bottom: 42px; /* Ajuste manual para que quede centrado en la barra */
+            left: calc(10% + 25px); /* Depende del ancho del 80% */
             z-index: 1001;
-            transition: 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            border: none;
         }
         
-        /* La X enorme dentro del botón */
-        #finalizar-btn-flotante::before {
-            content: '×'; /* Carácter de multiplicación */
-            color: white; font-size: 50px; font-weight: 300;
-        }
+        /* Ocultar iconos de material que fallan (smart_toy, etc) */
+        span[data-testid="stWidgetLabel"] { display: none !important; }
 
-        /* LEYENDA FLOTANTE AL PASAR EL MOUSE (Hover) */
-        #finalizar-btn-flotante:hover::after {
-            content: 'Finalizar chat';
-            position: absolute; left: 85px;
-            background-color: #333; color: white;
-            padding: 5px 12px; border-radius: 5px;
-            font-size: 14px; white-space: nowrap;
+        /* --- 4. BOTÓN X FLOTANTE (REAL) --- */
+        #finalizar-link {
+            position: fixed; bottom: 40px; left: 40px;
+            width: 60px; height: 60px;
+            background-color: #FF4B4B; color: white;
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 40px; font-weight: bold;
+            text-decoration: none; z-index: 1002;
+            box-shadow: 0px 4px 15px rgba(255, 75, 75, 0.4);
+            transition: 0.3s;
         }
-
-        #finalizar-btn-flotante:hover {
-            transform: scale(1.1) rotate(90deg); /* Gira y crece */
+        #finalizar-link:hover {
+            transform: scale(1.1) rotate(90deg);
             background-color: #e04141;
+        }
+        #finalizar-link:hover::after {
+            content: 'Finalizar Chat';
+            position: absolute; left: 70px;
+            background: #333; color: white;
+            font-size: 14px; padding: 5px 10px;
+            border-radius: 5px; white-space: nowrap;
         }
         </style>
     """, unsafe_allow_html=True)

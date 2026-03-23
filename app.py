@@ -2,125 +2,86 @@ import streamlit as st
 import google.generativeai as genai
 import os
 import time
-import pandas as pd
 from PIL import Image
 
-# IMPORTAMOS TUS ESTILOS (Asegúrate de que existan estos archivos)
 import global_styles
 import auth_styles
 import chat_styles
 
-# --- 1. CONFIGURACIÓN ---
+# --- SETUP ---
 st.set_page_config(page_title="CoreDesk Support", page_icon="🛡️", layout="wide")
 global_styles.aplicar_globales()
 
-# IA Setup
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-# Session State (Variables críticas)
 if "messages" not in st.session_state: st.session_state.messages = []
 if "user_data" not in st.session_state: st.session_state.user_data = None
-if "chat_iniciado" not in st.session_state: st.session_state.chat_iniciado = False
 
-# Carga de Logo
-try:
-    logo_img = Image.open("logo.png")
-except:
-    logo_img = None
+try: logo_img = Image.open("logo.png")
+except: logo_img = None
 
-# --- 2. LÓGICA DE NAVEGACIÓN ---
-
-if not st.session_state.chat_iniciado:
-    # --- PANTALLA DE REGISTRO ---
+# --- NAVEGACIÓN ---
+if st.session_state.user_data is None:
     auth_styles.aplicar_auth()
-    
-    col_inic1, col_inic2, col_inic3 = st.columns([1, 2, 1])
-    with col_inic2:
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
         if logo_img: st.image(logo_img, use_container_width=True)
-        st.markdown("<p class='core-title-main' style='color:#0E3255; text-align:center; font-size:50px; font-weight:bold;'>CoreDesk</p>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align:center; color:#0E3255;'>CoreDesk</h1>", unsafe_allow_html=True)
         
-        with st.form("registro_ticket"):
-            st.subheader("📝 Apertura de Ticket")
-            nombre = st.text_input("Nombre Completo:")
-            empresa = st.text_input("Empresa / Departamento:")
-            correo = st.text_input("Correo Electrónico:")
-            submit = st.form_submit_button("INICIAR SOPORTE")
-            
-            if submit:
+        with st.form("login"):
+            nombre = st.text_input("Nombre:")
+            empresa = st.text_input("Empresa:")
+            correo = st.text_input("Correo:")
+            if st.form_submit_button("INICIAR"):
                 if nombre and empresa and "@" in correo:
-                    # GUARDAMOS TODO ANTES DE REINICIAR
-                    st.session_state.user_data = {
-                        "nombre": nombre, 
-                        "empresa": empresa, 
-                        "correo": correo,
-                        "inicio_time": time.time()
-                    }
-                    st.session_state.chat_iniciado = True
+                    st.session_state.user_data = {"nombre": nombre, "empresa": empresa, "inicio": time.time()}
                     st.rerun()
-                else:
-                    st.error("❌ Por favor, llena los datos correctamente.")
-
+                else: st.error("Datos incompletos")
 else:
-    # --- PANTALLA DE CHAT ACTIVA ---
     chat_styles.aplicar_chat()
     
-    # Header con Logo
-    head_l, head_r = st.columns([8, 1])
-    with head_l:
-        if logo_img: st.image(logo_img, width=120)
-    
-    # Tarjeta de Usuario con Contador
-    tiempo_transcurrido = int((time.time() - st.session_state.user_data['inicio_time']) / 60)
+    # Header
     st.markdown(f"""
-        <div style="background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.05); border-left: 5px solid #0E3255; display: flex; justify-content: space-between;">
-            <div>👤 <b>{st.session_state.user_data['nombre']}</b> | 🏢 {st.session_state.user_data['empresa']}</div>
-            <div style="color: #6c757d;">⏱️ Activo: {tiempo_transcurrido} min</div>
+        <div class="header-fixed">
+            <img src="https://raw.githubusercontent.com/tu-usuario/tu-repo/main/logo.png" class="logo-chat" style="height:50px;"> 
+            <div style="color:#6c757d;">⏱️ Activo: {int((time.time()-st.session_state.user_data['inicio'])/60)} min</div>
         </div>
     """, unsafe_allow_html=True)
 
-    st.divider()
+    # Tarjeta Usuario
+    st.markdown(f"""
+        <div style="background:white; padding:15px; border-radius:10px; border-left:5px solid #0E3255; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+            👤 <b>{st.session_state.user_data['nombre']}</b> | 🏢 {st.session_state.user_data['empresa']}
+        </div>
+    """, unsafe_allow_html=True)
 
-    # Bienvenida Única
-    if len(st.session_state.messages) == 0:
-        msg_inicio = f"Hola **{st.session_state.user_data['nombre']}**, soy tu Asistente de CoreDesk. ¿Cuál es el problema en **{st.session_state.user_data['empresa']}**?"
-        st.session_state.messages.append({"role": "assistant", "content": msg_inicio})
-
-    # Historial
+    # Chat
     for m in st.session_state.messages:
         with st.chat_message(m["role"]): st.markdown(m["content"])
 
-    # Input con el '+' integrado (Usando columnas pegadas)
-    c_clip, c_txt = st.columns([1, 15])
-    with c_clip:
-        with st.popover("📎"):
-            st.button("📷 Imagen", disabled=True)
-    
-    with c_txt:
-        if prompt := st.chat_input("Escribe tu duda técnica aquí..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            st.rerun() # Forzamos recarga para mostrar mensaje del usuario
+    # Botón + (Clip) flotando sobre la barra
+    with st.popover("➕"):
+        st.button("📷 Imagen", disabled=True)
 
-    # Lógica de respuesta IA (Si el último mensaje es del usuario)
-    if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+    if prompt := st.chat_input("Escribe tu duda técnica aquí..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"): st.markdown(prompt)
+        
         with st.chat_message("assistant"):
             with st.spinner("CoreDesk AI analizando..."):
-                try:
-                    usr_nombre = st.session_state.user_data['nombre']
-                    prompt_actual = st.session_state.messages[-1]["content"]
-                    
-                    sys_prompt = f"Eres Soporte CoreDesk. Guía paso a paso a {usr_nombre}. Sé procedimental (ej. Win+R, Ctrl+C). Pregunta al final si funcionó."
-                    res = model.start_chat(history=[]).send_message(f"{sys_prompt}\n{prompt_actual}").text
-                    
-                    st.markdown(res)
-                    st.session_state.messages.append({"role": "assistant", "content": res})
-                except Exception as e:
-                    st.error(f"Error: {e}")
+                ctx = f"Eres Soporte CoreDesk. Guía paso a paso a {st.session_state.user_data['nombre']}. Sé procedimental (Win+R, etc)."
+                res = model.start_chat(history=[]).send_message(f"{ctx}\n{prompt}").text
+                st.markdown(res)
+                st.session_state.messages.append({"role": "assistant", "content": res})
 
-    # Botón Flotante de Finalizar (X Roja)
-    st.markdown("""
-        <a href="/" target="_self" style="position: fixed; bottom: 40px; left: 40px; width: 60px; height: 60px; background-color: #FF4B4B; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0px 4px 10px rgba(0,0,0,0.2); z-index: 1000;" title="Finalizar Chat">
-            <span style="color: white; font-size: 35px; font-weight: bold;">×</span>
-        </a>
-    """, unsafe_allow_html=True)
+    # BOTÓN X FLOTANTE (HTML Real)
+    # Al dar clic, el sistema detecta el cambio de URL o puedes usar un botón oculto
+    st.markdown('<a href="/" target="_self" id="finalizar-link">×</a>', unsafe_allow_html=True)
+    
+    # Si quieres que realmente borre sesión al dar clic:
+    if st.button("invisible_exit", key="exit", help="Finalizar"):
+        st.session_state.user_data = None
+        st.session_state.messages = []
+        st.rerun()
