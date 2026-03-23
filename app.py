@@ -1,80 +1,115 @@
 import streamlit as st
-import google.generativeai as genai
-import os
-from PIL import Image
-import styles
-import auth
 
-# --- CONFIGURACIÓN ---
-st.set_page_config(page_title="CoreDesk Support AI", page_icon="🛡️", layout="wide")
-styles.aplicar_estilos()
+def aplicar_estilos():
+    st.markdown("""
+        <style>
+        /* ==========================================
+           1. DISEÑO GLOBAL & FONDO
+           ========================================== */
+        .stApp { 
+            background-color: #FFFFFF; 
+        }
 
-# IA Setup
-api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-if "messages" not in st.session_state: st.session_state.messages = []
-if "user_data" not in st.session_state: st.session_state.user_data = None
-
-# Carga de Logo
-try:
-    logo_img = Image.open("logo.png")
-except:
-    logo_img = None
-
-# --- NAVEGACIÓN ---
-if st.session_state.user_data is None:
-    # Pantalla de Inicio (Logo Grande)
-    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
-    with col_l2:
-        if logo_img: st.image(logo_img, use_container_width=True)
-    st.markdown("<p class='core-title'>CoreDesk</p>", unsafe_allow_html=True)
-    auth.mostrar_registro()
-
-else:
-    # --- PANTALLA DE CHAT ---
-    
-    # 1. Header: Logo (Izq) y Botón Finalizar (Der)
-    col_head_1, col_head_2 = st.columns([8, 1])
-    with col_head_1:
-        if logo_img:
-            st.markdown('<div class="chat-logo-container">', unsafe_allow_html=True)
-            st.image(logo_img)
-            st.markdown('</div>', unsafe_allow_html=True)
-    with col_head_2:
-        if st.button("FINALIZAR", use_container_width=True):
-            st.session_state.user_data = None
-            st.session_state.messages = []
-            st.rerun()
-
-    # 2. Apartado de Usuario (Separado del logo)
-    st.markdown(f"""
-        <div class="user-info-box">
-            👤 Usuario: {st.session_state.user_data['nombre']} | 🏢 Empresa: {st.session_state.user_data['empresa']}
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("---")
-
-    # 3. Historial de Chat
-    for m in st.session_state.messages:
-        with st.chat_message(m["role"]): st.markdown(m["content"])
-
-    # 4. Input con botón '+' integrado
-    st.markdown('<div class="plus-button-container">', unsafe_allow_html=True)
-    with st.popover("➕"):
-        st.write("Adjuntar Evidencia")
-        st.button("📷 Subir Imagen", disabled=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    if prompt := st.chat_input("Escribe tu duda técnica aquí..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"): st.markdown(prompt)
+        /* Ocultamos elementos por defecto de Streamlit para limpieza total */
+        div[data-testid="stHeader"] { display: none; }
         
-        with st.chat_message("assistant"):
-            with st.spinner("CoreDesk AI analizando..."):
-                ctx = f"Eres Soporte CoreDesk. Guía paso a paso a {st.session_state.user_data['nombre']}."
-                res = model.start_chat(history=[]).send_message(f"{ctx}\n{prompt}").text
-                st.markdown(res)
-                st.session_state.messages.append({"role": "assistant", "content": res})
+        /* Tipografía responsiva */
+        html { font-size: 16px; }
+        @media (max-width: 768px) { html { font-size: 14px; } }
+
+        /* ==========================================
+           2. CABECERA FIJA (Header-Footer)
+           ========================================== */
+        .header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px; /* Alto fijo profesional */
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Logo izq, Botón der */
+            padding: 0 5%;
+        }
+
+        /* Estilo del Logo PEQUEÑO (Izq) */
+        .chat-logo-small {
+            max-height: 50px; /* Tamaño responsivo y sutil */
+            width: auto;
+        }
+
+        /* Botón Finalizar ROJO (Der) */
+        button[kind="secondary"] {
+            background-color: #FF4B4B !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 5px !important;
+            font-weight: bold !important;
+            padding: 0.5rem 1.2rem !important;
+            font-size: 14px !important;
+            transition: 0.3s;
+        }
+        button[kind="secondary"]:hover {
+            background-color: #e04141 !important;
+        }
+
+        /* ==========================================
+           3. APARTADO DE USUARIO & CHAT
+           ========================================== */
+        /* Agregamos padding al fondo de la app para no tapar los mensajes */
+        .main {
+            padding-top: 90px; /* Espacio para el header fijo */
+            padding-bottom: 150px; /* Espacio para el input fijo */
+        }
+
+        /* Texto de usuario sutil, sin recuadros feos */
+        .user-tag {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        /* Burbujas de chat limpias */
+        .stChatMessage { 
+            border-radius: 20px; 
+            margin-bottom: 10px;
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.03);
+        }
+
+        /* ==========================================
+           4. BARRA DE CHAT FIJA ABAJO
+           ========================================== */
+        div[data-testid="stChatInput"] {
+            position: fixed;
+            bottom: 30px;
+            z-index: 999;
+            background-color: white;
+            border-top: 1px solid #ddd;
+            padding: 10px 0;
+            width: 80%; /* Ancho controlado */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Botón '+' LITERALMENTE dentro del input (al inicio) */
+        button[data-testid="stBaseButton-headerNoPadding"] {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 5px;
+            background-color: #f1f3f5 !important;
+            color: #495057 !important;
+            z-index: 1000;
+        }
+
+        /* Ajuste de padding del input de texto para el botón '+' */
+        div[data-testid="stChatInput"] > div > textarea {
+            padding-left: 50px !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
