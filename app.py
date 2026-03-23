@@ -10,6 +10,7 @@ import chat_styles
 st.set_page_config(page_title="CoreDesk Support", layout="wide")
 
 # IA Setup - Usando el modelo estándar más estable
+load_dotenv()
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
