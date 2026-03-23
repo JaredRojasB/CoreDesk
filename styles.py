@@ -1,12 +1,12 @@
 import streamlit as st
 
 def aplicar_estilos_globales():
-    """Estilos para toda la aplicación"""
+    """Estilos que aplican a toda la aplicación"""
     st.markdown("""
         <style>
         .stApp { background-color: #FFFFFF; }
         html { font-size: 16px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        div[data-testid="stHeader"], div[data-testid="stSidebarNav"] { display: none; }
+        div[data-testid="stHeader"] { display: none; }
         .stSpinner > div { border-top-color: #0E3255 !important; }
         </style>
     """, unsafe_allow_html=True)
