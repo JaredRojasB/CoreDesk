@@ -21,9 +21,11 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. CONFIGURACIÓN DE IA ---
+# --- 2. CONFIGURACIÓN DE IA (FIX DEL ERROR 404) ---
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
+
+# Usamos el nombre del modelo sin el prefijo 'models/' para mayor compatibilidad
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Session State
@@ -49,36 +51,47 @@ if st.session_state.user_data is None:
                 st.session_state.user_data = {"nombre": nombre, "empresa": empresa}
                 st.rerun()
 
-# Caso B: Chat (El que SÍ responde)
+# Caso B: Chat
 else:
     st.markdown(f"<h2 style='color:#0E3255;'>Soporte: {st.session_state.user_data['empresa']}</h2>", unsafe_allow_html=True)
     st.caption(f"Atendiendo a: **{st.session_state.user_data['nombre']}**")
 
-    # Mostrar Historial
+    # Mostrar Historial con Avatares fijos
     for m in st.session_state.messages:
-        with st.chat_message(m["role"]):
+        # Forzamos avatar de emoji para evitar el error visual
+        avatar_type = "🤖" if m["role"] == "assistant" else "👤"
+        with st.chat_message(m["role"], avatar=avatar_type):
             st.markdown(m["content"])
 
-    # CAJA DE ENTRADA (Lógica pura de Streamlit)
+    # CAJA DE ENTRADA
     if prompt := st.chat_input("¿Cuál es el problema técnico hoy?"):
         st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="🤖"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
-                    # System Prompt para ser amable y procedimental
+                    # System Prompt procedimental para novatos
                     ctx = f"""Eres el experto de Soporte Técnico de CoreDesk. 
                     Ayudas a {st.session_state.user_data['nombre']} de {st.session_state.user_data['empresa']}.
-                    Explica paso a paso como para alguien novato (ej: 'Abre la carpeta naranja').
+                    Explica paso a paso como para alguien novato.
+                    Ejemplo: 'Abre la carpeta naranja abajo en la barra' o 'Presiona Ctrl+R'.
                     Usa negritas y pregunta al final: '¿Te funcionó la información que te di?'"""
                     
+                    # Generación de contenido
                     response = model.generate_content(f"{ctx}\n\nProblema: {prompt}")
                     st.markdown(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    # Si el primer nombre falla, intentamos con el alternativo internamente
+                    try:
+                        alt_model = genai.GenerativeModel("models/gemini-1.5-flash")
+                        response = alt_model.generate_content(f"{ctx}\n\nProblema: {prompt}")
+                        st.markdown(response.text)
+                        st.session_state.messages.append({"role": "assistant", "content": response.text})
+                    except:
+                        st.error(f"Error de conexión: {e}")
 
     # Botón lateral para salir
     if st.sidebar.button("Finalizar Ticket"):
