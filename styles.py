@@ -49,6 +49,22 @@ def aplicar_estilos():
             box-shadow: 0px 2px 5px rgba(0,0,0,0.05);
         }
 
+        /* Contenedor del Logo PEQUEÑO y RESPONSIVO en el Chat */
+        .chat-logo-container {
+            display: flex;
+            justify-content: flex-end; /* Alinea a la derecha */
+            align-items: center;
+            padding: 10px;
+            width: 100%;
+        }
+
+        /* Estilo de la imagen del logo dentro del chat (pequeña) */
+        .chat-logo-container img {
+            max-width: 80px; /* Tamaño máximo responsivo */
+            height: auto;
+            border-radius: 5px;
+        }
+
         /* Botón de "Finalizar" Rojo (Esquina Superior) */
         .btn-finalizar > button {
             background-color: #d9534f !important;
