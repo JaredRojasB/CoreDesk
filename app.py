@@ -31,7 +31,6 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 
 if "messages" not in st.session_state: st.session_state.messages = []
 if "user_data" not in st.session_state: st.session_state.user_data = None
-# Este es el interruptor para la animación
 if "cargando" not in st.session_state: st.session_state.cargando = False
 
 def es_correo_valido(correo):
@@ -41,12 +40,11 @@ def es_correo_valido(correo):
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     try:
-        # Asegúrate de que el nombre sea idéntico al de tu carpeta de archivos
         st.image(Image.open("Logo CoreDesk.png"), use_container_width=True)
     except:
         st.markdown("<h1 style='text-align: center;'>🛡️</h1>", unsafe_allow_html=True)
 
-# --- 5. LÓGICA DE REGISTRO CON ANIMACIÓN PRIORITARIA ---
+# --- 5. LÓGICA DE REGISTRO ---
 if st.session_state.user_data is None:
     st.markdown("<h1 style='text-align: center; color: #0E3255;'>CoreDesk</h1>", unsafe_allow_html=True)
     st.subheader("📝 Apertura de Ticket")
@@ -55,21 +53,19 @@ if st.session_state.user_data is None:
     empresa = st.text_input("Empresa / Departamento:")
     correo = st.text_input("Correo Electrónico:")
 
-    # Si el botón se presiona, activamos el modo carga
     if st.button("INICIAR SOPORTE"):
         st.session_state.cargando = True
 
-    # Si el modo carga está activo, mostramos el spinner y LUEGO validamos
     if st.session_state.cargando:
         with st.spinner("Sincronizando con los servidores de CoreDesk..."):
-            time.sleep(1.5) # Pausa obligatoria para que el ojo humano vea la animación
+            time.sleep(1.5) 
             
             if not nombre or not empresa or not correo:
                 st.error("❌ Por favor, completa todos los campos del ticket.")
-                st.session_state.cargando = False # Apagamos la carga si hay error
+                st.session_state.cargando = False 
             elif not es_correo_valido(correo):
                 st.error("❌ El dominio del correo no es válido (Usa Gmail, Outlook o Hotmail).")
-                st.session_state.cargando = False # Apagamos la carga si hay error
+                st.session_state.cargando = False 
             else:
                 st.session_state.user_data = {"nombre": nombre, "empresa": empresa, "correo": correo}
                 st.session_state.cargando = False
@@ -102,6 +98,4 @@ else:
         if st.button("🔴 FINALIZAR"):
             st.session_state.user_data = None
             st.session_state.messages = []
-            st.rerun()git add .
-git commit -m "Fix UX: Spinner prioritario usando Session State"
-git push origin main
+            st.rerun()
