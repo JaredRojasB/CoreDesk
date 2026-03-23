@@ -1,21 +1,17 @@
 import streamlit as st
 import google.generativeai as genai
 import os
-from dotenv import load_dotenv
+# Borra load_dotenv si quieres, Streamlit no lo necesita para los Secrets
 
-# Configuración de página
-st.set_page_config(page_title="CoreDesk AI Chat", page_icon="💬")
+# --- CONFIGURACIÓN DE IA (Modo Nube) ---
+# Intentamos leer de Streamlit Secrets (Nube) o de .env (Local)
+api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
-# 1. Configuración de IA
-load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+if not api_key:
+    st.error("No se encontró la configuración de la API Key.")
+    st.stop()
 
-# Buscador de modelo automático
-if "model_name" not in st.session_state:
-    modelos = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-    st.session_state.model_name = next((m for m in modelos if "flash" in m), modelos[0])
-
-model = genai.GenerativeModel(st.session_state.model_name)
+genai.configure(api_key=api_key)
 
 # 2. Inicializar el historial del chat y datos del usuario
 if "messages" not in st.session_state:
