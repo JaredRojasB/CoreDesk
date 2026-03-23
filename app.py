@@ -6,7 +6,7 @@ from PIL import Image
 import styles
 import auth
 
-# --- CONFIGURACIÓN ---
+# --- 1. CONFIGURACIÓN ---
 st.set_page_config(page_title="CoreDesk Support", page_icon="🛡️", layout="wide")
 styles.aplicar_estilos()
 
@@ -18,57 +18,72 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 if "messages" not in st.session_state: st.session_state.messages = []
 if "user_data" not in st.session_state: st.session_state.user_data = None
 
-# Carga de Logo
+# Carga de Logo (logo.png)
 try:
     logo_img = Image.open("logo.png")
 except:
     logo_img = None
 
-# --- NAVEGACIÓN ---
+# --- 2. LÓGICA DE NAVEGACIÓN ---
 if st.session_state.user_data is None:
-    # Pantalla de Bienvenida (Logo Grande)
-    c1, c2, c3 = st.columns([1, 2, 1])
-    with col2:
-        if logo_img: st.image(logo_img, width=200)
+    # PANTALLA DE REGISTRO
+    # Definimos las columnas correctamente aquí para evitar el NameError
+    col_inic1, col_inic2, col_inic3 = st.columns([1, 2, 1])
+    with col_inic2:
+        if logo_img: 
+            st.image(logo_img, use_container_width=True)
         st.markdown("<h1 style='text-align:center; color:#0E3255;'>CoreDesk</h1>", unsafe_allow_html=True)
         auth.mostrar_registro()
 
 else:
-    # --- INTERFAZ DE CHAT ---
+    # --- PANTALLA DE CHAT ACTIVA ---
     
-    # 1. HEADER (Logo Izq | Botón Der)
-    head_col1, head_col2 = st.columns([8, 1])
-    with head_col1:
-        if logo_img: st.image(logo_img, width=80)
-    with head_col2:
-        if st.button("FINALIZAR"):
+    # Header: Logo (Izq) | Botón Finalizar (Der)
+    head_left, head_spacer, head_right = st.columns([1, 6, 1])
+    
+    with head_left:
+        if logo_img: 
+            st.image(logo_img, width=80) # Logo pequeño arriba a la izquierda
+    
+    with head_right:
+        # Botón FINALIZAR (Saldrá rojo por el CSS en styles.py)
+        if st.button("FINALIZAR", key="btn_exit"):
             st.session_state.user_data = None
             st.session_state.messages = []
             st.rerun()
 
-    # 2. INFO USUARIO (Limpio)
-    st.caption(f"👤 {st.session_state.user_data['nombre']} | 🏢 {st.session_state.user_data['empresa']}")
+    # Info del usuario (Limpio y sutil)
+    st.markdown(f"👤 **{st.session_state.user_data['nombre']}** | 🏢 **{st.session_state.user_data['empresa']}**")
     st.divider()
 
-    # 3. HISTORIAL
+    # Historial de Chat
     for m in st.session_state.messages:
-        with st.chat_message(m["role"]): st.markdown(m["content"])
+        with st.chat_message(m["role"]): 
+            st.markdown(m["content"])
 
-    # 4. ENTRADA DE CHAT CON '+' INTEGRADO
-    # Ponemos el popover y el input en la misma fila
-    chat_col1, chat_col2 = st.columns([1, 15])
-    with chat_col1:
-        with st.popover("➕"):
-            st.button("📷 Imagen", disabled=True)
+    # Entrada de Chat con el '+' integrado visualmente
+    # Usamos columnas pequeñas para que el '+' parezca parte de la barra
+    chat_col_plus, chat_col_input = st.columns([1, 20])
     
-    with chat_col2:
+    with chat_col_plus:
+        # El botón de adjuntar como un símbolo de más
+        with st.popover("➕"):
+            st.write("Adjuntar Evidencia")
+            st.button("📷 Subir Imagen", disabled=True)
+    
+    with chat_col_input:
         if prompt := st.chat_input("Escribe tu duda técnica aquí..."):
             st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"): st.markdown(prompt)
+            with st.chat_message("user"): 
+                st.markdown(prompt)
             
             with st.chat_message("assistant"):
-                with st.spinner("Analizando..."):
-                    ctx = f"Eres Soporte CoreDesk. Guía paso a paso a {st.session_state.user_data['nombre']}."
-                    res = model.start_chat(history=[]).send_message(f"{ctx}\n{prompt}").text
-                    st.markdown(res)
-                    st.session_state.messages.append({"role": "assistant", "content": res})
+                with st.spinner("CoreDesk AI analizando..."):
+                    try:
+                        ctx = f"Eres Soporte CoreDesk. Guía paso a paso a {st.session_state.user_data['nombre']}."
+                        chat = model.start_chat(history=[])
+                        res = chat.send_message(f"{ctx}\n{prompt}").text
+                        st.markdown(res)
+                        st.session_state.messages.append({"role": "assistant", "content": res})
+                    except Exception as e:
+                        st.error(f"Error: {e}")
