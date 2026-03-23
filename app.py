@@ -1,51 +1,43 @@
 import streamlit as st
 import google.generativeai as genai
-import os, time
+import os
+import time
 from PIL import Image
 
 import auth_styles
 import chat_styles
+import auth
 
-# --- 1. CONFIGURACIÓN ---
+# --- CONFIGURACIÓN ---
 st.set_page_config(page_title="CoreDesk Support", page_icon="🛡️", layout="wide")
 
+# IA Setup - FIX DEL MODELO NOT FOUND
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
+# Usamos el nombre de modelo completo para evitar el error NotFound
+model = genai.GenerativeModel("models/gemini-1.5-flash")
 
-# Inicialización del modelo
-if "model_name" not in st.session_state:
-    try:
-        modelos = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-        st.session_state.model_name = next((m for m in modelos if "flash" in m), modelos[0])
-    except:
-        st.session_state.model_name = "gemini-1.5-flash"
-
-model = genai.GenerativeModel(st.session_state.model_name)
-
+# Session State
 if "messages" not in st.session_state: st.session_state.messages = []
 if "user_data" not in st.session_state: st.session_state.user_data = None
 
+# Carga de Logo
 try: logo_img = Image.open("logo.png")
 except: logo_img = None
 
-# --- 2. NAVEGACIÓN ---
+# --- NAVEGACIÓN ---
 
+# CASO A: Pantalla de Registro
 if st.session_state.user_data is None:
     auth_styles.aplicar_auth()
+    
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if logo_img: st.image(logo_img, use_container_width=True)
         st.markdown("<h1 style='text-align:center; color:#0E3255;'>CoreDesk</h1>", unsafe_allow_html=True)
-        with st.form("login"):
-            nombre = st.text_input("Nombre Completo:")
-            empresa = st.text_input("Empresa:")
-            correo = st.text_input("Correo:")
-            if st.form_submit_button("INICIAR SOPORTE"):
-                if nombre and empresa and correo:
-                    st.session_state.user_data = {"nombre": nombre, "empresa": empresa, "inicio": time.time()}
-                    st.rerun()
-                else: st.error("Rellena todos los campos.")
+        auth.mostrar_registro()
 
+# CASO B: Pantalla de Chat Activa
 else:
     chat_styles.aplicar_chat()
     
@@ -59,36 +51,48 @@ else:
 
     # Tarjeta Usuario
     st.markdown(f"""
-        <div class="user-card-pro">
+        <div style="background:white; padding:15px; border-radius:10px; border-left:5px solid #0E3255; box-shadow:0 2px 5px rgba(0,0,0,0.05); margin-top:20px;">
             👤 <b>{st.session_state.user_data['nombre']}</b> | 🏢 {st.session_state.user_data['empresa']}
         </div>
     """, unsafe_allow_html=True)
 
     st.divider()
 
-    # Historial de Chat
+    # Historial de Chat (Con Avatares para evitar cuadros naranjas)
     for m in st.session_state.messages:
         with st.chat_message(m["role"], avatar="🤖" if m["role"]=="assistant" else "👤"):
             st.markdown(m["content"])
 
-    # Chat Input Estándar (Sin botones que lo bloqueen)
-    if prompt := st.chat_input("¿Cuál es el problema técnico hoy?"):
+    # Chat Input Estándar
+    if prompt := st.chat_input("Escribe tu duda técnica aquí..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
-        # Respuesta de la IA
+        # Respuesta de la IA (Lógica estable de tu código anterior)
         with st.chat_message("assistant", avatar="🤖"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
+                    # PROMPT IA EXTREMADAMENTE ESPECÍFICO Y AMIGABLE
                     system_prompt = f"""
-                    Eres el experto de Soporte Técnico de CoreDesk. Ayudas a {st.session_state.user_data['nombre']} de {st.session_state.user_data['empresa']}.
-                    Responde con pasos numerados, usa negritas y sé muy específico.
-                    Pregunta al final: "¿Te funcionó la información que te di?"
+                    Eres Soporte Técnico de CoreDesk. Estás ayudando a {st.session_state.user_data['nombre']} de {st.session_state.user_data['empresa']}.
+
+                    REGLAS DE RESPUESTA PARA NOVATOS:
+                    1. Identifícate como 'Asistente IA de CoreDesk'.
+                    2. Responde con un tono EXTREMADAMENTE AMABLE, PACIENTE y FORMAL. No uses jergas técnicas sin explicarlas.
+                    3. Responde con un formato de 'GUÍA PASO A PASO'. Usa números.
+                    4. Para cada acción, explica EXACTAMENTE cómo hacerlo. Ejemplos de formato:
+                       - 'Abre el Explorador de Archivos (la **carpeta naranja que aparece en la barra de tareas** en la parte inferior de tu pantalla)'.
+                       - 'En tu teclado, mantén presionada la tecla **Ctrl** y, sin soltarla, presiona la tecla **R** (Ctrl+R)'.
+                    5. Usa negritas para resaltar botones o teclas.
+                    6. Al final de tu respuesta, pregunta EXACTAMENTE: "¿Te funcionó la información que te di?"
                     """
-                    response = model.generate_content(f"{system_prompt}\n\nProblema: {prompt}")
+                    # Generación directa para máxima estabilidad
+                    chat_session = model.start_chat(history=[])
+                    full_query = f"{system_prompt}\n\nProblema del usuario: {prompt}"
+                    response = chat_session.send_message(full_query)
+                    
                     st.markdown(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
-                    st.error(f"Error de IA: {e}")
-        st.rerun()
+                    st.error(f"Error de conexión con la IA. Intenta de nuevo. Detalles: {e}")
