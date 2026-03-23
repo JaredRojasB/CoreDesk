@@ -3,61 +3,43 @@ import streamlit as st
 def aplicar_chat():
     st.markdown("""
         <style>
-        /* Fondo Blanco y Limpieza */
         .stApp { background-color: #FFFFFF; }
-        div[data-testid="stHeader"] { display: none; }
+        
+        /* Limpieza de iconos basura */
+        span[data-testid="stWidgetLabel"], [data-testid="stIconMaterial"] { display: none !important; }
 
-        /* HEADER FIJO */
-        .custom-header {
-            background-color: white;
-            padding: 10px 20px;
-            border-bottom: 2px solid #f0f2f6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Tarjeta de Usuario */
+        .user-card-pro {
+            background: white; border-radius: 10px; padding: 15px;
+            border-left: 6px solid #0E3255; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-top: 20px;
         }
 
-        /* LOGO TAMAÑO REAL */
-        .logo-img { height: 80px !important; }
-
-        /* TARJETA DE USUARIO FORMAL */
-        .user-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 5px solid #0E3255;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        /* BOTÓN X FLOTANTE (FIJO ABAJO IZQUIERDA) */
-        .floating-x {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            width: 60px;
-            height: 60px;
-            background-color: #FF4B4B;
-            color: white !important;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            font-weight: bold;
-            text-decoration: none;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(255, 75, 75, 0.3);
-            transition: 0.3s;
-        }
-        .floating-x:hover {
-            transform: scale(1.1) rotate(90deg);
-            background-color: #e04141;
-        }
-
-        /* AJUSTE BARRA DE CHAT */
+        /* Input de Chat Fijo */
         div[data-testid="stChatInput"] {
-            border-radius: 15px !important;
+            position: fixed !important; bottom: 30px !important;
+            width: 80% !important; left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 999 !important;
+            padding-left: 55px !important;
         }
+
+        /* Clip (+) Azul dentro de la barra */
+        .stPopover {
+            position: fixed !important; bottom: 42px !important;
+            left: calc(10% + 20px) !important; z-index: 1001 !important;
+        }
+        .stPopover button { background: transparent !important; color: #0E3255 !important; border: none !important; font-size: 25px !important; }
+
+        /* Botón X Flotante */
+        #finalizar-btn {
+            position: fixed; bottom: 40px; left: 40px;
+            width: 65px; height: 65px; background-color: #FF4B4B;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; color: white !important; font-size: 35px;
+            text-decoration: none; z-index: 1002;
+            box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4); transition: 0.3s;
+        }
+        #finalizar-btn:hover { transform: scale(1.1) rotate(180deg); background: #e04141; }
         </style>
     """, unsafe_allow_html=True)
