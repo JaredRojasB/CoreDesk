@@ -3,63 +3,88 @@ import streamlit as st
 def aplicar_chat():
     st.markdown("""
         <style>
-        /* --- 1. AJUSTE DE PANTALLA --- */
-        .stApp { padding-top: 80px; padding-bottom: 120px; }
-        
-        /* --- 2. CABECERA --- */
-        .header-fixed {
-            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
-            background-color: white; z-index: 1000;
-            box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
-            display: flex; align-items: center; padding: 0 5%;
+        /* --- 1. LIMPIEZA DE BASURA (smart_toy, expand_more, etc) --- */
+        span[data-testid="stWidgetLabel"], 
+        .st-emotion-cache-1ae8k9u, 
+        .st-emotion-cache-1p6f584 { 
+            display: none !important; 
         }
 
-        /* --- 3. BARRA DE CHAT PRO (CLIP INTEGRADO) --- */
-        /* Contenedor del input de Streamlit */
+        /* --- 2. BARRA DE CHAT FIJA Y LIMPIA --- */
         div[data-testid="stChatInput"] {
-            position: fixed; bottom: 30px; z-index: 999;
-            width: 80% !important; left: 50% !important;
-            transform: translateX(-50%) !important;
+            position: fixed !important;
+            bottom: 30px !important;
             background-color: white !important;
+            border: 1px solid #ddd !important;
             border-radius: 15px !important;
-            padding-left: 50px !important; /* Espacio para el + */
+            z-index: 999 !important;
+            width: 70% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            padding-left: 50px !important; /* Espacio para el clip */
         }
 
-        /* El botón "+" o Clip (Popover) */
-        /* Lo movemos con absolute para que entre en la barra */
-        div[data-testid="stChatInput"] + div, 
+        /* --- 3. EL BOTÓN '+' (Clip) DENTRO DE LA BARRA --- */
+        /* Forzamos que el popover del clip flote a la izquierda del input */
         .stPopover {
-            position: fixed;
-            bottom: 42px; /* Ajuste manual para que quede centrado en la barra */
-            left: calc(10% + 25px); /* Depende del ancho del 80% */
-            z-index: 1001;
+            position: fixed !important;
+            bottom: 42px !important;
+            left: calc(15% + 15px) !important;
+            z-index: 1000 !important;
         }
         
-        /* Ocultar iconos de material que fallan (smart_toy, etc) */
-        span[data-testid="stWidgetLabel"] { display: none !important; }
+        .stPopover button {
+            background-color: transparent !important;
+            border: none !important;
+            color: #0E3255 !important;
+            font-size: 20px !important;
+        }
 
-        /* --- 4. BOTÓN X FLOTANTE (REAL) --- */
+        /* --- 4. BOTÓN X FLOTANTE (Real y Animado) --- */
         #finalizar-link {
-            position: fixed; bottom: 40px; left: 40px;
-            width: 60px; height: 60px;
-            background-color: #FF4B4B; color: white;
-            border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
-            font-size: 40px; font-weight: bold;
-            text-decoration: none; z-index: 1002;
-            box-shadow: 0px 4px 15px rgba(255, 75, 75, 0.4);
-            transition: 0.3s;
+            position: fixed !important;
+            bottom: 40px !important;
+            left: 40px !important;
+            width: 65px !important;
+            height: 65px !important;
+            background-color: #FF4B4B !important;
+            color: white !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 40px !important;
+            font-weight: bold !important;
+            text-decoration: none !important;
+            z-index: 1001 !important;
+            box-shadow: 0px 4px 15px rgba(255, 75, 75, 0.4) !important;
+            transition: 0.3s !important;
         }
+
         #finalizar-link:hover {
-            transform: scale(1.1) rotate(90deg);
-            background-color: #e04141;
+            transform: scale(1.1) rotate(90deg) !important;
         }
+
         #finalizar-link:hover::after {
-            content: 'Finalizar Chat';
-            position: absolute; left: 70px;
-            background: #333; color: white;
-            font-size: 14px; padding: 5px 10px;
-            border-radius: 5px; white-space: nowrap;
+            content: 'Finalizar Chat' !important;
+            position: absolute !important;
+            left: 75px !important;
+            background: #333 !important;
+            color: white !important;
+            padding: 5px 12px !important;
+            border-radius: 5px !important;
+            font-size: 14px !important;
+            white-space: nowrap !important;
+        }
+
+        /* --- 5. TARJETA DE USUARIO --- */
+        .user-card-pro {
+            background: white !important;
+            border-radius: 12px !important;
+            padding: 15px !important;
+            border-left: 6px solid #0E3255 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+            margin-top: 10px !important;
         }
         </style>
     """, unsafe_allow_html=True)
