@@ -2,6 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import os
 import pandas as pd
+import re
 from datetime import datetime
 from dotenv import load_dotenv
 from PIL import Image
@@ -19,30 +20,39 @@ st.markdown("""
     .stApp {
         background-color: #f4f7f9;
     }
-    .main-header {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    .main-title {
         color: #0E3255;
-        font-size: 42px;
-        font-weight: 700;
+        font-size: 50px;
+        font-weight: 800;
+        text-align: center;
         margin-bottom: 0px;
     }
-    .sub-header {
-        color: #6c757d;
-        font-size: 18px;
-        margin-top: -10px;
-        margin-bottom: 30px;
+    .banner-container {
+        text-align: center;
+        padding: 20px;
     }
+    /* Estilo de botones */
     .stButton>button {
-        border-radius: 20px;
+        border-radius: 10px;
         background-color: #0E3255;
         color: white;
         font-weight: bold;
-        height: 3em;
-        width: 100%;
+        transition: 0.3s;
+        border: 2px solid #0E3255;
     }
-    /* Estilo de los globos de chat */
+    .stButton>button:hover {
+        background-color: #ffffff;
+        color: #0E3255;
+    }
+    /* Botón de finalizar (Rojo) */
+    div[data-testid="stSidebar"] .stButton>button {
+        background-color: #d9534f;
+        border-color: #d9534f;
+    }
+    /* Chat bubbles */
     .stChatMessage {
-        border-radius: 15px;
+        border-radius: 20px;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.05);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -52,35 +62,33 @@ load_dotenv()
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 if not api_key:
-    st.error("⚠️ Error: Configura la API KEY en los Secrets de Streamlit.")
+    st.error("⚠️ Configura la API KEY en Secrets.")
     st.stop()
 
 genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-if "model_name" not in st.session_state:
-    try:
-        modelos = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-        st.session_state.model_name = next((m for m in modelos if "flash" in m), modelos[0])
-    except:
-        st.session_state.model_name = "gemini-1.5-flash"
+# --- 4. FUNCIONES DE VALIDACIÓN Y BITÁCORA ---
+def es_correo_valido(correo):
+    # Regex para validar dominios específicos
+    patron = r'^[a-zA-Z0-9_.+-]+@(gmail\.com|outlook\.com|hotmail\.com)$'
+    return re.match(patron, correo)
 
-model = genai.GenerativeModel(st.session_state.model_name)
-
-# --- 4. FUNCIONES DE BITÁCORA ---
-def guardar_en_bitacora(nombre, empresa, problema, respuesta):
-    archivo_bitacora = "bitacora_coredesk.csv"
+def guardar_en_bitacora(nombre, empresa, correo, problema, respuesta):
+    archivo = "bitacora_coredesk.csv"
     nueva_entrada = {
         "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "Usuario": nombre,
         "Empresa": empresa,
+        "Correo": correo,
         "Problema": problema,
         "Solucion_IA": respuesta.replace('\n', ' ')
     }
-    df_nueva = pd.DataFrame([nueva_entrada])
-    if not os.path.isfile(archivo_bitacora):
-        df_nueva.to_csv(archivo_bitacora, index=False, encoding='utf-8')
+    df = pd.DataFrame([nueva_entrada])
+    if not os.path.isfile(archivo):
+        df.to_csv(archivo, index=False, encoding='utf-8')
     else:
-        df_nueva.to_csv(archivo_bitacora, mode='a', header=False, index=False, encoding='utf-8')
+        df.to_csv(archivo, mode='a', header=False, index=False, encoding='utf-8')
 
 # --- 5. GESTIÓN DE SESIÓN ---
 if "messages" not in st.session_state:
@@ -88,80 +96,104 @@ if "messages" not in st.session_state:
 if "user_data" not in st.session_state:
     st.session_state.user_data = None
 
-# --- 6. CABECERA (LOGO + TÍTULO) ---
-# Aquí es donde referenciamos tu imagen
-col1, col2 = st.columns([1, 4])
-with col1:
-    try:
-        # IMPORTANTE: Asegúrate de que el archivo se llame exactamente 'logo.png' en Codespaces
-        logo_img = Image.open("logo.png")
-        st.image(logo_img, width=100)
-    except Exception as e:
-        # Si no encuentra la imagen, pone un icono por defecto para que no truene el código
-        st.markdown("<h1 style='font-size: 60px;'>🛡️</h1>", unsafe_allow_html=True)
+# --- 6. PANTALLA PRINCIPAL (BANNER) ---
+with st.container():
+    col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+    with col_logo2:
+        try:
+            logo_img = Image.open("logo.png")
+            st.image(logo_img, use_container_width=True)
+        except:
+            st.markdown("<h1 style='text-align: center;'>🛡️</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='main-title'>CoreDesk</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #6c757d;'>Sistema de Soporte Técnico Inteligente</p>", unsafe_allow_html=True)
 
-with col2:
-    st.markdown("<p class='main-header'>CoreDesk</p>", unsafe_allow_html=True)
-    st.markdown("<p class='sub-header'>Intelligent IT Management System</p>", unsafe_allow_html=True)
-
-# --- 7. LÓGICA DE NAVEGACIÓN ---
+# --- 7. LÓGICA DE REGISTRO / CHAT ---
 if st.session_state.user_data is None:
-    st.info("👋 Bienvenido al portal de soporte. Identifícate para continuar.")
-    with st.form("login_form"):
+    st.markdown("---")
+    with st.form("registro_form"):
+        st.subheader("📝 Apertura de Ticket")
         nombre = st.text_input("Nombre Completo:")
-        empresa = st.text_input("Empresa o Departamento:")
-        if st.form_submit_button("INGRESAR"):
-            if nombre and empresa:
-                st.session_state.user_data = {"nombre": nombre, "empresa": empresa}
-                st.rerun()
+        empresa = st.text_input("Empresa / Departamento:")
+        correo = st.text_input("Correo Electrónico (Gmail, Outlook, Hotmail):")
+        
+        btn_ingresar = st.form_submit_button("INICIAR SOPORTE")
+        
+        if btn_ingresar:
+            if not nombre or not empresa or not correo:
+                st.error("❌ Por favor, llena todos los campos.")
+            elif not es_correo_valido(correo):
+                st.error("❌ Ingresa un correo válido (Gmail, Outlook o Hotmail).")
             else:
-                st.warning("Por favor completa ambos campos.")
+                st.session_state.user_data = {"nombre": nombre, "empresa": empresa, "correo": correo}
+                st.success("✅ Datos validados correctamente.")
+                st.rerun()
+
 else:
-    # Mostrar Chat
-    st.write(f"Sesión iniciada: **{st.session_state.user_data['nombre']}** | **{st.session_state.user_data['empresa']}**")
+    # --- INTERFAZ DE CHAT ACTIVA ---
+    st.markdown(f"**Usuario:** {st.session_state.user_data['nombre']} | **Empresa:** {st.session_state.user_data['empresa']}")
     
+    # Botón (Inactivo por ahora) para subir imágenes
+    st.file_uploader("📷 Adjuntar imagen del problema (Próximamente)", type=["png", "jpg", "jpeg"], disabled=True)
+
+    # Mostrar historial
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input("¿Cómo puedo ayudarte con tu equipo hoy?"):
+    # Entrada de chat
+    if prompt := st.chat_input("Describe paso a paso tu problema..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("Analizando incidencia..."):
+            with st.spinner("CoreDesk AI analizando solución técnica..."):
                 try:
-                    contexto = f"""
-                    Eres el experto de Soporte Técnico de CoreDesk. 
-                    Usuario: {st.session_state.user_data['nombre']} de {st.session_state.user_data['empresa']}.
+                    system_prompt = f"""
+                    Eres el experto senior de Soporte Técnico de CoreDesk. 
+                    Atiendes a {st.session_state.user_data['nombre']} de {st.session_state.user_data['empresa']}.
+                    
+                    REGLAS DE RESPUESTA:
                     1. Identifícate como 'Asistente IA de CoreDesk'.
-                    2. Usa negritas y listas.
-                    3. Al final pregunta: '¿Te funcionó la información que te di?'
+                    2. Responde con un formato de 'GUÍA PASO A PASO'.
+                    3. Usa negritas para componentes de hardware o comandos de software.
+                    4. Sé extremadamente específico en las acciones (Ej: 'Presiona la tecla Windows + R', no solo 'abre ejecutar').
+                    5. Organiza la información en secciones: 'Diagnóstico Inicial' y 'Pasos a seguir'.
+                    6. Al final pregunta: '¿Te funcionó la información que te di?'
                     """
                     chat = model.start_chat(history=[])
-                    response = chat.send_message(f"{contexto}\nProblema: {prompt}")
+                    response = chat.send_message(f"{system_prompt}\nProblema: {prompt}")
                     st.markdown(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
                     
-                    guardar_en_bitacora(st.session_state.user_data['nombre'], st.session_state.user_data['empresa'], prompt, response.text)
+                    guardar_en_bitacora(
+                        st.session_state.user_data['nombre'], 
+                        st.session_state.user_data['empresa'], 
+                        st.session_state.user_data['correo'],
+                        prompt, 
+                        response.text
+                    )
                 except Exception as e:
                     st.error(f"Error: {e}")
 
-# --- 8. BARRA LATERAL (ADMIN) ---
-with st.sidebar:
-    st.title("Panel IT")
-    if st.button("Finalizar Ticket"):
-        st.session_state.user_data = None
-        st.session_state.messages = []
-        st.rerun()
-    
-    st.markdown("---")
-    if os.path.exists("bitacora_coredesk.csv"):
-        df_log = pd.read_csv("bitacora_coredesk.csv")
-        st.download_button(
-            label="📥 Descargar Bitácora",
-            data=df_log.to_csv(index=False).encode('utf-8'),
-            file_name="bitacora_coredesk.csv",
-            mime="text/csv"
-        )
+    # --- BARRA LATERAL ---
+    with st.sidebar:
+        st.title("⚙️ Panel de Usuario")
+        st.write(f"Conectado como: **{st.session_state.user_data['correo']}**")
+        
+        # Botón para finalizar chat (Rojo y visible)
+        if st.button("🔴 FINALIZAR SOPORTE"):
+            st.session_state.user_data = None
+            st.session_state.messages = []
+            st.rerun()
+        
+        st.markdown("---")
+        if os.path.exists("bitacora_coredesk.csv"):
+            df_log = pd.read_csv("bitacora_coredesk.csv")
+            st.download_button(
+                label="📥 Descargar Reportes (Admin)",
+                data=df_log.to_csv(index=False).encode('utf-8'),
+                file_name="bitacora_coredesk.csv",
+                mime="text/csv"
+            )
