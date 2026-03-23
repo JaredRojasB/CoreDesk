@@ -25,7 +25,7 @@ if "user_data" not in st.session_state: st.session_state.user_data = None
 col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
 with col_l2:
     try:
-        st.image(Image.open("Logo CoreDesk.png"), use_container_width=True)
+        st.image(Image.open("logo.png"), use_container_width=True)
     except: st.markdown("<h1 style='text-align: center;'>🛡️</h1>", unsafe_allow_html=True)
 st.markdown("<p class='core-title' style='text-align: center;'>CoreDesk</p>", unsafe_allow_html=True)
 
