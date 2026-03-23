@@ -4,189 +4,129 @@ import os
 import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
+from PIL import Image
 
-# --- 1. CONFIGURACIÓN DE PÁGINA Y ESTILO ---
+# --- 1. CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
     page_title="CoreDesk Support AI", 
     page_icon="🛡️", 
     layout="centered"
 )
 
-# Inyección de CSS para personalizar la interfaz
+# --- 2. DISEÑO PERSONALIZADO (CSS) ---
 st.markdown("""
     <style>
-    /* Color de fondo principal */
-    .stApp {
-        background-color: #f8f9fa;
+    /* Estilo para los contenedores de mensajes */
+    .stChatMessage {
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 10px;
     }
-    /* Estilo de los botones */
-    .stButton>button {
-        width: 100%;
-        border-radius: 8px;
-        height: 3em;
-        background-color: #0E3255;
-        color: white;
-        border: none;
-        font-weight: bold;
-    }
-    .stButton>button:hover {
-        background-color: #1a4a7a;
-        color: white;
-    }
-    /* Títulos personalizados */
-    .main-title {
+    /* Estilo del título principal */
+    .main-header {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         color: #0E3255;
-        text-align: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 0px;
     }
-    /* Estilo de los inputs */
-    .stTextInput>div>div>input {
-        border-radius: 8px;
+    .sub-header {
+        color: #6c757d;
+        font-size: 18px;
+        margin-top: -10px;
+        margin-bottom: 30px;
+    }
+    /* Botones más modernos */
+    .stButton>button {
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. CONFIGURACIÓN DE IA (Nube o Local) ---
+# --- 3. CONFIGURACIÓN DE IA ---
 load_dotenv()
-# Buscamos la llave en los Secrets de Streamlit (Prioridad) o en el .env
 api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
-
 if not api_key:
-    st.error("⚠️ Configuración faltante: Agrega GOOGLE_API_KEY en los Secrets de Streamlit.")
+    st.error("Falta API KEY")
     st.stop()
-
 genai.configure(api_key=api_key)
 
-# Inicialización segura del modelo
 if "model_name" not in st.session_state:
-    try:
-        modelos = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-        st.session_state.model_name = next((m for m in modelos if "flash" in m), modelos[0])
-    except:
-        st.session_state.model_name = "gemini-1.5-flash"
-
+    st.session_state.model_name = "gemini-1.5-flash"
 model = genai.GenerativeModel(st.session_state.model_name)
 
-# --- 3. FUNCIONES DE GUARDADO (Bitácora) ---
+# --- 4. FUNCIONES Y ESTADO ---
 def guardar_en_bitacora(nombre, empresa, problema, respuesta):
-    archivo_bitacora = "bitacora_coredesk.csv"
-    nueva_entrada = {
+    archivo = "bitacora_coredesk.csv"
+    nueva_entrada = pd.DataFrame([{
         "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "Usuario": nombre,
-        "Empresa": empresa,
-        "Problema": problema,
-        "Solucion_IA": respuesta.replace('\n', ' ') # Limpiamos saltos de línea para el CSV
-    }
-    
-    df_nueva = pd.DataFrame([nueva_entrada])
-    
-    # Si el archivo no existe, lo creamos con cabeceras. Si existe, añadimos sin cabecera.
-    if not os.path.isfile(archivo_bitacora):
-        df_nueva.to_csv(archivo_bitacora, index=False, encoding='utf-8')
+        "Usuario": nombre, "Empresa": empresa, "Problema": problema, "Solucion": respuesta.replace('\n', ' ')
+    }])
+    if not os.path.isfile(archivo):
+        nueva_entrada.to_csv(archivo, index=False)
     else:
-        df_nueva.to_csv(archivo_bitacora, mode='a', header=False, index=False, encoding='utf-8')
+        nueva_entrada.to_csv(archivo, mode='a', header=False, index=False)
 
-# --- 4. GESTIÓN DE ESTADO DE SESIÓN ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "user_data" not in st.session_state:
     st.session_state.user_data = None
 
-# --- INTERFAZ DE USUARIO ---
+# --- 5. CABECERA CON LOGO ---
+col1, col2 = st.columns([1, 4])
+with col1:
+    try:
+        # Cambia 'logo.png' por el nombre exacto de tu archivo
+        image = Image.open('logo.png') 
+        st.image(image, width=100)
+    except:
+        st.write("🛡️") # Emoji de respaldo si no encuentra la imagen
 
-# Caso A: El usuario no se ha registrado
+with col2:
+    st.markdown("<p class='main-header'>CoreDesk</p>", unsafe_allow_html=True)
+    st.markdown("<p class='sub-header'>Intelligent IT Management System</p>", unsafe_allow_html=True)
+
+# --- 6. LÓGICA DE NAVEGACIÓN ---
 if st.session_state.user_data is None:
-    st.markdown("<h1 class='main-title'>🛡️ CoreDesk System</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>Plataforma Inteligente de Gestión de Incidencias IT</p>", unsafe_allow_html=True)
-    
-    with st.container():
-        st.info("Por favor, identifícate para comenzar el soporte técnico.")
-        with st.form("registro_form"):
-            nombre = st.text_input("Nombre Completo:")
-            empresa = st.text_input("Empresa o Departamento:")
-            btn_entrar = st.form_submit_button("INGRESAR AL SISTEMA")
-            
-            if btn_entrar:
-                if nombre and empresa:
-                    st.session_state.user_data = {"nombre": nombre, "empresa": empresa}
-                    st.rerun()
-                else:
-                    st.warning("Debes completar ambos campos para continuar.")
+    st.info("👋 Bienvenido. Por favor, inicia sesión para reportar un problema.")
+    with st.form("registro"):
+        nombre = st.text_input("Nombre:")
+        empresa = st.text_input("Empresa:")
+        if st.form_submit_button("INGRESAR"):
+            if nombre and empresa:
+                st.session_state.user_data = {"nombre": nombre, "empresa": empresa}
+                st.rerun()
 
-# Caso B: El usuario ya está registrado (Chat activo)
 else:
-    st.markdown(f"<h2 class='main-title'>Soporte Activo: {st.session_state.user_data['empresa']}</h2>", unsafe_allow_html=True)
-    st.caption(f"Atendiendo a: **{st.session_state.user_data['nombre']}**")
+    # Interfaz de Chat
+    st.write(f"Atendiendo a: **{st.session_state.user_data['nombre']}** ({st.session_state.user_data['empresa']})")
+    
+    for m in st.session_state.messages:
+        with st.chat_message(m["role"]):
+            st.markdown(m["content"])
 
-    # Mostrar el historial de chat
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    # Caja de entrada de chat
-    if prompt := st.chat_input("¿Cuál es el problema técnico hoy?"):
-        # Agregar mensaje del usuario
+    if prompt := st.chat_input("¿En qué te ayudo?"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Respuesta de la IA con el System Prompt refinado
         with st.chat_message("assistant"):
-            with st.spinner("CoreDesk AI está analizando la solución..."):
-                try:
-                    system_prompt = f"""
-                    Eres el experto de Soporte Técnico de la plataforma CoreDesk. 
-                    Estás ayudando a {st.session_state.user_data['nombre']} de la empresa {st.session_state.user_data['empresa']}.
-                    
-                    INSTRUCCIONES DE FORMATO:
-                    1. Identifícate como 'Asistente IA de CoreDesk'. No uses otros nombres.
-                    2. Organiza la solución en pasos numerados o puntos (bullet points).
-                    3. Usa negritas para resaltar términos técnicos importantes.
-                    4. Mantén un tono profesional pero amable.
-                    5. Al final de tu respuesta, pregunta EXACTAMENTE: "¿Te funcionó la información que te di?"
-                    """
-                    
-                    chat = model.start_chat(history=[])
-                    full_query = f"{system_prompt}\n\nProblema del usuario: {prompt}"
-                    response = chat.send_message(full_query)
-                    
-                    respuesta_final = response.text
-                    
-                    # Mostrar y guardar respuesta
-                    st.markdown(respuesta_final)
-                    st.session_state.messages.append({"role": "assistant", "content": respuesta_final})
-                    
-                    # Guardar automáticamente en la bitácora
-                    guardar_en_bitacora(
-                        st.session_state.user_data['nombre'],
-                        st.session_state.user_data['empresa'],
-                        prompt,
-                        respuesta_final
-                    )
-                except Exception as e:
-                    st.error(f"Hubo un error al procesar tu solicitud: {e}")
+            with st.spinner("CoreDesk pensando..."):
+                ctx = f"Eres Soporte CoreDesk. Usuario: {st.session_state.user_data['nombre']}. Sé visual y pregunta al final si funcionó."
+                res = model.start_chat(history=[]).send_message(f"{ctx}\nProblema: {prompt}").text
+                st.markdown(res)
+                st.session_state.messages.append({"role": "assistant", "content": res})
+                guardar_en_bitacora(st.session_state.user_data['nombre'], st.session_state.user_data['empresa'], prompt, res)
 
-    # --- BARRA LATERAL (ADMIN) ---
+    # Sidebar Admin
     with st.sidebar:
-        st.image("https://cdn-icons-png.flaticon.com/512/2906/2906274.png", width=100)
-        st.title("Panel de Control")
-        
-        if st.button("Finalizar Ticket / Salir"):
+        st.title("Panel IT")
+        if st.button("Nuevo Ticket"):
             st.session_state.user_data = None
             st.session_state.messages = []
             st.rerun()
-            
-        st.markdown("---")
-        st.subheader("📊 Administración")
-        
-        # Botón para descargar la bitácora si existe
         if os.path.exists("bitacora_coredesk.csv"):
-            df_log = pd.read_csv("bitacora_coredesk.csv")
-            st.download_button(
-                label="📥 Descargar Bitácora (CSV)",
-                data=df_log.to_csv(index=False).encode('utf-8'),
-                file_name=f"bitacora_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime="text/csv"
-            )
-        else:
-            st.write("Aún no hay registros en la bitácora.")
+            st.download_button("Descargar Reportes", pd.read_csv("bitacora_coredesk.csv").to_csv(index=False), "reporte.csv")
