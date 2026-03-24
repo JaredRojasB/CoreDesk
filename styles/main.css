@@ -9,20 +9,52 @@ div[data-testid="stSidebarNav"] {
     display: none;
 }
 
+/* Header fijo de CoreDesk */
+.coredesk-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #E9ECEF;
+    z-index: 998;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.coredesk-header-inner {
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4%;
+}
+
+.coredesk-header-spacer {
+    height: 105px;
+}
+
+.coredesk-timer {
+    color: #5F6C7B;
+    font-weight: 700;
+    font-size: 18px;
+}
+
 /* Avatar asistente */
-[data-testid="stChatMessageAssistant"] 
+[data-testid="stChatMessageAssistant"]
 div[data-testid="stChatMessageAvatar"] {
     background-color: #FF8C00 !important;
     color: white !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
+    font-weight: bold !important;
 }
 
 /* Avatar usuario */
-[data-testid="stChatMessageUser"] 
+[data-testid="stChatMessageUser"]
 div[data-testid="stChatMessageAvatar"] {
     background-color: #0E3255 !important;
     color: white !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
 }
 
 /* Limpieza visual */
@@ -31,19 +63,30 @@ span[data-testid="stWidgetLabel"] {
     display: none !important;
 }
 
+/* Espacio inferior del contenido */
+.coredesk-bottom-space {
+    height: 90px;
+}
+
 /* Botón finalizar flotante */
 .st-key-finalizar-btn button {
     position: fixed !important;
-    bottom: 115px !important;
+    bottom: 105px !important;
     left: 22px !important;
     background-color: #FF4B4B !important;
     color: white !important;
-    border-radius: 50px !important;
+    border-radius: 999px !important;
     width: 170px !important;
-    z-index: 1000 !important;
+    height: 52px !important;
+    z-index: 999 !important;
     border: none !important;
-    box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3) !important;
+    box-shadow: 0 8px 20px rgba(255, 75, 75, 0.28) !important;
     font-weight: bold !important;
+}
+
+/* Caja del chat inferior */
+[data-testid="stChatInput"] {
+    margin-bottom: 8px !important;
 }
 
 /* Botón del formulario */

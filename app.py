@@ -16,7 +16,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Ruta base del proyecto (la carpeta donde está app.py)
 BASE_DIR = Path(__file__).resolve().parent
 
 
@@ -144,7 +143,7 @@ def mostrar_registro(logo_img):
 
     with col2:
         if logo_img:
-            st.image(logo_img, width=150)
+            st.image(logo_img, width=170)
 
         st.markdown(
             "<h1 style='color:#0E3255; text-align:center;'>CoreDesk</h1>",
@@ -171,41 +170,29 @@ def mostrar_header_chat(logo_img):
     """Muestra el header fijo del chat."""
     st.markdown(
         """
-        <div style="
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:70px;
-            background:white;
-            z-index:999;
-            display:flex;
-            align-items:center;
-            padding:0 5%;
-            border-bottom:1px solid #EEE;
-        ">
+        <div class="coredesk-header">
+            <div class="coredesk-header-inner">
         """,
         unsafe_allow_html=True
     )
 
     if logo_img:
-        st.image(logo_img, width=140)
+        st.image(logo_img, width=150)
 
     inicio_t = st.session_state.user_data.get("inicio", time.time())
     t_min = int((time.time() - inicio_t) / 60)
 
     st.markdown(
         f"""
-        <div style="margin-left:auto;color:#6c757d;font-weight:bold;">
-            ⏱️ {t_min} min activo
+                <div class="coredesk-timer">⏱️ {t_min} min activo</div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown('<div style="margin-top: 90px;"></div>', unsafe_allow_html=True)
+    # espacio para compensar el header fijo
+    st.markdown('<div class="coredesk-header-spacer"></div>', unsafe_allow_html=True)
 
 
 def mostrar_tarjeta_usuario():
@@ -249,7 +236,7 @@ def mostrar_historial():
     """Muestra todos los mensajes guardados en la sesión."""
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-        avatar = "🧑" if rol == "user" else "🤖"
+        avatar = "◉" if rol == "assistant" else "👨"
 
         with st.chat_message(rol, avatar=avatar):
             st.markdown(mensaje["content"])
@@ -265,18 +252,18 @@ def procesar_input_usuario():
             "content": prompt
         })
 
-        with st.chat_message("user", avatar="🧑"):
+        with st.chat_message("user", avatar="👨"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant", avatar="🤖"):
+        with st.chat_message("assistant", avatar="◉"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
                     prompt_final = construir_prompt_soporte(nombre_usuario, prompt)
 
                     respuesta = st.session_state.model.generate_content(prompt_final)
-
                     texto_respuesta = respuesta.text
+
                     st.markdown(texto_respuesta)
 
                     st.session_state.messages.append({
@@ -305,6 +292,10 @@ def mostrar_chat(logo_img):
     mostrar_tarjeta_usuario()
     enviar_bienvenida_si_falta()
     mostrar_historial()
+
+    # espacio final para que el botón y el input no tapen mensajes
+    st.markdown('<div class="coredesk-bottom-space"></div>', unsafe_allow_html=True)
+
     procesar_input_usuario()
     mostrar_boton_finalizar()
 
