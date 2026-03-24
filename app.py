@@ -112,8 +112,7 @@ REGLAS IMPORTANTES DE RESPUESTA:
 7. Si el problema requiere varios pasos, sepáralos por secciones y especifica la sección.
 8. Si hay riesgo de que el usuario se equivoque, adviértelo claramente.
 9. No respondas de forma genérica. Sé específico y accionable.
-10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, 
-disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
+10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
 
 ESTRUCTURA QUE DEBES SEGUIR SIEMPRE:
 - Una línea breve de diagnóstico inicial
@@ -164,12 +163,6 @@ def construir_mensaje_error_amigable(error: Exception):
                 "Tu mensaje se recibió correctamente, pero la IA no pudo responder en este momento."
             )
 
-    if "api key" in texto_error or "permission" in texto_error or "unauthorized" in texto_error:
-        return (
-            "🔴 **CoreDesk AI no pudo autenticarse correctamente.**\n\n"
-            "Avisa a soporte por correo y vuelve a intentarlo."
-        )
-
     return (
         "🔴 **Ocurrió un problema al generar la respuesta de CoreDesk AI.**\n\n"
         "Intenta nuevamente en unos momentos."
@@ -183,7 +176,7 @@ def formatear_tiempo_sesion(segundos_totales: int) -> str:
 
 
 # =========================================================
-# 3. FUNCIONES DE INTERFAZ CHAT
+# 3. INTERFAZ CHAT
 # =========================================================
 def mostrar_header_chat():
     inicio_t = st.session_state.user_data.get("inicio", time.time())
@@ -222,14 +215,15 @@ def mostrar_tarjeta_usuario():
         f"""
         <div class="session-card">
             <div class="session-card-title">Sesión activa</div>
-            <div class="session-card-row"><span class="session-card-label">Atendiendo a:</span> <span class="session-card-value">{nombre}</span></div>
-            <div class="session-card-row"><span class="session-card-label">Empresa:</span> <span class="session-card-value">{empresa}</span></div>
-            <div class="session-card-row"><span class="session-card-label">Correo:</span> <span class="session-card-value">{correo}</span></div>
+            <div class="session-card-row"><span class="session-card-label">👤 Atendiendo a:</span> <span class="session-card-value">{nombre}</span></div>
+            <div class="session-card-row"><span class="session-card-label">🏢 Empresa:</span> <span class="session-card-value">{empresa}</span></div>
+            <div class="session-card-row"><span class="session-card-label">📧 Correo:</span> <span class="session-card-value">{correo}</span></div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
+    st.markdown('<div class="session-card-button-wrap">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         if st.button("Finalizar chat", key="finalizar-btn"):
@@ -237,6 +231,7 @@ def mostrar_tarjeta_usuario():
             st.session_state.messages = []
             st.session_state.bienvenida_enviada = False
             st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.divider()
 
@@ -246,7 +241,7 @@ def enviar_bienvenida_si_falta():
         nombre = st.session_state.user_data["nombre"]
         saludo = (
             f"¡Hola **{nombre}**! 👋 Bienvenido al soporte técnico de CoreDesk. "
-            f"Por favor, describe el problema que tienes con tu equipo y te ayudaremos a resolverlo."
+            f"Por favor, describe tu problema y te ayudaremos a resolverlo."
         )
         st.session_state.messages.append({
             "role": "assistant",
