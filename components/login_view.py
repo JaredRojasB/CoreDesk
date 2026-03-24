@@ -1,3 +1,4 @@
+import re
 import time
 from pathlib import Path
 import streamlit as st
@@ -14,6 +15,11 @@ def aplicar_estilos_login():
             st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
         st.warning(f"No se encontró el archivo: {ruta_css}")
+
+
+def correo_valido(correo: str) -> bool:
+    patron = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+    return bool(re.match(patron, correo.strip()))
 
 
 def mostrar_registro(logo_img):
@@ -50,13 +56,23 @@ def mostrar_registro(logo_img):
             )
 
             st.markdown(
-                '<div class="login-field-label">Empresa o área</div>',
+                '<div class="login-field-label">Correo electrónico</div>',
+                unsafe_allow_html=True
+            )
+            correo = st.text_input(
+                "Correo electrónico",
+                label_visibility="collapsed",
+                placeholder="ejemplo@empresa.com"
+            )
+
+            st.markdown(
+                '<div class="login-field-label">Empresa</div>',
                 unsafe_allow_html=True
             )
             empresa = st.text_input(
-                "Empresa o área",
+                "Empresa",
                 label_visibility="collapsed",
-                placeholder="Ej. Soporte, RH, Finanzas"
+                placeholder="Ej. Meztal, Kare, TrustWell, WaterMark"
             )
 
             btn_left, btn_center, btn_right = st.columns([1, 1.2, 1])
@@ -64,13 +80,20 @@ def mostrar_registro(logo_img):
                 enviado = st.form_submit_button("Comenzar soporte")
 
             if enviado:
-                if nombre and empresa:
+                nombre = nombre.strip()
+                correo = correo.strip()
+                empresa = empresa.strip()
+
+                if not nombre or not correo or not empresa:
+                    st.warning("Por favor completa todos los campos para continuar.")
+                elif not correo_valido(correo):
+                    st.warning("Por favor escribe un correo electrónico válido.")
+                else:
                     st.session_state.user_data = {
                         "nombre": nombre,
+                        "correo": correo,
                         "empresa": empresa,
                         "inicio": time.time()
                     }
-                else:
-                    st.warning("Por favor completa ambos campos para continuar.")
 
         st.markdown('</div>', unsafe_allow_html=True)
