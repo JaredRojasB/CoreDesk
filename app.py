@@ -1,5 +1,6 @@
 import os
 import time
+from pathlib import Path
 from PIL import Image
 
 import streamlit as st
@@ -15,14 +16,19 @@ st.set_page_config(
     layout="wide"
 )
 
+# Ruta base del proyecto (la carpeta donde está app.py)
+BASE_DIR = Path(__file__).resolve().parent
+
 
 # =========================================================
 # 2. FUNCIONES BASE
 # =========================================================
 def cargar_logo():
     """Carga el logo desde assets/logo.png si existe."""
+    ruta_logo = BASE_DIR / "assets" / "logo.png"
+
     try:
-        return Image.open("assets/logo.png")
+        return Image.open(ruta_logo)
     except FileNotFoundError:
         return None
     except Exception:
@@ -31,12 +37,14 @@ def cargar_logo():
 
 def aplicar_estilos():
     """Carga los estilos desde styles/main.css."""
+    ruta_css = BASE_DIR / "styles" / "main.css"
+
     try:
-        with open("styles/main.css", "r", encoding="utf-8") as archivo_css:
+        with open(ruta_css, "r", encoding="utf-8") as archivo_css:
             css = archivo_css.read()
             st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
-        st.warning("No se encontró el archivo styles/main.css")
+        st.warning(f"No se encontró el archivo: {ruta_css}")
 
 
 def configurar_modelo():
