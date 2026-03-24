@@ -39,7 +39,7 @@
 
 
 /* =========================================================
-   FORMULARIO COMO TARJETA REAL
+   TARJETA REAL DEL FORMULARIO
    ========================================================= */
 
 div[data-testid="stForm"] {
@@ -88,7 +88,11 @@ div[data-testid="stTextInput"] input:focus {
    BOTÓN PRINCIPAL
    ========================================================= */
 
-.st-key-registro button {
+div[data-testid="stFormSubmitButton"] {
+    width: 100%;
+}
+
+div[data-testid="stFormSubmitButton"] button {
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%) !important;
     color: white !important;
     border-radius: 15px !important;
@@ -102,7 +106,7 @@ div[data-testid="stTextInput"] input:focus {
     letter-spacing: 0.2px !important;
 }
 
-.st-key-registro button:hover {
+div[data-testid="stFormSubmitButton"] button:hover {
     background: linear-gradient(135deg, #F08200 0%, #E35F00 100%) !important;
     transform: translateY(-1px);
 }
@@ -120,5 +124,9 @@ div[data-testid="stTextInput"] input:focus {
 
     div[data-testid="stForm"] {
         padding: 18px 14px 14px 14px !important;
+    }
+
+    div[data-testid="stFormSubmitButton"] button {
+        width: 100% !important;
     }
 }
