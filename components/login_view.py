@@ -19,16 +19,15 @@ def aplicar_estilos_login():
 def mostrar_registro(logo_img):
     aplicar_estilos_login()
 
-    col1, col2, col3 = st.columns([1, 1.5, 1])
+    col1, col2, col3 = st.columns([1, 1.2, 1])
 
     with col2:
-        st.markdown('<div class="login-topbar"></div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
+        st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
 
         st.markdown('<div class="login-brand-block">', unsafe_allow_html=True)
         if logo_img:
-            st.image(logo_img, width=250)
+            st.image(logo_img, width=280)
+
         st.markdown(
             """
             <h1 class="login-title">CoreDesk Support</h1>
@@ -40,7 +39,7 @@ def mostrar_registro(logo_img):
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="login-form-shell">', unsafe_allow_html=True)
+        st.markdown('<div class="login-form-card">', unsafe_allow_html=True)
 
         with st.form("registro"):
             nombre = st.text_input("Nombre completo")

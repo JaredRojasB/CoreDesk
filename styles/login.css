@@ -1,55 +1,59 @@
-/* Layout general del login */
+/* Layout general */
 .block-container {
-    padding-top: 3.8rem !important;
-    max-width: 1200px !important;
+    padding-top: 4.5rem !important;
+    max-width: 1100px !important;
 }
 
-/* Barra superior visual */
-.login-topbar {
-    width: 100%;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid #E7ECF2;
-    border-radius: 22px;
-    box-shadow: 0 10px 28px rgba(14, 50, 85, 0.06);
-    margin-bottom: 22px;
+/* Wrapper general del login */
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Tarjeta principal */
-.login-card {
-    background: transparent;
-    padding: 0;
-}
-
-/* Bloque branding */
+/* Branding */
 .login-brand-block {
+    text-align: center;
     margin-bottom: 26px;
+}
+
+.login-brand-block img {
+    display: block;
+    margin: 0 auto 18px auto;
 }
 
 .login-title {
     color: #202636;
     font-size: 3rem;
     font-weight: 800;
-    margin-top: 8px;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
     line-height: 1.05;
 }
 
 .login-subtitle {
     color: #5F6C7B;
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.05rem;
+    margin: 0;
     line-height: 1.5;
-    max-width: 650px;
 }
 
 /* Tarjeta del formulario */
-.login-form-shell {
+.login-form-card {
+    width: 100%;
     background: #EEF2F6;
     border: 1px solid #DCE3EB;
     border-radius: 18px;
-    box-shadow: 0 12px 28px rgba(14, 50, 85, 0.10);
-    padding: 18px 16px 14px 16px;
+    box-shadow: 0 14px 30px rgba(14, 50, 85, 0.10);
+    padding: 22px 18px 16px 18px;
+}
+
+/* Evita bordes extra del form */
+div[data-testid="stForm"] {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left;
 }
 
 /* Inputs */
@@ -66,12 +70,6 @@ div[data-testid="stTextInput"] label {
     font-weight: 700 !important;
 }
 
-/* Formulario alineado */
-div[data-testid="stForm"] {
-    text-align: left;
-    margin-top: 2px;
-}
-
 /* Botón principal */
 div[data-testid="stForm"] .stButton > button {
     background-color: #FF8C00 !important;
@@ -86,15 +84,15 @@ div[data-testid="stForm"] .stButton > button {
     font-size: 1rem !important;
 }
 
-/* Hover del botón */
+/* Hover */
 div[data-testid="stForm"] .stButton > button:hover {
     background-color: #E67E00 !important;
 }
 
-/* Responsive suave */
+/* Responsive */
 @media (max-width: 900px) {
     .login-title {
-        font-size: 2.4rem;
+        font-size: 2.3rem;
     }
 
     .login-subtitle {
