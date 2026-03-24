@@ -17,9 +17,25 @@ def aplicar_estilos_login():
         st.warning(f"No se encontró el archivo: {ruta_css}")
 
 
+def limpiar_texto(texto: str) -> str:
+    """
+    Quita espacios al inicio/final
+    y convierte múltiples espacios internos en uno solo.
+    """
+    return " ".join(texto.strip().split())
+
+
+def limpiar_correo(correo: str) -> str:
+    """
+    Quita TODOS los espacios del correo
+    y lo pasa a minúsculas.
+    """
+    return "".join(correo.strip().split()).lower()
+
+
 def correo_valido(correo: str) -> bool:
     patron = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
-    return bool(re.match(patron, correo.strip()))
+    return bool(re.match(patron, correo))
 
 
 def mostrar_registro(logo_img):
@@ -80,19 +96,19 @@ def mostrar_registro(logo_img):
                 enviado = st.form_submit_button("Comenzar soporte")
 
             if enviado:
-                nombre = nombre.strip()
-                correo = correo.strip()
-                empresa = empresa.strip()
+                nombre_limpio = limpiar_texto(nombre)
+                correo_limpio = limpiar_correo(correo)
+                empresa_limpia = limpiar_texto(empresa)
 
-                if not nombre or not correo or not empresa:
+                if not nombre_limpio or not correo_limpio or not empresa_limpia:
                     st.warning("Por favor completa todos los campos para continuar.")
-                elif not correo_valido(correo):
+                elif not correo_valido(correo_limpio):
                     st.warning("Por favor escribe un correo electrónico válido.")
                 else:
                     st.session_state.user_data = {
-                        "nombre": nombre,
-                        "correo": correo,
-                        "empresa": empresa,
+                        "nombre": nombre_limpio,
+                        "correo": correo_limpio,
+                        "empresa": empresa_limpia,
                         "inicio": time.time()
                     }
 
