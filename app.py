@@ -193,10 +193,18 @@ def mostrar_overlay_cierre():
     )
 
 
-def cerrar_chat():
+def iniciar_cierre_chat():
     st.session_state.cerrando_chat = True
+    st.rerun()
+
+
+def procesar_cierre_chat():
+    """
+    Segunda fase del cierre:
+    muestra solo el overlay, espera y luego limpia sesión.
+    """
     mostrar_overlay_cierre()
-    time.sleep(0.9)
+    time.sleep(1.2)
 
     st.session_state.user_data = None
     st.session_state.messages = []
@@ -257,7 +265,7 @@ def mostrar_tarjeta_usuario():
         col1, col2, col3 = st.columns([1, 1.1, 1])
         with col2:
             if st.button("Finalizar este chat", key="finalizar-btn", use_container_width=True):
-                cerrar_chat()
+                iniciar_cierre_chat()
 
     st.divider()
 
@@ -354,9 +362,6 @@ def mostrar_chat():
     mostrar_historial()
     mostrar_boton_subir()
 
-    if st.session_state.cerrando_chat:
-        mostrar_overlay_cierre()
-
 
 # =========================================================
 # 4. FUNCIÓN PRINCIPAL
@@ -366,6 +371,11 @@ def main():
     aplicar_estilos()
     configurar_modelo()
     inicializar_sesion()
+
+    # Si está en proceso de cierre, NO renderizamos chat normal
+    if st.session_state.cerrando_chat:
+        procesar_cierre_chat()
+        st.stop()
 
     if st.session_state.user_data is None:
         mostrar_registro(logo_img)
