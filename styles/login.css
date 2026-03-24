@@ -168,7 +168,7 @@ div[data-testid="stFormSubmitButton"] {
     display: flex;
     /* Activa flex */
 
-    justify-content: center;
+    justify-content: center-right;
     /* Centra el botón */
 
     width: 100%;
