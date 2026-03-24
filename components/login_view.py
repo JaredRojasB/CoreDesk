@@ -19,20 +19,22 @@ def aplicar_estilos_login():
 def mostrar_registro(logo_img):
     aplicar_estilos_login()
 
-    col1, col2, col3 = st.columns([1, 1.2, 1])
+    col1, col2, col3 = st.columns([1, 1.15, 1])
 
     with col2:
         st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
 
         st.markdown('<div class="login-brand-block">', unsafe_allow_html=True)
-        if logo_img:
-            st.image(logo_img, width=280)
+
+        img_col1, img_col2, img_col3 = st.columns([1, 2.2, 1])
+        with img_col2:
+            if logo_img:
+                st.image(logo_img, width=330)
 
         st.markdown(
             """
-            <h1 class="login-title">CoreDesk Support</h1>
             <p class="login-subtitle">
-                Ingresa tus datos para comenzar una sesión de soporte técnico.
+                Ingresa tus datos para comenzar una sesión de soporte técnico con CoreDesk.
             </p>
             """,
             unsafe_allow_html=True
@@ -41,9 +43,20 @@ def mostrar_registro(logo_img):
 
         st.markdown('<div class="login-form-card">', unsafe_allow_html=True)
 
-        with st.form("registro"):
-            nombre = st.text_input("Nombre completo")
-            empresa = st.text_input("Empresa o área")
+        with st.form("registro", border=False):
+            st.markdown('<div class="login-field-label">Nombre completo</div>', unsafe_allow_html=True)
+            nombre = st.text_input(
+                "Nombre completo",
+                label_visibility="collapsed",
+                placeholder="Escribe tu nombre completo"
+            )
+
+            st.markdown('<div class="login-field-label">Empresa o área</div>', unsafe_allow_html=True)
+            empresa = st.text_input(
+                "Empresa o área",
+                label_visibility="collapsed",
+                placeholder="Ej. Soporte, RH, Finanzas"
+            )
 
             enviado = st.form_submit_button("Comenzar soporte")
 
