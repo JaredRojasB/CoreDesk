@@ -23,7 +23,7 @@ div[data-testid="stSidebarNav"] {
 .coredesk-header-fixed {
     width: calc(100% - 48px);
     max-width: 1800px;
-    height: 96px;
+    height: 120px;
     background: rgba(255, 255, 255, 0.98);
     border: 1px solid #E7ECF2;
     border-radius: 18px;
@@ -33,7 +33,7 @@ div[data-testid="stSidebarNav"] {
 }
 
 .coredesk-header-content {
-    height: 100px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: space-between;
