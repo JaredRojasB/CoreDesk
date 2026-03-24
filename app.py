@@ -105,10 +105,10 @@ REGLAS IMPORTANTES DE RESPUESTA:
 2. Explica todo paso a paso, como si la persona no supiera casi nada de computadoras.
 3. Nunca des pasos ambiguos como "revisa la carpeta" o "abre configuración" sin explicar exactamente cómo hacerlo.
 4. Cuando menciones una ruta o una carpeta, explica cómo llegar:
-   - qué tecla presionar,
-   - qué escribir,
-   - dónde dar clic,
-   - qué debería ver el usuario.
+   - qué tecla presionar
+   - qué escribir
+   - dónde dar clic
+   - qué debería ver el usuario
 5. Usa formato visual ordenado con títulos y viñetas.
 6. Usa emojis simples para hacer clara la respuesta, por ejemplo:
    - 🟢 para pasos recomendados
@@ -116,7 +116,7 @@ REGLAS IMPORTANTES DE RESPUESTA:
    - 🟡 para verificaciones
    - 📂 para rutas o carpetas
    - ⚙️ para configuración
-7. Si el problema requiere varios pasos, sepáralos por secciones y espefica la sección.
+7. Si el problema requiere varios pasos, sepáralos por secciones y especifica la sección.
 8. Si hay riesgo de que el usuario se equivoque, adviértelo claramente.
 9. No respondas de forma genérica. Sé específico y accionable.
 10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
@@ -261,9 +261,9 @@ def procesar_input_usuario():
             st.markdown(prompt)
 
         avatar_path = BASE_DIR / "assets" / "bot.png"
-avatar = str(avatar_path) if avatar_path.exists() else None
+        avatar = str(avatar_path) if avatar_path.exists() else None
 
-with st.chat_message("assistant", avatar=avatar):
+        with st.chat_message("assistant", avatar=avatar):
             with st.spinner("CoreDesk AI analizando tu problema..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
