@@ -17,7 +17,6 @@
     text-align: center;
 }
 
-
 /* =========================================================
    BLOQUE DEL LOGO Y TEXTO SUPERIOR
    ========================================================= */
@@ -129,4 +128,18 @@ div[data-testid="stFormSubmitButton"] button:hover {
     div[data-testid="stFormSubmitButton"] button {
         width: 100% !important;
     }
+}
+
+/* =========================================
+   FIX: eliminar cuadros blancos de inputs
+   ========================================= */
+
+div[data-testid="stTextInput"] {
+    background: transparent !important; /* Quita fondo externo */
+}
+
+div[data-testid="stTextInput"] > div {
+    background: transparent !important; /* Quita wrapper blanco */
+    border: none !important;            /* Elimina borde oculto */
+    box-shadow: none !important;        /* Elimina sombra residual */
 }
