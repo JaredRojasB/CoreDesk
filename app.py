@@ -390,6 +390,11 @@ def construir_mensaje_error_amigable(error: Exception):
         "Intenta nuevamente en unos momentos. Si no funciona, contacta a IT vía correo."
     )
 
+def formatear_tiempo_sesion(segundos_totales: int) -> str:
+    minutos = segundos_totales // 60
+    segundos = segundos_totales % 60
+    return f"{minutos:02d}:{segundos:02d}"
+
 
 # =========================================================
 # 5. CIERRE DE CHAT
