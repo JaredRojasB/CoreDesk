@@ -19,18 +19,16 @@ def aplicar_estilos_login():
 def mostrar_registro(logo_img):
     aplicar_estilos_login()
 
-    col1, col2, col3 = st.columns([1, 1.15, 1])
+    # Centro más ancho para que el logo sí pueda crecer
+    col1, col2, col3 = st.columns([0.7, 2.2, 0.7])
 
     with col2:
         st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
 
+        # Branding superior
         st.markdown('<div class="login-brand-block">', unsafe_allow_html=True)
-
-        img_col1, img_col2, img_col3 = st.columns([1, 3, 1])
-        with img_col2:
-            if logo_img:
-                st.image(logo_img, width=760)
-
+        if logo_img:
+            st.image(logo_img, width=520)
         st.markdown(
             """
             <p class="login-subtitle">
@@ -41,17 +39,22 @@ def mostrar_registro(logo_img):
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="login-form-card">', unsafe_allow_html=True)
-
+        # Formulario
         with st.form("registro", border=False):
-            st.markdown('<div class="login-field-label">Nombre completo</div>', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="login-field-label">Nombre completo</div>',
+                unsafe_allow_html=True
+            )
             nombre = st.text_input(
                 "Nombre completo",
                 label_visibility="collapsed",
                 placeholder="Escribe tu nombre completo"
             )
 
-            st.markdown('<div class="login-field-label">Empresa o área</div>', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="login-field-label">Empresa o área</div>',
+                unsafe_allow_html=True
+            )
             empresa = st.text_input(
                 "Empresa o área",
                 label_visibility="collapsed",
@@ -70,5 +73,4 @@ def mostrar_registro(logo_img):
                 else:
                     st.warning("Por favor completa ambos campos para continuar.")
 
-        st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)

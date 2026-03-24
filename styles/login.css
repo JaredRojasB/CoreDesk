@@ -6,8 +6,8 @@
     padding-top: 4.2rem !important;
     /* Espacio superior de la pantalla */
 
-    max-width: 1100px !important;
-    /* Ancho máximo del contenido del login */
+    max-width: 1400px !important;
+    /* Ancho máximo general del login */
 }
 
 
@@ -24,6 +24,9 @@
 
     align-items: center;
     /* Centra horizontalmente todo el bloque */
+
+    width: 100%;
+    /* Permite que use todo el ancho disponible */
 }
 
 
@@ -33,21 +36,18 @@
 
 .login-brand-block {
     text-align: center;
-    /* Centra el texto del subtítulo */
+    /* Centra el subtítulo */
 
-    margin-bottom: 24px;
-    /* Espacio entre branding y tarjeta del formulario */
+    margin-bottom: 22px;
+    /* Espacio antes del formulario */
+
+    width: 100%;
+    /* Ocupa todo el ancho del bloque */
 }
 
 .login-brand-block img {
     display: block;
     /* Hace que la imagen se comporte como bloque */
-
-    width: 600px;
-    /* Cambia este valor para hacer el logo más grande o pequeño */
-
-    max-width: 95%;
-    /* Evita que el logo se salga en pantallas pequeñas */
 
     margin: 0 auto 20px auto;
     /* Centra el logo horizontalmente y deja espacio debajo */
@@ -72,8 +72,8 @@
     line-height: 1.6;
     /* Espaciado entre líneas */
 
-    max-width: 620px;
-    /* Limita el ancho del párrafo */
+    max-width: 720px;
+    /* Ancho máximo del párrafo */
 
     text-align: center;
     /* Centra el texto */
@@ -81,49 +81,33 @@
 
 
 /* =========================================================
-   TARJETA DEL FORMULARIO
-   ========================================================= */
-
-.login-form-card {
-    width: 100%;
-    /* Hace que la tarjeta ocupe todo el ancho disponible del bloque */
-
-    background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%);
-    /* Fondo gris claro con degradado suave */
-
-    border: 1px solid #DCE3EB;
-    /* Borde sutil de la tarjeta */
-
-    border-radius: 20px;
-    /* Bordes redondeados */
-
-    box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12);
-    /* Sombra para que la tarjeta se vea elevada */
-
-    padding: 22px 18px 16px 18px;
-    /* Espacio interior de la tarjeta */
-}
-
-
-/* =========================================================
-   FORMULARIO LIMPIO
+   FORMULARIO STREAMLIT ESTILIZADO COMO TARJETA
    ========================================================= */
 
 div[data-testid="stForm"] {
-    border: none !important;
-    /* Quita borde nativo de Streamlit */
+    width: 100%;
+    /* Hace que el form use todo el ancho disponible */
 
-    background: transparent !important;
-    /* Quita fondo nativo */
+    background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%) !important;
+    /* Fondo gris claro con degradado suave */
 
-    padding: 0 !important;
-    /* Elimina padding nativo */
+    border: 1px solid #DCE3EB !important;
+    /* Borde sutil */
+
+    border-radius: 20px !important;
+    /* Bordes redondeados */
+
+    box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12) !important;
+    /* Sombra de tarjeta elevada */
+
+    padding: 22px 18px 16px 18px !important;
+    /* Espacio interior */
 
     margin: 0 !important;
-    /* Elimina margen nativo */
+    /* Quita margen externo */
 
     text-align: left;
-    /* Alinea etiquetas y campos a la izquierda */
+    /* Alinea contenido a la izquierda */
 }
 
 
@@ -133,7 +117,7 @@ div[data-testid="stForm"] {
 
 .login-field-label {
     color: #0E3255;
-    /* Color corporativo azul */
+    /* Azul corporativo */
 
     font-weight: 800;
     /* Grosor fuerte */
@@ -142,7 +126,7 @@ div[data-testid="stForm"] {
     /* Tamaño de texto */
 
     margin: 12px 0 8px 2px;
-    /* Espaciado arriba y abajo de cada etiqueta */
+    /* Separación arriba y abajo */
 }
 
 
@@ -161,18 +145,18 @@ div[data-testid="stTextInput"] input {
     /* Fondo blanco del campo */
 
     padding: 0.92rem 1rem !important;
-    /* Espacio interior del input */
+    /* Espacio interior */
 
     box-shadow: inset 0 1px 2px rgba(14, 50, 85, 0.03);
-    /* Sombra interna muy ligera */
+    /* Sombra interna ligera */
 }
 
 div[data-testid="stTextInput"] input:focus {
     border: 1px solid #FF8C00 !important;
-    /* Color naranja al seleccionar */
+    /* Color naranja al enfocar */
 
     box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.10) !important;
-    /* Halo naranja suave al enfocar */
+    /* Halo naranja suave */
 }
 
 
@@ -182,10 +166,10 @@ div[data-testid="stTextInput"] input:focus {
 
 div[data-testid="stFormSubmitButton"] {
     display: flex;
-    /* Permite alinear el botón */
+    /* Activa flex */
 
     justify-content: center;
-    /* Centra horizontalmente el botón */
+    /* Centra el botón */
 
     width: 100%;
     /* Usa todo el ancho disponible */
@@ -210,7 +194,7 @@ div[data-testid="stFormSubmitButton"] > button {
     /* Texto fuerte */
 
     width: 340px !important;
-    /* Ancho fijo del botón para que no se estire */
+    /* Ancho fijo del botón */
 
     height: 52px !important;
     /* Alto del botón */
@@ -219,24 +203,24 @@ div[data-testid="stFormSubmitButton"] > button {
     /* Sin borde */
 
     box-shadow: 0 12px 24px rgba(255, 122, 0, 0.24) !important;
-    /* Sombra del botón */
+    /* Sombra */
 
     margin-top: 16px !important;
-    /* Espacio arriba del botón */
+    /* Espacio arriba */
 
     font-size: 1rem !important;
     /* Tamaño del texto */
 
     letter-spacing: 0.2px !important;
-    /* Separación mínima entre letras */
+    /* Espaciado entre letras */
 }
 
 div[data-testid="stFormSubmitButton"] > button:hover {
     background: linear-gradient(135deg, #F08200 0%, #E35F00 100%) !important;
-    /* Color del botón al pasar el mouse */
+    /* Color al pasar el mouse */
 
     transform: translateY(-1px);
-    /* Eleva ligeramente el botón */
+    /* Efecto de elevación */
 }
 
 
@@ -247,20 +231,15 @@ div[data-testid="stFormSubmitButton"] > button:hover {
 @media (max-width: 900px) {
     .login-subtitle {
         font-size: 1.05rem;
-        /* Reduce tamaño del subtítulo en pantallas pequeñas */
+        /* Reduce subtítulo en pantallas pequeñas */
 
         max-width: 95%;
         /* Permite mejor ajuste */
     }
 
-    .login-form-card {
-        padding: 18px 14px 14px 14px;
-        /* Reduce padding en pantallas pequeñas */
-    }
-
-    .login-brand-block img {
-        width: 280px;
-        /* Reduce el logo en pantallas pequeñas */
+    div[data-testid="stForm"] {
+        padding: 18px 14px 14px 14px !important;
+        /* Reduce padding del form en pantallas pequeñas */
     }
 
     div[data-testid="stFormSubmitButton"] > button {
