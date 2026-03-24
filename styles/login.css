@@ -45,6 +45,20 @@
     /* Ocupa todo el ancho del bloque */
 }
 
+/* Centra la imagen que renderiza Streamlit */
+.login-brand-block [data-testid="stImage"] {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Centra el elemento interno de la imagen */
+.login-brand-block [data-testid="stImage"] > div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .login-brand-block img {
     display: block;
     /* Hace que la imagen se comporte como bloque */
@@ -107,7 +121,7 @@ div[data-testid="stForm"] {
     /* Quita margen externo */
 
     text-align: left;
-    /* Alinea contenido a la izquierda */
+    /* Mantiene labels e inputs a la izquierda */
 }
 
 
@@ -168,11 +182,21 @@ div[data-testid="stFormSubmitButton"] {
     display: flex;
     /* Activa flex */
 
-    justify-content: center-right;
+    justify-content: center !important;
     /* Centra el botón */
+
+    align-items: center;
+    /* Centrado vertical */
 
     width: 100%;
     /* Usa todo el ancho disponible */
+}
+
+/* También centra el div interno que Streamlit genera */
+div[data-testid="stFormSubmitButton"] > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -180,7 +204,7 @@ div[data-testid="stFormSubmitButton"] {
    BOTÓN PRINCIPAL
    ========================================================= */
 
-div[data-testid="stFormSubmitButton"] > button {
+div[data-testid="stFormSubmitButton"] button {
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%) !important;
     /* Fondo naranja degradado */
 
@@ -213,9 +237,13 @@ div[data-testid="stFormSubmitButton"] > button {
 
     letter-spacing: 0.2px !important;
     /* Espaciado entre letras */
+
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
-div[data-testid="stFormSubmitButton"] > button:hover {
+div[data-testid="stFormSubmitButton"] button:hover {
     background: linear-gradient(135deg, #F08200 0%, #E35F00 100%) !important;
     /* Color al pasar el mouse */
 
@@ -242,7 +270,7 @@ div[data-testid="stFormSubmitButton"] > button:hover {
         /* Reduce padding del form en pantallas pequeñas */
     }
 
-    div[data-testid="stFormSubmitButton"] > button {
+    div[data-testid="stFormSubmitButton"] button {
         width: 100% !important;
         /* En móvil, el botón usa todo el ancho */
     }
