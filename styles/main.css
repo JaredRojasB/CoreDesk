@@ -16,7 +16,7 @@ div[data-testid="stSidebarNav"] {
     left: 0;
     width: 100%;
     height: 84px;
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid #E9ECEF;
     z-index: 999;
@@ -29,6 +29,12 @@ div[data-testid="stSidebarNav"] {
     align-items: center;
     justify-content: space-between;
     padding: 0 4%;
+}
+
+.coredesk-brand-area {
+    display: flex;
+    align-items: center;
+    min-width: 180px;
 }
 
 .coredesk-logo-fixed {
@@ -65,8 +71,7 @@ div[data-testid="stSidebarNav"] {
 }
 
 /* Avatar asistente */
-[data-testid="stChatMessageAssistant"]
-div[data-testid="stChatMessageAvatar"] {
+[data-testid="stChatMessageAssistant"] div[data-testid="stChatMessageAvatar"] {
     background-color: #FF8C00 !important;
     color: white !important;
     border-radius: 10px !important;
@@ -74,8 +79,7 @@ div[data-testid="stChatMessageAvatar"] {
 }
 
 /* Avatar usuario */
-[data-testid="stChatMessageUser"]
-div[data-testid="stChatMessageAvatar"] {
+[data-testid="stChatMessageUser"] div[data-testid="stChatMessageAvatar"] {
     background-color: #0E3255 !important;
     color: white !important;
     border-radius: 10px !important;
@@ -87,7 +91,19 @@ span[data-testid="stWidgetLabel"] {
     display: none !important;
 }
 
-/* Botón finalizar ya NO flotante */
+/* Recortar espacio del input para dejar sitio al botón */
+[data-testid="stChatInput"] {
+    margin-right: 210px !important;
+}
+
+/* Botón finalizar fijo abajo derecha */
+.st-key-finalizar-btn {
+    position: fixed !important;
+    right: 24px !important;
+    bottom: 22px !important;
+    z-index: 1001 !important;
+}
+
 .st-key-finalizar-btn button {
     background-color: #FF4B4B !important;
     color: white !important;
@@ -95,9 +111,8 @@ span[data-testid="stWidgetLabel"] {
     width: 180px !important;
     height: 48px !important;
     border: none !important;
-    box-shadow: 0 8px 20px rgba(255, 75, 75, 0.22) !important;
+    box-shadow: 0 8px 20px rgba(255, 75, 75, 0.24) !important;
     font-weight: bold !important;
-    margin-bottom: 14px !important;
 }
 
 /* Botón del formulario */

@@ -187,15 +187,15 @@ def mostrar_header_chat(logo_img):
 
     logo_html = ""
     if logo_b64:
-        logo_html = f"""
-            <img src="data:image/png;base64,{logo_b64}" class="coredesk-logo-fixed" alt="CoreDesk Logo">
-        """
+        logo_html = f'<img src="data:image/png;base64,{logo_b64}" class="coredesk-logo-fixed" alt="CoreDesk Logo">'
 
     st.markdown(
         f"""
         <div class="coredesk-header-fixed">
             <div class="coredesk-header-content">
-                {logo_html}
+                <div class="coredesk-brand-area">
+                    {logo_html}
+                </div>
                 <div class="coredesk-header-right">
                     <span class="coredesk-header-timer">⏱️ {t_min} min activo</span>
                 </div>
@@ -222,15 +222,12 @@ def mostrar_tarjeta_usuario():
 
 
 def mostrar_boton_finalizar():
-    """Muestra el botón rojo debajo de la tarjeta del usuario."""
-    col1, col2, col3 = st.columns([1.2, 4, 1])
-
-    with col1:
-        if st.button("Finalizar Chat", key="finalizar-btn"):
-            st.session_state.user_data = None
-            st.session_state.messages = []
-            st.session_state.bienvenida_enviada = False
-            st.rerun()
+    """Muestra el botón fijo en esquina inferior derecha."""
+    if st.button("Finalizar Chat", key="finalizar-btn"):
+        st.session_state.user_data = None
+        st.session_state.messages = []
+        st.session_state.bienvenida_enviada = False
+        st.rerun()
 
 
 def enviar_bienvenida_si_falta():
@@ -297,9 +294,9 @@ def mostrar_chat(logo_img):
     """Agrupa toda la vista del chat."""
     mostrar_header_chat(logo_img)
     mostrar_tarjeta_usuario()
-    mostrar_boton_finalizar()
     enviar_bienvenida_si_falta()
     mostrar_historial()
+    mostrar_boton_finalizar()
 
 
 # =========================================================
