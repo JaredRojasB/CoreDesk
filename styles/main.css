@@ -311,10 +311,10 @@ span[data-testid="stWidgetLabel"] {
     position: fixed;
     /* Botón fijo siempre visible */
 
-    right: 20px;
+    right: 25px;
     /* Qué tan pegado queda al borde derecho */
 
-    bottom: 80px;
+    bottom: 85px;
     /* Qué tan arriba queda del borde inferior */
 
     width: 40px;
