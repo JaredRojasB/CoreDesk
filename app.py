@@ -99,6 +99,10 @@ def inicializar_sesion():
     if "ultimo_analisis_ticket" not in st.session_state:
         st.session_state.ultimo_analisis_ticket = None
 
+    analisis = st.session_state.get("ultimo_analisis_ticket")
+    if analisis and "escalado_inmediato" not in analisis:
+        st.session_state.ultimo_analisis_ticket = None
+
 
 # =========================================================
 # 3. UTILIDADES
@@ -126,6 +130,57 @@ def extraer_segundos_espera(error_texto: str):
         return max(1, int(patron_seconds.group(1)))
 
     return None
+
+
+def obtener_contexto_conversacion(max_mensajes=6):
+    """
+    Devuelve los últimos mensajes del chat para mantener el hilo.
+    """
+    mensajes = st.session_state.messages[-max_mensajes:]
+    lineas = []
+
+    for m in mensajes:
+        rol = "Usuario" if m["role"] == "user" else "Asistente"
+        contenido = m["content"].strip()
+        lineas.append(f"{rol}: {contenido}")
+
+    return "\n".join(lineas)
+
+
+def mover_vista_al_inicio_respuesta():
+    components.html(
+        """
+        <script>
+            const doc = window.parent.document;
+            const win = window.parent;
+
+            const restoreScroll = () => {
+                const markers = doc.querySelectorAll('.assistant-start-marker');
+                if (!markers.length) return;
+
+                const lastMarker = markers[markers.length - 1];
+                const rect = lastMarker.getBoundingClientRect();
+                const targetTop = win.scrollY + rect.top - 110;
+
+                if (doc.activeElement) {
+                    doc.activeElement.blur();
+                }
+
+                win.scrollTo({
+                    top: Math.max(0, targetTop),
+                    behavior: "auto"
+                });
+            };
+
+            setTimeout(restoreScroll, 50);
+            setTimeout(restoreScroll, 150);
+            setTimeout(restoreScroll, 300);
+            setTimeout(restoreScroll, 600);
+            setTimeout(restoreScroll, 1000);
+        </script>
+        """,
+        height=0,
+    )
 
 
 # =========================================================
@@ -354,12 +409,14 @@ def analizar_ticket_hibrido(prompt_usuario: str):
         return analisis_base
 
 
-def construir_prompt_soporte_hibrido(nombre_usuario, prompt_usuario, analisis_ticket):
+def construir_prompt_soporte_hibrido(nombre_usuario, prompt_usuario, analisis_ticket, es_seguimiento=False):
     categoria = analisis_ticket["categoria"]
     prioridad = analisis_ticket["prioridad"]
     escalado_inmediato = analisis_ticket["escalado_inmediato"]
     escalar_si_falla = analisis_ticket["escalar_si_falla"]
     motivo_escalado = analisis_ticket["motivo_escalado"]
+
+    contexto = obtener_contexto_conversacion()
 
     if escalado_inmediato:
         modo = f"""
@@ -376,6 +433,7 @@ INSTRUCCIONES ESPECIALES:
 3. Puedes dar recomendaciones seguras y básicas mientras espera soporte.
 4. No prometas reparación inmediata.
 5. Sé claro, profesional y tranquilizador.
+6. Si el usuario está respondiendo a pasos previos, NO vuelvas a reiniciar el caso desde cero.
 """
     elif escalar_si_falla:
         modo = f"""
@@ -389,9 +447,10 @@ MOTIVO: {motivo_escalado}
 
 INSTRUCCIONES ESPECIALES:
 1. Da pasos iniciales simples, seguros y muy claros.
-2. Prioriza verificaciones básicas primero.
-3. Al final, indica claramente que si esas pruebas no funcionan, el caso deberá escalarse a soporte técnico.
-4. No declares escalamiento inmediato desde el inicio.
+2. Si el usuario ya respondió antes, continúa desde lo último que dijo.
+3. NO repitas el saludo ni vuelvas a presentar el ticket como nuevo.
+4. NO repitas notas de clasificación a menos que sea necesario.
+5. Solo indica escalamiento si las pruebas ya fallaron o el usuario confirma que no funcionó.
 """
     else:
         modo = f"""
@@ -400,14 +459,25 @@ PRIORIDAD DETECTADA: {prioridad}
 
 INSTRUCCIONES ESPECIALES:
 1. Este caso puede intentarse resolver por soporte remoto.
-2. Responde paso a paso de forma muy específica.
-3. Prioriza verificaciones simples primero.
+2. Continúa la conversación con naturalidad.
+3. NO repitas el saludo en cada respuesta.
+4. NO repitas diagnóstico base si ya lo explicaste antes.
 """
+
+    seguimiento_txt = "Sí" if es_seguimiento else "No"
 
     return f"""
 Eres un agente de soporte técnico llamado CoreDesk AI y estás ayudando a {nombre_usuario}.
 
 {modo}
+
+ESTADO DEL TICKET:
+- Es seguimiento: {seguimiento_txt}
+- Categoría: {categoria}
+- Prioridad: {prioridad}
+
+CONTEXTO RECIENTE DE LA CONVERSACIÓN:
+{contexto}
 
 REGLAS IMPORTANTES DE RESPUESTA:
 1. Responde siempre en español.
@@ -419,39 +489,38 @@ REGLAS IMPORTANTES DE RESPUESTA:
    - dónde dar clic
    - qué debería ver el usuario
 5. Usa formato visual ordenado con títulos y viñetas.
-6. Usa emojis simples para hacer clara la respuesta, por ejemplo:
-   - 🟢 para pasos recomendados
-   - 🔴 para advertencias o errores
-   - 🟡 para verificaciones
-   - 📂 para rutas o carpetas
-   - ⚙️ para configuración
-7. Si el problema requiere varios pasos, sepáralos por secciones y especifica la sección.
-8. Si hay riesgo de que el usuario se equivoque, adviértelo claramente.
-9. No respondas de forma genérica. Sé específico y accionable.
+6. Usa emojis simples cuando ayuden a la claridad.
+7. Si el usuario ya está respondiendo sobre pasos anteriores, continúa el flujo sin reiniciarlo.
+8. No repitas saludo, clasificación, ni encabezados si ya se mostraron antes.
+9. Sé específico y accionable.
 
-ESTRUCTURA QUE DEBES SEGUIR SIEMPRE:
-- Una línea breve de diagnóstico inicial
+ESTRUCTURA:
+- Una línea breve de seguimiento o diagnóstico
 - Sección: "🟡 Qué está pasando"
 - Sección: "🟢 Qué debes hacer paso a paso"
 - Sección: "🔴 Qué no debes hacer" (solo si aplica)
 - Sección: "🔵 Qué necesito que me confirmes al final"
 
-PROBLEMA DEL USUARIO:
+MENSAJE NUEVO DEL USUARIO:
 {prompt_usuario}
 """
 
 
 def construir_resumen_analisis(analisis):
-    escalado_inmediato = "Sí" if analisis["escalado_inmediato"] else "No"
-    escalar_si_falla = "Sí" if analisis["escalar_si_falla"] else "No"
+    escalado_inmediato = "Sí" if analisis.get("escalado_inmediato", False) else "No"
+    escalar_si_falla = "Sí" if analisis.get("escalar_si_falla", False) else "No"
+
+    categoria = analisis.get("categoria", "Sin categoría")
+    prioridad = analisis.get("prioridad", "Sin prioridad")
+    motivo = analisis.get("motivo_escalado", "Sin motivo especificado.")
 
     return (
         f"**Clasificación del ticket**\n\n"
-        f"- Categoría: **{analisis['categoria']}**\n"
-        f"- Prioridad: **{analisis['prioridad']}**\n"
+        f"- Categoría: **{categoria}**\n"
+        f"- Prioridad: **{prioridad}**\n"
         f"- Escalado inmediato: **{escalado_inmediato}**\n"
         f"- Escalar si falla: **{escalar_si_falla}**\n"
-        f"- Motivo: {analisis['motivo_escalado']}"
+        f"- Motivo: {motivo}"
     )
 
 
@@ -604,43 +673,6 @@ def mostrar_historial():
             st.markdown(mensaje["content"])
 
 
-def mover_vista_al_inicio_respuesta():
-    components.html(
-        """
-        <script>
-            const doc = window.parent.document;
-            const win = window.parent;
-
-            const restoreScroll = () => {
-                const markers = doc.querySelectorAll('.assistant-start-marker');
-                if (!markers.length) return;
-
-                const lastMarker = markers[markers.length - 1];
-                const rect = lastMarker.getBoundingClientRect();
-                const targetTop = win.scrollY + rect.top - 110;
-
-                // Quita foco del input para que no empuje la vista hacia abajo
-                if (doc.activeElement) {
-                    doc.activeElement.blur();
-                }
-
-                // Fuerza scroll al inicio de la respuesta
-                win.scrollTo({
-                    top: Math.max(0, targetTop),
-                    behavior: "auto"
-                });
-            };
-
-            setTimeout(restoreScroll, 50);
-            setTimeout(restoreScroll, 150);
-            setTimeout(restoreScroll, 300);
-            setTimeout(restoreScroll, 600);
-            setTimeout(restoreScroll, 1000);
-        </script>
-        """,
-        height=0,
-    )
-
 def procesar_input_usuario():
     prompt = st.chat_input("Escribe aquí")
 
@@ -661,44 +693,52 @@ def procesar_input_usuario():
 
             with st.spinner("CoreDesk AI está analizando tu problema..."):
                 try:
-                    # 1. Analizar ticket
-                    analisis_ticket = analizar_ticket_hibrido(prompt)
-                    st.session_state.ultimo_analisis_ticket = analisis_ticket
+                    analisis_existente = st.session_state.ultimo_analisis_ticket
+                    es_primer_mensaje_ticket = analisis_existente is None
 
-                    st.session_state.ticket_history.append({
-                        "timestamp": time.time(),
-                        "problema": prompt,
-                        "analisis": analisis_ticket
-                    })
+                    # 1. Clasificar solo una vez por ticket
+                    if es_primer_mensaje_ticket:
+                        analisis_ticket = analizar_ticket_hibrido(prompt)
+                        st.session_state.ultimo_analisis_ticket = analisis_ticket
 
-                    # 2. Construir prompt según resultado
+                        st.session_state.ticket_history.append({
+                            "timestamp": time.time(),
+                            "problema": prompt,
+                            "analisis": analisis_ticket
+                        })
+                    else:
+                        analisis_ticket = analisis_existente
+
+                    # 2. Construir prompt con contexto conversacional
                     nombre_usuario = st.session_state.user_data["nombre"]
                     prompt_final = construir_prompt_soporte_hibrido(
                         nombre_usuario,
                         prompt,
-                        analisis_ticket
+                        analisis_ticket,
+                        es_seguimiento=not es_primer_mensaje_ticket
                     )
 
                     # 3. Generar respuesta
                     respuesta = st.session_state.model.generate_content(prompt_final)
                     texto_respuesta = respuesta.text
 
-                    # 4. Encabezado visual según estrategia
-                    if analisis_ticket["escalado_inmediato"]:
-                        encabezado = (
-                            f"🟠 **Este caso fue marcado para escalamiento técnico inmediato.**\n\n"
-                            f"**Prioridad:** {analisis_ticket['prioridad']}\n\n"
-                            f"**Motivo:** {analisis_ticket['motivo_escalado']}\n\n"
-                        )
-                        texto_respuesta = encabezado + texto_respuesta
+                    # 4. Encabezado visual SOLO en primer mensaje del ticket
+                    if es_primer_mensaje_ticket:
+                        if analisis_ticket["escalado_inmediato"]:
+                            encabezado = (
+                                f"🟠 **Este caso fue marcado para escalamiento técnico inmediato.**\n\n"
+                                f"**Prioridad:** {analisis_ticket['prioridad']}\n\n"
+                                f"**Motivo:** {analisis_ticket['motivo_escalado']}\n\n"
+                            )
+                            texto_respuesta = encabezado + texto_respuesta
 
-                    elif analisis_ticket["escalar_si_falla"]:
-                        encabezado = (
-                            f"🟡 **Este caso primero intentará resolverse por chat.**\n\n"
-                            f"**Prioridad:** {analisis_ticket['prioridad']}\n\n"
-                            f"**Nota:** si las pruebas iniciales no funcionan, el caso deberá escalarse.\n\n"
-                        )
-                        texto_respuesta = encabezado + texto_respuesta
+                        elif analisis_ticket["escalar_si_falla"]:
+                            encabezado = (
+                                f"🟡 **Este caso primero intentará resolverse por chat.**\n\n"
+                                f"**Prioridad:** {analisis_ticket['prioridad']}\n\n"
+                                f"**Nota:** si las pruebas iniciales no funcionan, el caso deberá escalarse.\n\n"
+                            )
+                            texto_respuesta = encabezado + texto_respuesta
 
                     st.markdown(texto_respuesta)
 
@@ -717,6 +757,8 @@ def procesar_input_usuario():
                         "role": "assistant",
                         "content": mensaje_error
                     })
+
+                    mover_vista_al_inicio_respuesta()
 
 
 def mostrar_boton_subir():
