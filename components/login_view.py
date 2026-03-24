@@ -108,13 +108,6 @@ def mostrar_registro(logo_img):
                         "empresa": empresa_limpia,
                         "inicio": time.time()
                     }
-
-                    # Limpia los campos para futuras aperturas del login
-                    st.session_state["registro_nombre"] = ""
-                    st.session_state["registro_correo"] = ""
-                    st.session_state["registro_empresa"] = ""
-
-                    # Fuerza el siguiente render ya dentro del chat
                     st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
