@@ -1,8 +1,6 @@
 import os
 import re
 import time
-import base64
-from io import BytesIO
 from pathlib import Path
 from PIL import Image
 
@@ -35,14 +33,6 @@ def cargar_logo():
         return None
     except Exception:
         return None
-
-
-def logo_a_base64(img):
-    if img is None:
-        return None
-    buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    return base64.b64encode(buffer.getvalue()).decode()
 
 
 def aplicar_estilos():
@@ -122,7 +112,8 @@ REGLAS IMPORTANTES DE RESPUESTA:
 7. Si el problema requiere varios pasos, sepáralos por secciones y especifica la sección.
 8. Si hay riesgo de que el usuario se equivoque, adviértelo claramente.
 9. No respondas de forma genérica. Sé específico y accionable.
-10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
+10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, 
+disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
 
 ESTRUCTURA QUE DEBES SEGUIR SIEMPRE:
 - Una línea breve de diagnóstico inicial
@@ -176,7 +167,7 @@ def construir_mensaje_error_amigable(error: Exception):
     if "api key" in texto_error or "permission" in texto_error or "unauthorized" in texto_error:
         return (
             "🔴 **CoreDesk AI no pudo autenticarse correctamente.**\n\n"
-            "Revisa la configuración de la API y vuelve a intentarlo."
+            "Avisa a soporte por correo y vuelve a intentarlo."
         )
 
     return (
@@ -185,31 +176,32 @@ def construir_mensaje_error_amigable(error: Exception):
     )
 
 
+def formatear_tiempo_sesion(segundos_totales: int) -> str:
+    minutos = segundos_totales // 60
+    segundos = segundos_totales % 60
+    return f"{minutos:02d}:{segundos:02d}"
+
+
 # =========================================================
 # 3. FUNCIONES DE INTERFAZ CHAT
 # =========================================================
-def mostrar_header_chat(logo_img):
+def mostrar_header_chat():
     inicio_t = st.session_state.user_data.get("inicio", time.time())
-    t_min = int((time.time() - inicio_t) / 60)
-
-    logo_b64 = logo_a_base64(logo_img)
-
-    logo_html = ""
-    if logo_b64:
-        logo_html = f'<img src="data:image/png;base64,{logo_b64}" class="coredesk-logo-fixed" alt="CoreDesk Logo">'
+    segundos = int(time.time() - inicio_t)
+    tiempo_texto = formatear_tiempo_sesion(segundos)
 
     st.markdown(
         f"""
+        <div id="top-chat"></div>
         <div class="coredesk-header-shell">
             <div class="coredesk-header-fixed">
                 <div class="coredesk-header-content">
-                    <div class="coredesk-brand-area">
-                        {logo_html}
+                    <div class="coredesk-header-brand">
+                        CoreDesk Support
                     </div>
                     <div class="coredesk-header-right">
-                        <span class="coredesk-header-title">CoreDesk Support</span>
                         <span class="coredesk-header-divider"></span>
-                        <span class="coredesk-header-timer">⏱️ {t_min} min activo</span>
+                        <span class="coredesk-header-timer">⏱ {tiempo_texto} en sesión</span>
                     </div>
                 </div>
             </div>
@@ -221,24 +213,32 @@ def mostrar_header_chat(logo_img):
 
 
 def mostrar_tarjeta_usuario():
-    nombre = st.session_state.user_data["nombre"]
-    empresa = st.session_state.user_data["empresa"]
+    user = st.session_state.user_data
+    nombre = user.get("nombre", "Sin nombre")
+    empresa = user.get("empresa", "Sin empresa")
+    correo = user.get("correo", "Sin correo")
 
-    st.markdown(f"""
-        <div class="coredesk-user-card">
-            👤 <b>{nombre}</b> &nbsp;&nbsp;|&nbsp;&nbsp; 🏢 {empresa}
+    st.markdown(
+        f"""
+        <div class="session-card">
+            <div class="session-card-title">Sesión activa</div>
+            <div class="session-card-row"><span class="session-card-label">Atendiendo a:</span> <span class="session-card-value">{nombre}</span></div>
+            <div class="session-card-row"><span class="session-card-label">Empresa:</span> <span class="session-card-value">{empresa}</span></div>
+            <div class="session-card-row"><span class="session-card-label">Correo:</span> <span class="session-card-value">{correo}</span></div>
         </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
+
+    col1, col2, col3 = st.columns([1, 1.2, 1])
+    with col2:
+        if st.button("Finalizar chat", key="finalizar-btn"):
+            st.session_state.user_data = None
+            st.session_state.messages = []
+            st.session_state.bienvenida_enviada = False
+            st.rerun()
 
     st.divider()
-
-
-def mostrar_boton_finalizar():
-    if st.button("Finalizar Chat", key="finalizar-btn"):
-        st.session_state.user_data = None
-        st.session_state.messages = []
-        st.session_state.bienvenida_enviada = False
-        st.rerun()
 
 
 def enviar_bienvenida_si_falta():
@@ -246,7 +246,7 @@ def enviar_bienvenida_si_falta():
         nombre = st.session_state.user_data["nombre"]
         saludo = (
             f"¡Hola **{nombre}**! 👋 Bienvenido al soporte técnico de CoreDesk. "
-            f"Por favor, describe tu problema y te ayudaremos a resolverlo."
+            f"Por favor, describe el problema que tienes con tu equipo y te ayudaremos a resolverlo."
         )
         st.session_state.messages.append({
             "role": "assistant",
@@ -317,12 +317,21 @@ def procesar_input_usuario():
             st.rerun()
 
 
-def mostrar_chat(logo_img):
-    mostrar_header_chat(logo_img)
+def mostrar_boton_subir():
+    st.markdown(
+        """
+        <a href="#top-chat" class="scroll-top-btn" title="Subir al inicio">↑</a>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+def mostrar_chat():
+    mostrar_header_chat()
     mostrar_tarjeta_usuario()
     enviar_bienvenida_si_falta()
     mostrar_historial()
-    mostrar_boton_finalizar()
+    mostrar_boton_subir()
 
 
 # =========================================================
@@ -337,7 +346,7 @@ def main():
     if st.session_state.user_data is None:
         mostrar_registro(logo_img)
     else:
-        mostrar_chat(logo_img)
+        mostrar_chat()
         procesar_input_usuario()
 
 
