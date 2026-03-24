@@ -242,7 +242,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
    CAJA DE ESCRITURA DEL CHAT - ESTILO PREMIUM
    ========================================================= */
 
-/* Contenedor general del chat input */
 [data-testid="stChatInput"] {
     margin-bottom: 10px !important;
     /* Espacio inferior */
@@ -251,7 +250,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     /* Sin fondo extra */
 }
 
-/* Wrapper principal de la caja */
 [data-testid="stChatInput"] > div {
     background: #FFFFFF !important;
     /* Fondo principal de la barra */
@@ -269,7 +267,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     /* Espaciado interno general */
 }
 
-/* Área donde se escribe */
 [data-testid="stChatInput"] textarea,
 [data-testid="stChatInput"] input {
     background: transparent !important;
@@ -303,7 +300,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     /* Color del texto */
 }
 
-/* Placeholder */
 [data-testid="stChatInput"] textarea::placeholder,
 [data-testid="stChatInput"] input::placeholder {
     color: #98A6B7 !important;
@@ -313,7 +309,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     /* Lo deja visible */
 }
 
-/* Botón de enviar nativo */
 [data-testid="stChatInput"] button {
     background: linear-gradient(135deg, #0E3255 0%, #153E68 100%) !important;
     /* Color del botón enviar */
@@ -345,7 +340,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     /* Eleva ligeramente al pasar el mouse */
 }
 
-/* Si el input está enfocado, resalta toda la cápsula */
 [data-testid="stChatInput"]:focus-within > div {
     border: 1px solid #C9D6E5 !important;
     /* Borde al enfocar */
@@ -425,9 +419,9 @@ span[data-testid="stWidgetLabel"] {
     /* Espaciado interno */
 }
 
-/* Espacio entre mensajes */
 [data-testid="stChatMessage"] {
     margin-bottom: 12px;
+    /* Espacio entre mensajes */
 }
 
 
@@ -491,309 +485,19 @@ span[data-testid="stWidgetLabel"] {
 
 
 /* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 900px) {
-    .coredesk-header-brand {
-        font-size: 1.45rem;
-        /* Tamaño del título del header en pantallas pequeñas */
-    }
-
-    .coredesk-header-content {
-        padding: 0 18px;
-        /* Reduce padding lateral en móvil */
-    }
-
-    .coredesk-header-fixed {
-        height: 84px;
-        /* Alto del header en pantallas pequeñas */
-    }
-
-    .coredesk-header-content {
-        height: 84px;
-        /* Mantiene alineado el contenido */
-    }
-
-    .coredesk-header-spacer {
-        height: 150px;
-        /* Espacio para el header fijo en móvil */
-    }
-
-    .scroll-top-btn {
-        width: 40px;
-        height: 40px;
-        right: 14px;
-        bottom: 96px;
-        /* Ajusta posición del botón flotante en móvil */
-    }
-
-    [data-testid="stChatMessageContent"] {
-        max-width: 100%;
-        /* En móvil el mensaje puede ocupar todo el ancho */
-    }
-
-    [data-testid="stChatInput"] > div {
-        border-radius: 22px !important;
-        /* Redondez de la barra en móvil */
-    }
-}
-
-/* =========================================================
-   MOBILE OPTIMIZATION — CORE DESK
+   MÓVIL — VERSIÓN SIMPLIFICADA Y LIMPIA
    ========================================================= */
 
 @media (max-width: 768px) {
 
     /* ---------- CONTENEDOR GENERAL ---------- */
-
-    .block-container {
-        padding-left: 14px !important;
-        padding-right: 14px !important;
-        max-width: 100% !important;
-    }
-
-    /* ---------- HEADER MÁS COMPACTO ---------- */
-
-    .coredesk-header-fixed {
-        height: 72px;
-        border-radius: 16px;
-    }
-
-    .coredesk-header-content {
-        height: 72px;
-        padding: 0 16px;
-    }
-
-    .coredesk-header-brand {
-        font-size: 1.35rem;
-        line-height: 1.1;
-    }
-
-    .coredesk-header-timer {
-        font-size: 0.9rem;
-    }
-
-    .coredesk-header-spacer {
-        height: 120px;
-    }
-
-    /* ---------- TARJETA DE SESIÓN ---------- */
-
-    div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
-        padding: 18px !important;
-        border-radius: 16px;
-    }
-
-    .session-card-title {
-        font-size: 1rem;
-    }
-
-    .session-card-row {
-        font-size: 0.95rem;
-    }
-
-    /* ---------- MENSAJES ---------- */
-
-    [data-testid="stChatMessageContent"] {
-        max-width: 100% !important;
-    }
-
-    /* ---------- INPUT TIPO APP ---------- */
-
-    [data-testid="stChatInput"] {
-        position: fixed;
-        bottom: 12px;
-        left: 12px;
-        right: 12px;
-        z-index: 1001;
-    }
-
-    /* Caja del input */
-
-    [data-testid="stChatInput"] textarea,
-    [data-testid="stChatInput"] input {
-
-        border-radius: 22px !important;
-        padding: 14px 16px !important;
-        font-size: 16px !important;
-
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
-        border: 1px solid #E1E6ED !important;
-    }
-
-    /* ---------- BOTÓN SUBIR ---------- */
-
-    .scroll-top-btn {
-        width: 46px;
-        height: 46px;
-        right: 16px;
-        bottom: 90px; /* por encima del input */
-    }
-
-}
-
-/* =========================================================
-   MOBILE FIX EXTRA — EVITAR QUE TODO SE VEA ENCIMADO
-   ========================================================= */
-
-@media (max-width: 768px) {
-
-    /* ---------- HEADER MÁS CHICO ---------- */
-
-    .coredesk-header-shell {
-        top: 16px !important;
-        /* Baja menos el header desde arriba */
-    }
-
-    .coredesk-header-fixed {
-        height: 64px !important;
-        /* Header más bajito */
-        border-radius: 14px !important;
-        /* Menos redondeado para ahorrar espacio */
-    }
-
-    .coredesk-header-content {
-        height: 64px !important;
-        /* Igual al alto del header */
-        padding: 0 14px !important;
-        /* Menos espacio lateral */
-    }
-
-    .coredesk-header-brand {
-        font-size: 1.05rem !important;
-        /* Texto más pequeño */
-        line-height: 1.05 !important;
-        /* Más compacto */
-    }
-
-    .coredesk-header-divider {
-        height: 22px !important;
-        /* Línea separadora más pequeña */
-    }
-
-    .coredesk-header-timer {
-        font-size: 0.78rem !important;
-        /* Tiempo más pequeño */
-        line-height: 1.1 !important;
-    }
-
-    .coredesk-header-spacer {
-        height: 84px !important;
-        /* Mucho menos espacio fantasma */
-    }
-
-    /* ---------- CONTENEDOR GENERAL ---------- */
-
     .block-container {
         padding-left: 10px !important;
         padding-right: 10px !important;
+        max-width: 100% !important;
     }
 
-    /* ---------- TARJETA DE SESIÓN MÁS COMPACTA ---------- */
-
-    div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
-        padding: 14px !important;
-        /* Menos padding interno */
-        border-radius: 14px !important;
-        /* Menos curva */
-        margin-bottom: 10px !important;
-    }
-
-    .session-card-title {
-        font-size: 0.92rem !important;
-        /* Título más chico */
-        margin-bottom: 8px !important;
-    }
-
-    .session-card-row {
-        font-size: 0.88rem !important;
-        /* Texto más pequeño */
-        margin-bottom: 8px !important;
-    }
-
-    /* ---------- BOTÓN FINALIZAR MÁS COMPACTO ---------- */
-
-    .st-key-finalizar-btn {
-        margin-top: 6px !important;
-    }
-
-    .st-key-finalizar-btn button {
-        height: 44px !important;
-        /* Menos alto */
-        font-size: 0.95rem !important;
-        /* Texto más chico */
-    }
-
-    /* ---------- MENSAJES MÁS COMPACTOS ---------- */
-
-    [data-testid="stChatMessageAssistant"] [data-testid="stChatMessageContent"],
-    [data-testid="stChatMessageUser"] [data-testid="stChatMessageContent"] {
-        padding: 12px 13px !important;
-        /* Menos padding en burbujas */
-        border-radius: 14px !important;
-    }
-
-    [data-testid="stChatMessage"] {
-        margin-bottom: 8px !important;
-        /* Menos espacio entre mensajes */
-    }
-
-    /* ---------- INPUT MÁS ARRIBA Y COMPACTO ---------- */
-
-    [data-testid="stChatInput"] {
-        position: fixed !important;
-        left: 10px !important;
-        right: 10px !important;
-        bottom: 84px !important;
-        /* Lo sube para no chocar con Safari */
-        z-index: 1001 !important;
-    }
-
-    [data-testid="stChatInput"] > div {
-        padding: 8px 10px !important;
-        /* Menos padding del wrapper */
-        border-radius: 20px !important;
-        /* Más compacto */
-    }
-
-    [data-testid="stChatInput"] textarea,
-    [data-testid="stChatInput"] input {
-        min-height: 24px !important;
-        /* Menos alto del input */
-        padding: 8px 6px !important;
-        /* Menos padding interno */
-        font-size: 16px !important;
-        /* Importante en iPhone para evitar zoom */
-        border-radius: 14px !important;
-    }
-
-    [data-testid="stChatInput"] button {
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px !important;
-        /* Botón enviar más compacto */
-    }
-
-    /* ---------- FLECHA NARANJA MÁS ARRIBA ---------- */
-
-    .scroll-top-btn {
-        width: 42px !important;
-        height: 42px !important;
-        right: 14px !important;
-        bottom: 142px !important;
-        /* La sube para que no se monte con el input */
-        font-size: 0.95rem !important;
-    }
-}
-
-/* =========================================================
-   MOBILE FIX SEGURO
-   ========================================================= */
-
-@media (max-width: 768px) {
-
-    /* Header más compacto */
+    /* ---------- HEADER ---------- */
     .coredesk-header-shell {
         top: 54px !important;
     }
@@ -801,6 +505,7 @@ span[data-testid="stWidgetLabel"] {
     .coredesk-header-fixed {
         height: 74px !important;
         border-radius: 16px !important;
+        width: calc(100% - 20px) !important;
     }
 
     .coredesk-header-content {
@@ -820,20 +525,14 @@ span[data-testid="stWidgetLabel"] {
     .coredesk-header-timer {
         font-size: 0.8rem !important;
         line-height: 1.15 !important;
+        text-align: left !important;
     }
 
     .coredesk-header-spacer {
         height: 118px !important;
     }
 
-    /* Contenedor general */
-    .block-container {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        max-width: 100% !important;
-    }
-
-    /* Tarjeta de sesión más compacta */
+    /* ---------- TARJETA DE SESIÓN ---------- */
     div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
         padding: 14px !important;
         border-radius: 14px !important;
@@ -859,7 +558,7 @@ span[data-testid="stWidgetLabel"] {
         font-size: 0.95rem !important;
     }
 
-    /* Mensajes */
+    /* ---------- MENSAJES ---------- */
     [data-testid="stChatMessageContent"] {
         max-width: 100% !important;
     }
@@ -874,7 +573,7 @@ span[data-testid="stWidgetLabel"] {
         margin-bottom: 8px !important;
     }
 
-    /* Barra de escritura */
+    /* ---------- BARRA DE ESCRITURA ---------- */
     [data-testid="stChatInput"] {
         position: fixed !important;
         left: 10px !important;
@@ -903,7 +602,7 @@ span[data-testid="stWidgetLabel"] {
         min-width: 40px !important;
     }
 
-    /* Flecha naranja más arriba */
+    /* ---------- FLECHA NARANJA ---------- */
     .scroll-top-btn {
         width: 42px !important;
         height: 42px !important;
