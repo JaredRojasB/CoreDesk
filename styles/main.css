@@ -25,107 +25,62 @@ div[data-testid="stSidebarNav"] {
 
 .coredesk-header-shell {
     position: fixed;
-    /* Deja el header fijo al hacer scroll */
-
     top: 48px;
-    /* Distancia del header respecto a la parte superior */
-
     left: 0;
     width: 100%;
-
     z-index: 998;
-    /* Capa del header */
-
     display: flex;
     justify-content: center;
-
     pointer-events: none;
-    /* Evita clics raros en el contenedor externo */
 }
 
 .coredesk-header-fixed {
     width: calc(100% - 48px);
-    /* Ancho del header, descontando márgenes laterales */
-
     max-width: 1800px;
-    /* Límite máximo del ancho */
-
     height: 92px;
-    /* Alto del header */
-
     background: rgba(255, 255, 255, 0.96);
-    /* Fondo del header */
-
     border: 1px solid #E6EBF2;
-    /* Borde suave */
-
     border-radius: 20px;
-    /* Qué tan redondeado se ve el header */
-
     box-shadow: 0 12px 28px rgba(14, 50, 85, 0.08);
-    /* Sombra del header */
-
     backdrop-filter: blur(10px);
-    /* Desenfoque sutil del fondo */
-
     pointer-events: auto;
-    /* Permite interacción dentro del header */
 }
 
 .coredesk-header-content {
     height: 92px;
-    /* Debe coincidir con el alto del header */
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 0 28px;
-    /* Espacio interno horizontal */
 }
 
 .coredesk-header-brand {
     color: #0E3255;
-    /* Color del texto principal */
-
     font-size: 2rem;
-    /* Tamaño del texto CoreDesk Support */
-
     font-weight: 800;
-    /* Grosor del título */
-
     letter-spacing: 0.2px;
-    /* Separación entre letras */
 }
 
 .coredesk-header-right {
     display: flex;
     align-items: center;
     gap: 16px;
-    /* Espacio entre divisor y reloj */
 }
 
 .coredesk-header-divider {
     width: 1px;
     height: 28px;
     background: #D8E0EA;
-    /* Línea vertical separadora */
 }
 
 .coredesk-header-timer {
     color: #5F6C7B;
-    /* Color del tiempo */
-
     font-size: 1rem;
-    /* Tamaño del tiempo */
-
     font-weight: 700;
-    /* Grosor del tiempo */
 }
 
 .coredesk-header-spacer {
     height: 165px;
-    /* Espacio para que el header fijo no tape el contenido */
 }
 
 
@@ -135,65 +90,37 @@ div[data-testid="stSidebarNav"] {
 
 .session-card-hook {
     display: none;
-    /* Hook invisible; solo sirve para detectar este contenedor */
 }
 
 div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     background: #FFFFFF;
-    /* Fondo de la tarjeta */
-
     border: 1px solid #E4EAF2;
-    /* Borde de la tarjeta */
-
     border-radius: 18px;
-    /* Qué tan redondeadas son las esquinas de la tarjeta */
-
     box-shadow: 0 12px 30px rgba(14, 50, 85, 0.08);
-    /* Sombra exterior de la tarjeta */
-
     padding: 22px 22px 18px 22px;
-    /* Espacio interno */
-
     margin-bottom: 16px;
-    /* Espacio debajo de la tarjeta */
 }
 
 .session-card-title {
     color: #0E3255;
-    /* Color del título Sesión activa */
-
     font-size: 1rem;
-    /* Tamaño del título */
-
     font-weight: 800;
-    /* Grosor del título */
-
     margin-bottom: 12px;
-    /* Espacio debajo del título */
 }
 
 .session-card-row {
     margin-bottom: 10px;
-    /* Espacio entre cada línea */
-
     font-size: 1rem;
-    /* Tamaño general del texto */
 }
 
 .session-card-label {
     color: #5F6C7B;
-    /* Color de etiquetas */
-
     font-weight: 700;
-    /* Grosor de la etiqueta */
 }
 
 .session-card-value {
     color: #1F2A37;
-    /* Color del valor */
-
     font-weight: 600;
-    /* Grosor del valor */
 }
 
 
@@ -203,38 +130,21 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 .st-key-finalizar-btn {
     margin-top: 10px;
-    /* Espacio entre la info de sesión y el botón */
 }
 
 .st-key-finalizar-btn button {
     background: linear-gradient(135deg, #FF6A6A 0%, #FF4B4B 100%) !important;
-    /* Color del botón */
-
     color: white !important;
-    /* Color del texto */
-
     border-radius: 999px !important;
-    /* Qué tan redondeado se ve el botón */
-
     width: 100% !important;
-    /* El botón usa todo el ancho de su columna */
-
     height: 48px !important;
-    /* Alto del botón */
-
     border: none !important;
-    /* Quita borde nativo */
-
     box-shadow: 0 10px 22px rgba(255, 75, 75, 0.22) !important;
-    /* Sombra del botón */
-
     font-weight: 800 !important;
-    /* Grosor del texto */
 }
 
 .st-key-finalizar-btn button:hover {
     transform: translateY(-1px);
-    /* Eleva ligeramente el botón al pasar el mouse */
 }
 
 
@@ -244,108 +154,55 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 [data-testid="stChatInput"] {
     margin-bottom: 10px !important;
-    /* Espacio inferior */
-
     background: transparent !important;
-    /* Sin fondo extra */
 }
 
 [data-testid="stChatInput"] > div {
     background: #FFFFFF !important;
-    /* Fondo principal de la barra */
-
     border: 1px solid #E1E7F0 !important;
-    /* Borde general del contenedor */
-
     border-radius: 26px !important;
-    /* Qué tan redondeada se ve toda la barra */
-
     box-shadow: 0 10px 28px rgba(14, 50, 85, 0.08) !important;
-    /* Sombra externa */
-
     padding: 10px 14px !important;
-    /* Espaciado interno general */
 }
 
 [data-testid="stChatInput"] textarea,
 [data-testid="stChatInput"] input {
     background: transparent !important;
-    /* Deja que el fondo lo maneje el contenedor */
-
     border: none !important;
-    /* Quita el borde interno del input */
-
     outline: none !important;
-    /* Quita borde azul del navegador */
-
     box-shadow: none !important;
-    /* Quita sombras internas */
-
     border-radius: 18px !important;
-    /* Redondez del área de texto */
-
     font-size: 1.02rem !important;
-    /* Tamaño del texto escrito */
-
     line-height: 1.5 !important;
-    /* Altura entre líneas */
-
     min-height: 34px !important;
-    /* Altura mínima del campo */
-
     padding: 10px 8px !important;
-    /* Espaciado interno del texto */
-
     color: #1F2A37 !important;
-    /* Color del texto */
 }
 
 [data-testid="stChatInput"] textarea::placeholder,
 [data-testid="stChatInput"] input::placeholder {
     color: #98A6B7 !important;
-    /* Color del placeholder */
-
     opacity: 1 !important;
-    /* Lo deja visible */
 }
 
 [data-testid="stChatInput"] button {
     background: linear-gradient(135deg, #0E3255 0%, #153E68 100%) !important;
-    /* Color del botón enviar */
-
     color: white !important;
-    /* Color del ícono */
-
     border: none !important;
-    /* Sin borde */
-
     border-radius: 999px !important;
-    /* Botón completamente redondo */
-
     width: 44px !important;
-    /* Ancho del botón */
-
     height: 44px !important;
-    /* Alto del botón */
-
     min-width: 44px !important;
-    /* Asegura tamaño fijo */
-
     box-shadow: 0 10px 18px rgba(14, 50, 85, 0.18) !important;
-    /* Sombra del botón enviar */
 }
 
 [data-testid="stChatInput"] button:hover {
     transform: translateY(-1px);
-    /* Eleva ligeramente al pasar el mouse */
 }
 
 [data-testid="stChatInput"]:focus-within > div {
     border: 1px solid #C9D6E5 !important;
-    /* Borde al enfocar */
-
     box-shadow: 0 14px 30px rgba(14, 50, 85, 0.10) !important;
-    /* Sombra un poco más marcada al enfocar */
 }
 
 
@@ -355,27 +212,18 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 [data-testid="stChatMessageAssistant"] div[data-testid="stChatMessageAvatar"] {
     background-color: #FF8C00 !important;
-    /* Fondo del avatar del bot */
-
     border-radius: 12px !important;
-    /* Qué tan redondeado se ve el avatar del bot */
-
     padding: 4px !important;
-    /* Espacio interno del avatar */
 }
 
 [data-testid="stChatMessageUser"] div[data-testid="stChatMessageAvatar"] {
     background-color: #0E3255 !important;
-    /* Fondo del avatar del usuario */
-
     border-radius: 12px !important;
-    /* Qué tan redondeado se ve el avatar del usuario */
 }
 
 [data-testid="stIconMaterial"],
 span[data-testid="stWidgetLabel"] {
     display: none !important;
-    /* Oculta íconos/labels nativos que ensucian el diseño */
 }
 
 
@@ -385,43 +233,25 @@ span[data-testid="stWidgetLabel"] {
 
 [data-testid="stChatMessageContent"] {
     max-width: 980px;
-    /* Ancho máximo del bloque de conversación */
 }
 
 [data-testid="stChatMessageAssistant"] [data-testid="stChatMessageContent"] {
     background: #FFFFFF;
-    /* Fondo del mensaje del bot */
-
     border: 1px solid #E7EDF5;
-    /* Borde suave */
-
     border-radius: 16px;
-    /* Redondez de la burbuja */
-
     padding: 14px 16px;
-    /* Espaciado interno */
-
     box-shadow: 0 6px 14px rgba(14, 50, 85, 0.04);
-    /* Sombra ligera */
 }
 
 [data-testid="stChatMessageUser"] [data-testid="stChatMessageContent"] {
     background: #EEF3F8;
-    /* Fondo del mensaje del usuario */
-
     border: 1px solid #DCE6F0;
-    /* Borde del mensaje del usuario */
-
     border-radius: 16px;
-    /* Redondez de la burbuja */
-
     padding: 14px 16px;
-    /* Espaciado interno */
 }
 
 [data-testid="stChatMessage"] {
     margin-bottom: 12px;
-    /* Espacio entre mensajes */
 }
 
 
@@ -431,56 +261,85 @@ span[data-testid="stWidgetLabel"] {
 
 .scroll-top-btn {
     position: fixed;
-    /* Lo deja fijo en pantalla */
-
     right: 25px;
-    /* Qué tan pegado queda al borde derecho */
-
     bottom: 75px;
-    /* Qué tan arriba queda del borde inferior */
-
     width: 40px;
-    /* Ancho del botón flotante */
-
     height: 40px;
-    /* Alto del botón flotante */
-
     border-radius: 999px;
-    /* Lo hace completamente redondo */
-
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%);
-    /* Color naranja del botón flotante */
-
     color: white;
-    /* Color de la flecha */
-
     text-decoration: none;
-    /* Quita subrayado del enlace */
-
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Centra la flecha */
-
     font-size: 1rem;
-    /* Tamaño de la flecha */
-
     font-weight: 800;
-    /* Grosor de la flecha */
-
     box-shadow: 0 12px 24px rgba(255, 122, 0, 0.24);
-    /* Sombra del botón flotante */
-
     z-index: 1002;
-    /* Lo deja por encima de otros elementos */
 }
 
 .scroll-top-btn:hover {
     transform: translateY(-1px);
-    /* Lo eleva ligeramente al pasar el mouse */
-
     color: white;
-    /* Mantiene la flecha blanca */
+}
+
+
+/* =========================================================
+   OVERLAY DE CIERRE DE CHAT
+   ========================================================= */
+
+.closing-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.30);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closing-modal {
+    width: min(92vw, 360px);
+    background: #FFFFFF;
+    border: 1px solid #E5ECF4;
+    border-radius: 22px;
+    box-shadow: 0 18px 40px rgba(14, 50, 85, 0.16);
+    padding: 28px 24px;
+    text-align: center;
+}
+
+.closing-title {
+    color: #0E3255;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+.closing-subtitle {
+    color: #5F6C7B;
+    font-size: 0.96rem;
+    font-weight: 600;
+}
+
+.closing-spinner {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+    border-radius: 999px;
+    border: 4px solid #E8EEF5;
+    border-top: 4px solid #FF8C00;
+    animation: coredeskSpin 0.8s linear infinite;
+}
+
+@keyframes coredeskSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -490,14 +349,12 @@ span[data-testid="stWidgetLabel"] {
 
 @media (max-width: 768px) {
 
-    /* ---------- CONTENEDOR GENERAL ---------- */
     .block-container {
         padding-left: 10px !important;
         padding-right: 10px !important;
         max-width: 100% !important;
     }
 
-    /* ---------- HEADER ---------- */
     .coredesk-header-shell {
         top: 54px !important;
     }
@@ -532,7 +389,6 @@ span[data-testid="stWidgetLabel"] {
         height: 118px !important;
     }
 
-    /* ---------- TARJETA DE SESIÓN ---------- */
     div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
         padding: 14px !important;
         border-radius: 14px !important;
@@ -558,7 +414,6 @@ span[data-testid="stWidgetLabel"] {
         font-size: 0.95rem !important;
     }
 
-    /* ---------- MENSAJES ---------- */
     [data-testid="stChatMessageContent"] {
         max-width: 100% !important;
     }
@@ -573,7 +428,6 @@ span[data-testid="stWidgetLabel"] {
         margin-bottom: 8px !important;
     }
 
-    /* ---------- BARRA DE ESCRITURA ---------- */
     [data-testid="stChatInput"] {
         position: fixed !important;
         left: 10px !important;
@@ -602,7 +456,6 @@ span[data-testid="stWidgetLabel"] {
         min-width: 40px !important;
     }
 
-    /* ---------- FLECHA NARANJA ---------- */
     .scroll-top-btn {
         width: 42px !important;
         height: 42px !important;
@@ -610,5 +463,19 @@ span[data-testid="stWidgetLabel"] {
         bottom: 144px !important;
         font-size: 0.95rem !important;
         z-index: 1004 !important;
+    }
+
+    .closing-modal {
+        width: min(90vw, 320px);
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+
+    .closing-title {
+        font-size: 1.05rem;
+    }
+
+    .closing-subtitle {
+        font-size: 0.9rem;
     }
 }

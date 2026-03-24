@@ -88,6 +88,9 @@ def inicializar_sesion():
     if "bienvenida_enviada" not in st.session_state:
         st.session_state.bienvenida_enviada = False
 
+    if "cerrando_chat" not in st.session_state:
+        st.session_state.cerrando_chat = False
+
 
 def construir_prompt_soporte(nombre_usuario, prompt_usuario):
     return f"""
@@ -175,6 +178,33 @@ def formatear_tiempo_sesion(segundos_totales: int) -> str:
     return f"{minutos:02d}:{segundos:02d}"
 
 
+def mostrar_overlay_cierre():
+    st.markdown(
+        """
+        <div class="closing-overlay">
+            <div class="closing-modal">
+                <div class="closing-spinner"></div>
+                <div class="closing-title">Cerrando el chat</div>
+                <div class="closing-subtitle">Gracias por usar CoreDesk</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+def cerrar_chat():
+    st.session_state.cerrando_chat = True
+    mostrar_overlay_cierre()
+    time.sleep(0.9)
+
+    st.session_state.user_data = None
+    st.session_state.messages = []
+    st.session_state.bienvenida_enviada = False
+    st.session_state.cerrando_chat = False
+    st.rerun()
+
+
 # =========================================================
 # 3. INTERFAZ CHAT
 # =========================================================
@@ -212,7 +242,6 @@ def mostrar_tarjeta_usuario():
     correo = user.get("correo", "Sin correo")
 
     with st.container():
-        # Hook invisible para que CSS detecte ESTE contenedor
         st.markdown('<div class="session-card-hook"></div>', unsafe_allow_html=True)
 
         st.markdown(
@@ -228,10 +257,7 @@ def mostrar_tarjeta_usuario():
         col1, col2, col3 = st.columns([1, 1.1, 1])
         with col2:
             if st.button("Finalizar este chat", key="finalizar-btn", use_container_width=True):
-                st.session_state.user_data = None
-                st.session_state.messages = []
-                st.session_state.bienvenida_enviada = False
-                st.rerun()
+                cerrar_chat()
 
     st.divider()
 
@@ -327,6 +353,9 @@ def mostrar_chat():
     enviar_bienvenida_si_falta()
     mostrar_historial()
     mostrar_boton_subir()
+
+    if st.session_state.cerrando_chat:
+        mostrar_overlay_cierre()
 
 
 # =========================================================
