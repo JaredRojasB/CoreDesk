@@ -88,8 +88,8 @@ def inicializar_sesion():
     if "bienvenida_enviada" not in st.session_state:
         st.session_state.bienvenida_enviada = False
 
-    if "cerrando_chat" not in st.session_state:
-        st.session_state.cerrando_chat = False
+    if "view_mode" not in st.session_state:
+        st.session_state.view_mode = "chat"   # chat | closing
 
 
 def construir_prompt_soporte(nombre_usuario, prompt_usuario):
@@ -178,10 +178,18 @@ def formatear_tiempo_sesion(segundos_totales: int) -> str:
     return f"{minutos:02d}:{segundos:02d}"
 
 
-def mostrar_overlay_cierre():
+# =========================================================
+# 3. CIERRE LIMPIO
+# =========================================================
+def iniciar_cierre_chat():
+    st.session_state.view_mode = "closing"
+    st.rerun()
+
+
+def mostrar_pantalla_cierre():
     st.markdown(
         """
-        <div class="closing-overlay">
+        <div class="closing-screen">
             <div class="closing-modal">
                 <div class="closing-spinner"></div>
                 <div class="closing-title">Cerrando el chat</div>
@@ -193,28 +201,20 @@ def mostrar_overlay_cierre():
     )
 
 
-def iniciar_cierre_chat():
-    st.session_state.cerrando_chat = True
-    st.rerun()
-
-
 def procesar_cierre_chat():
-    """
-    Segunda fase del cierre:
-    muestra solo el overlay, espera y luego limpia sesión.
-    """
-    mostrar_overlay_cierre()
+    # Renderiza SOLO la pantalla limpia, sin chat detrás
+    mostrar_pantalla_cierre()
     time.sleep(1.2)
 
     st.session_state.user_data = None
     st.session_state.messages = []
     st.session_state.bienvenida_enviada = False
-    st.session_state.cerrando_chat = False
+    st.session_state.view_mode = "chat"
     st.rerun()
 
 
 # =========================================================
-# 3. INTERFAZ CHAT
+# 4. INTERFAZ CHAT
 # =========================================================
 def mostrar_header_chat():
     inicio_t = st.session_state.user_data.get("inicio", time.time())
@@ -364,7 +364,7 @@ def mostrar_chat():
 
 
 # =========================================================
-# 4. FUNCIÓN PRINCIPAL
+# 5. FUNCIÓN PRINCIPAL
 # =========================================================
 def main():
     logo_img = cargar_logo()
@@ -372,8 +372,8 @@ def main():
     configurar_modelo()
     inicializar_sesion()
 
-    # Si está en proceso de cierre, NO renderizamos chat normal
-    if st.session_state.cerrando_chat:
+    # Vista especial de cierre: NO dibuja chat
+    if st.session_state.view_mode == "closing":
         procesar_cierre_chat()
         st.stop()
 
@@ -385,7 +385,7 @@ def main():
 
 
 # =========================================================
-# 5. EJECUCIÓN
+# 6. EJECUCIÓN
 # =========================================================
 if __name__ == "__main__":
     main()

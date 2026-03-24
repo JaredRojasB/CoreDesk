@@ -285,14 +285,13 @@ span[data-testid="stWidgetLabel"] {
 
 
 /* =========================================================
-   OVERLAY DE CIERRE DE CHAT
+   PANTALLA LIMPIA DE CIERRE
    ========================================================= */
 
-.closing-overlay {
+.closing-screen {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.30);
-    backdrop-filter: blur(3px);
+    background: #F5F7FB;
     z-index: 9999;
     display: flex;
     align-items: center;
