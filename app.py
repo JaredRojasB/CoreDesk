@@ -211,8 +211,8 @@ def mostrar_tarjeta_usuario():
     empresa = user.get("empresa", "Sin empresa")
     correo = user.get("correo", "Sin correo")
 
+    # ===== DESKTOP: tarjeta normal =====
     with st.container():
-        # Hook invisible para que CSS detecte ESTE contenedor
         st.markdown('<div class="session-card-hook"></div>', unsafe_allow_html=True)
 
         st.markdown(
@@ -225,7 +225,6 @@ def mostrar_tarjeta_usuario():
             unsafe_allow_html=True
         )
 
-        # Botón dentro del mismo contenedor real de Streamlit
         col1, col2, col3 = st.columns([1, 1.1, 1])
         with col2:
             if st.button("Finalizar este chat", key="finalizar-btn", use_container_width=True):
@@ -233,6 +232,38 @@ def mostrar_tarjeta_usuario():
                 st.session_state.messages = []
                 st.session_state.bienvenida_enviada = False
                 st.rerun()
+
+    # ===== MOBILE: panel lateral HTML =====
+    st.markdown(
+        f"""
+        <div class="mobile-session-ui">
+            <input type="checkbox" id="mobile-session-toggle" class="mobile-session-toggle">
+            <label for="mobile-session-toggle" class="mobile-session-fab" title="Ver sesión">👤</label>
+
+            <div class="mobile-session-overlay"></div>
+
+            <aside class="mobile-session-drawer">
+                <div class="mobile-session-drawer-title">Sesión activa</div>
+                <div class="mobile-session-drawer-row"><strong>👤 Usuario:</strong> {nombre}</div>
+                <div class="mobile-session-drawer-row"><strong>🏢 Empresa:</strong> {empresa}</div>
+                <div class="mobile-session-drawer-row"><strong>📧 Correo:</strong> {correo}</div>
+                <label for="mobile-session-toggle" class="mobile-session-close">✕</label>
+            </aside>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # ===== MOBILE: botón real de finalizar =====
+    st.markdown('<div class="mobile-endchat-wrap">', unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col2:
+        if st.button("Finalizar chat", key="finalizar-btn-mobile", use_container_width=True):
+            st.session_state.user_data = None
+            st.session_state.messages = []
+            st.session_state.bienvenida_enviada = False
+            st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.divider()
 

@@ -786,3 +786,240 @@ span[data-testid="stWidgetLabel"] {
         font-size: 0.95rem !important;
     }
 }
+
+/* =========================================================
+   MOBILE DRAWER DE SESIÓN + AJUSTES EXTRA
+   ========================================================= */
+
+.mobile-session-ui,
+.mobile-endchat-wrap {
+    display: none;
+    /* En desktop no se muestran */
+}
+
+@media (max-width: 768px) {
+
+    /* ---------- HEADER MÓVIL MÁS SEGURO ---------- */
+
+    .coredesk-header-shell {
+        top: 54px !important;
+        /* Baja el header para que no choque con la barra superior visible de Streamlit/Safari */
+    }
+
+    .coredesk-header-fixed {
+        height: 88px !important;
+        /* Header un poco más alto para que no se vea apretado */
+        border-radius: 18px !important;
+    }
+
+    .coredesk-header-content {
+        height: 88px !important;
+        padding: 0 16px !important;
+    }
+
+    .coredesk-header-brand {
+        font-size: 1.1rem !important;
+        line-height: 1.15 !important;
+    }
+
+    .coredesk-header-timer {
+        font-size: 0.78rem !important;
+        line-height: 1.2 !important;
+        text-align: left !important;
+    }
+
+    .coredesk-header-spacer {
+        height: 150px !important;
+        /* Más espacio para que el contenido ya no pase por debajo del header */
+    }
+
+    /* ---------- OCULTAR TARJETA NORMAL EN MÓVIL ---------- */
+
+    div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
+        display: none !important;
+        /* La tarjeta grande desaparece en móvil */
+    }
+
+    /* ---------- MOSTRAR PANEL LATERAL DE SESIÓN ---------- */
+
+    .mobile-session-ui {
+        display: block;
+    }
+
+    .mobile-session-toggle {
+        display: none;
+        /* Checkbox oculto; controla apertura/cierre */
+    }
+
+    .mobile-session-fab {
+        position: fixed;
+        right: 16px;
+        top: 160px;
+        z-index: 1010;
+
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+
+        background: linear-gradient(135deg, #0E3255 0%, #153E68 100%);
+        color: white;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 1.1rem;
+        font-weight: 800;
+
+        box-shadow: 0 10px 22px rgba(14, 50, 85, 0.22);
+        cursor: pointer;
+    }
+
+    .mobile-session-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.20);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 1011;
+    }
+
+    .mobile-session-drawer {
+        position: fixed;
+        top: 0;
+        right: -88%;
+        width: 84%;
+        max-width: 340px;
+        height: 100vh;
+        background: #FFFFFF;
+        box-shadow: -12px 0 28px rgba(14, 50, 85, 0.14);
+        z-index: 1012;
+        padding: 24px 18px 18px 18px;
+        transition: right 0.25s ease;
+        overflow-y: auto;
+    }
+
+    .mobile-session-drawer-title {
+        color: #0E3255;
+        font-size: 1rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        margin-top: 30px;
+    }
+
+    .mobile-session-drawer-row {
+        color: #1F2A37;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        margin-bottom: 12px;
+        word-break: break-word;
+    }
+
+    .mobile-session-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        background: #F3F6FA;
+        color: #0E3255;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        border: 1px solid #E3EAF2;
+    }
+
+    .mobile-session-toggle:checked ~ .mobile-session-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .mobile-session-toggle:checked ~ .mobile-session-drawer {
+        right: 0;
+    }
+
+    /* ---------- BOTÓN REAL FINALIZAR EN MÓVIL ---------- */
+
+    .mobile-endchat-wrap {
+        display: block;
+        position: fixed;
+        left: 12px;
+        right: 74px;
+        bottom: 86px;
+        z-index: 1003;
+    }
+
+    .st-key-finalizar-btn-mobile button {
+        background: linear-gradient(135deg, #FF6A6A 0%, #FF4B4B 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 999px !important;
+        height: 42px !important;
+        font-size: 0.9rem !important;
+        font-weight: 800 !important;
+        box-shadow: 0 10px 22px rgba(255, 75, 75, 0.20) !important;
+    }
+
+    /* ---------- INPUT MÓVIL ---------- */
+
+    [data-testid="stChatInput"] {
+        position: fixed !important;
+        left: 12px !important;
+        right: 12px !important;
+        bottom: 18px !important;
+        z-index: 1001 !important;
+        margin-bottom: 0 !important;
+    }
+
+    [data-testid="stChatInput"] > div {
+        border-radius: 22px !important;
+        padding: 10px 12px !important;
+    }
+
+    [data-testid="stChatInput"] textarea,
+    [data-testid="stChatInput"] input {
+        min-height: 28px !important;
+        padding: 10px 8px !important;
+        font-size: 16px !important;
+        border-radius: 16px !important;
+    }
+
+    [data-testid="stChatInput"] button {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+    }
+
+    /* ---------- FLECHA NARANJA ---------- */
+
+    .scroll-top-btn {
+        width: 44px !important;
+        height: 44px !important;
+        right: 16px !important;
+        bottom: 146px !important;
+        font-size: 1rem !important;
+        z-index: 1004 !important;
+        /* Queda encima del input y arriba del botón enviar */
+    }
+
+    /* ---------- MENSAJES ---------- */
+
+    [data-testid="stChatMessageAssistant"] [data-testid="stChatMessageContent"],
+    [data-testid="stChatMessageUser"] [data-testid="stChatMessageContent"] {
+        padding: 12px 13px !important;
+        border-radius: 14px !important;
+    }
+
+    [data-testid="stChatMessage"] {
+        margin-bottom: 8px !important;
+    }
+
+    [data-testid="stChatMessageContent"] {
+        max-width: 100% !important;
+    }
+}
