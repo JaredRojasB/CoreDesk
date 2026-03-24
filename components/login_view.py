@@ -26,10 +26,10 @@ def mostrar_registro(logo_img):
 
         st.markdown('<div class="login-brand-block">', unsafe_allow_html=True)
 
-img_col1, img_col2, img_col3 = st.columns([1, 3, 1])
-with img_col2:
-    if logo_img:
-        st.image(logo_img, width=760)
+        img_col1, img_col2, img_col3 = st.columns([1, 3, 1])
+        with img_col2:
+            if logo_img:
+                st.image(logo_img, width=760)
 
         st.markdown(
             """
@@ -41,7 +41,7 @@ with img_col2:
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        
+        st.markdown('<div class="login-form-card">', unsafe_allow_html=True)
 
         with st.form("registro", border=False):
             st.markdown('<div class="login-field-label">Nombre completo</div>', unsafe_allow_html=True)
