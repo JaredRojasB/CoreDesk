@@ -1,109 +1,270 @@
-/* Layout general */
+/* =========================================================
+   FONDO GENERAL Y ANCHO DE LA PÁGINA
+   ========================================================= */
+
 .block-container {
     padding-top: 4.2rem !important;
+    /* Espacio superior de la pantalla */
+
     max-width: 1100px !important;
+    /* Ancho máximo del contenido del login */
 }
 
-/* Wrapper */
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL DEL LOGIN
+   ========================================================= */
+
 .login-wrapper {
     display: flex;
+    /* Activa layout flexible */
+
     flex-direction: column;
+    /* Coloca logo, texto y formulario uno debajo del otro */
+
     align-items: center;
+    /* Centra horizontalmente todo el bloque */
 }
 
-/* Branding */
+
+/* =========================================================
+   BLOQUE DEL LOGO Y TEXTO SUPERIOR
+   ========================================================= */
+
 .login-brand-block {
     text-align: center;
+    /* Centra el texto del subtítulo */
+
     margin-bottom: 24px;
+    /* Espacio entre branding y tarjeta del formulario */
 }
 
 .login-brand-block img {
     display: block;
+    /* Hace que la imagen se comporte como bloque */
+
+    width: 330px;
+    /* Cambia este valor para hacer el logo más grande o pequeño */
+
+    max-width: 95%;
+    /* Evita que el logo se salga en pantallas pequeñas */
+
     margin: 0 auto 20px auto;
+    /* Centra el logo horizontalmente y deja espacio debajo */
+
     filter: drop-shadow(0 10px 22px rgba(14, 50, 85, 0.08));
+    /* Sombra suave del logo */
 }
 
 .login-subtitle {
     color: #4F6072;
+    /* Color del texto descriptivo */
+
     font-size: 1.2rem;
+    /* Tamaño del subtítulo */
+
     font-weight: 600;
+    /* Grosor del texto */
+
     margin: 0 auto;
+    /* Centrado horizontal */
+
     line-height: 1.6;
+    /* Espaciado entre líneas */
+
     max-width: 620px;
+    /* Limita el ancho del párrafo */
+
     text-align: center;
+    /* Centra el texto */
 }
 
-/* Tarjeta del formulario */
+
+/* =========================================================
+   TARJETA DEL FORMULARIO
+   ========================================================= */
+
 .login-form-card {
     width: 100%;
+    /* Hace que la tarjeta ocupe todo el ancho disponible del bloque */
+
     background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%);
+    /* Fondo gris claro con degradado suave */
+
     border: 1px solid #DCE3EB;
+    /* Borde sutil de la tarjeta */
+
     border-radius: 20px;
+    /* Bordes redondeados */
+
     box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12);
+    /* Sombra para que la tarjeta se vea elevada */
+
     padding: 22px 18px 16px 18px;
+    /* Espacio interior de la tarjeta */
 }
 
-/* Form limpio */
+
+/* =========================================================
+   FORMULARIO LIMPIO
+   ========================================================= */
+
 div[data-testid="stForm"] {
     border: none !important;
+    /* Quita borde nativo de Streamlit */
+
     background: transparent !important;
+    /* Quita fondo nativo */
+
     padding: 0 !important;
+    /* Elimina padding nativo */
+
     margin: 0 !important;
+    /* Elimina margen nativo */
+
     text-align: left;
+    /* Alinea etiquetas y campos a la izquierda */
 }
 
-/* Labels personalizados */
+
+/* =========================================================
+   ETIQUETAS PERSONALIZADAS
+   ========================================================= */
+
 .login-field-label {
     color: #0E3255;
+    /* Color corporativo azul */
+
     font-weight: 800;
+    /* Grosor fuerte */
+
     font-size: 0.98rem;
+    /* Tamaño de texto */
+
     margin: 12px 0 8px 2px;
+    /* Espaciado arriba y abajo de cada etiqueta */
 }
 
-/* Inputs */
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
 div[data-testid="stTextInput"] input {
     border-radius: 16px !important;
+    /* Redondea los inputs */
+
     border: 1px solid #C7D3E0 !important;
+    /* Borde gris suave */
+
     background: #FFFFFF !important;
+    /* Fondo blanco del campo */
+
     padding: 0.92rem 1rem !important;
+    /* Espacio interior del input */
+
     box-shadow: inset 0 1px 2px rgba(14, 50, 85, 0.03);
+    /* Sombra interna muy ligera */
 }
 
-/* Borde al enfocar */
 div[data-testid="stTextInput"] input:focus {
     border: 1px solid #FF8C00 !important;
+    /* Color naranja al seleccionar */
+
     box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.10) !important;
+    /* Halo naranja suave al enfocar */
 }
 
-/* Botón principal */
+
+/* =========================================================
+   CONTENEDOR DEL BOTÓN
+   ========================================================= */
+
+div[data-testid="stFormSubmitButton"] {
+    display: flex;
+    /* Permite alinear el botón */
+
+    justify-content: center;
+    /* Centra horizontalmente el botón */
+
+    width: 100%;
+    /* Usa todo el ancho disponible */
+}
+
+
+/* =========================================================
+   BOTÓN PRINCIPAL
+   ========================================================= */
+
 div[data-testid="stFormSubmitButton"] > button {
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%) !important;
+    /* Fondo naranja degradado */
+
     color: white !important;
+    /* Texto blanco */
+
     border-radius: 15px !important;
+    /* Bordes redondeados */
+
     font-weight: 800 !important;
-    width: 100% !important;
+    /* Texto fuerte */
+
+    width: 260px !important;
+    /* Ancho fijo del botón para que no se estire */
+
     height: 52px !important;
+    /* Alto del botón */
+
     border: none !important;
+    /* Sin borde */
+
     box-shadow: 0 12px 24px rgba(255, 122, 0, 0.24) !important;
+    /* Sombra del botón */
+
     margin-top: 16px !important;
+    /* Espacio arriba del botón */
+
     font-size: 1rem !important;
+    /* Tamaño del texto */
+
     letter-spacing: 0.2px !important;
+    /* Separación mínima entre letras */
 }
 
-/* Hover */
 div[data-testid="stFormSubmitButton"] > button:hover {
     background: linear-gradient(135deg, #F08200 0%, #E35F00 100%) !important;
+    /* Color del botón al pasar el mouse */
+
     transform: translateY(-1px);
+    /* Eleva ligeramente el botón */
 }
 
-/* Responsive */
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
 @media (max-width: 900px) {
     .login-subtitle {
         font-size: 1.05rem;
+        /* Reduce tamaño del subtítulo en pantallas pequeñas */
+
         max-width: 95%;
+        /* Permite mejor ajuste */
     }
 
     .login-form-card {
         padding: 18px 14px 14px 14px;
+        /* Reduce padding en pantallas pequeñas */
+    }
+
+    .login-brand-block img {
+        width: 280px;
+        /* Reduce el logo en pantallas pequeñas */
+    }
+
+    div[data-testid="stFormSubmitButton"] > button {
+        width: 100% !important;
+        /* En móvil, el botón usa todo el ancho */
     }
 }
