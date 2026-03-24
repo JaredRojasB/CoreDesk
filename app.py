@@ -237,7 +237,14 @@ def enviar_bienvenida_si_falta():
 def mostrar_historial():
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-        with st.chat_message(rol):
+
+        if rol == "assistant":
+            avatar_path = BASE_DIR / "assets" / "bot.png"
+            avatar = str(avatar_path) if avatar_path.exists() else None
+        else:
+            avatar = None
+
+        with st.chat_message(rol, avatar=avatar):
             st.markdown(mensaje["content"])
 
 
@@ -253,7 +260,10 @@ def procesar_input_usuario():
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant"):
+        avatar_path = BASE_DIR / "assets" / "bot.png"
+avatar = str(avatar_path) if avatar_path.exists() else None
+
+with st.chat_message("assistant", avatar=avatar):
             with st.spinner("CoreDesk AI analizando tu problema..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
