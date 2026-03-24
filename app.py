@@ -191,7 +191,6 @@ def mostrar_header_chat(logo_img):
         unsafe_allow_html=True
     )
 
-    # espacio para compensar el header fijo
     st.markdown('<div class="coredesk-header-spacer"></div>', unsafe_allow_html=True)
 
 
@@ -236,7 +235,7 @@ def mostrar_historial():
     """Muestra todos los mensajes guardados en la sesión."""
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-        avatar = "◉" if rol == "assistant" else "👨"
+        avatar = "🤖" if rol == "assistant" else "👤"
 
         with st.chat_message(rol, avatar=avatar):
             st.markdown(mensaje["content"])
@@ -252,10 +251,10 @@ def procesar_input_usuario():
             "content": prompt
         })
 
-        with st.chat_message("user", avatar="👨"):
+        with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant", avatar="◉"):
+        with st.chat_message("assistant", avatar="🤖"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
@@ -293,7 +292,6 @@ def mostrar_chat(logo_img):
     enviar_bienvenida_si_falta()
     mostrar_historial()
 
-    # espacio final para que el botón y el input no tapen mensajes
     st.markdown('<div class="coredesk-bottom-space"></div>', unsafe_allow_html=True)
 
     procesar_input_usuario()
