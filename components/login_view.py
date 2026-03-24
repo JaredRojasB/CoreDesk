@@ -18,18 +18,12 @@ def aplicar_estilos_login():
 
 
 def limpiar_texto(texto: str) -> str:
-    """
-    Quita espacios al inicio/final
-    y convierte múltiples espacios internos en uno solo.
-    """
+    """Quita espacios al inicio/final y reduce múltiples espacios internos."""
     return " ".join(texto.strip().split())
 
 
 def limpiar_correo(correo: str) -> str:
-    """
-    Quita TODOS los espacios del correo
-    y lo pasa a minúsculas.
-    """
+    """Quita todos los espacios del correo y lo pasa a minúsculas."""
     return "".join(correo.strip().split()).lower()
 
 
@@ -68,7 +62,8 @@ def mostrar_registro(logo_img):
             nombre = st.text_input(
                 "Nombre completo",
                 label_visibility="collapsed",
-                placeholder="Escribe tu nombre completo"
+                placeholder="Escribe tu nombre completo",
+                key="registro_nombre"
             )
 
             st.markdown(
@@ -78,7 +73,8 @@ def mostrar_registro(logo_img):
             correo = st.text_input(
                 "Correo electrónico",
                 label_visibility="collapsed",
-                placeholder="ejemplo@empresa.com"
+                placeholder="ejemplo@empresa.com",
+                key="registro_correo"
             )
 
             st.markdown(
@@ -88,7 +84,8 @@ def mostrar_registro(logo_img):
             empresa = st.text_input(
                 "Empresa",
                 label_visibility="collapsed",
-                placeholder="Ej. Meztal, Kare, TrustWell, WaterMark"
+                placeholder="Ej. Meztal, Kare, TrustWell, WaterMark",
+                key="registro_empresa"
             )
 
             btn_left, btn_center, btn_right = st.columns([1, 1.2, 1])
@@ -111,5 +108,13 @@ def mostrar_registro(logo_img):
                         "empresa": empresa_limpia,
                         "inicio": time.time()
                     }
+
+                    # Limpia los campos para futuras aperturas del login
+                    st.session_state["registro_nombre"] = ""
+                    st.session_state["registro_correo"] = ""
+                    st.session_state["registro_empresa"] = ""
+
+                    # Fuerza el siguiente render ya dentro del chat
+                    st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
