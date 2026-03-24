@@ -4,15 +4,18 @@
 
 .stApp {
     background: #F5F7FB;
+    /* Color de fondo general del chat */
 }
 
 div[data-testid="stHeader"],
 div[data-testid="stSidebarNav"] {
     display: none;
+    /* Oculta header y sidebar nativos de Streamlit */
 }
 
 .block-container {
     max-width: 1500px !important;
+    /* Ancho máximo del contenido central */
 }
 
 
@@ -22,140 +25,251 @@ div[data-testid="stSidebarNav"] {
 
 .coredesk-header-shell {
     position: fixed;
+    /* Deja fijo el header al hacer scroll */
+
     top: 48px;
+    /* Distancia desde arriba */
+
     left: 0;
     width: 100%;
+
     z-index: 998;
+    /* Capa del header */
+
     display: flex;
     justify-content: center;
+
     pointer-events: none;
+    /* Evita interacciones raras en el contenedor externo */
 }
 
 .coredesk-header-fixed {
     width: calc(100% - 48px);
+    /* Ancho total del header, restando márgenes laterales */
+
     max-width: 1800px;
+    /* Límite máximo de ancho */
+
     height: 92px;
+    /* Alto del header */
+
     background: rgba(255, 255, 255, 0.96);
+    /* Fondo del header */
+
     border: 1px solid #E6EBF2;
+    /* Borde suave */
+
     border-radius: 20px;
+    /* Qué tan redondeado se ve el header */
+
     box-shadow: 0 12px 28px rgba(14, 50, 85, 0.08);
+    /* Sombra del header */
+
     backdrop-filter: blur(10px);
+    /* Desenfoque sutil del fondo */
+
     pointer-events: auto;
+    /* Permite interacción normal dentro del header */
 }
 
 .coredesk-header-content {
     height: 92px;
+    /* Igual al alto del header para centrar verticalmente */
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     padding: 0 28px;
+    /* Espacio interno horizontal */
 }
 
 .coredesk-header-brand {
     color: #0E3255;
+    /* Color del texto de marca */
+
     font-size: 2rem;
+    /* Tamaño del texto "CoreDesk Support" */
+
     font-weight: 800;
+    /* Grosor del texto */
+
     letter-spacing: 0.2px;
+    /* Separación entre letras */
 }
 
 .coredesk-header-right {
     display: flex;
     align-items: center;
     gap: 16px;
+    /* Separación entre línea divisora y tiempo */
 }
 
 .coredesk-header-divider {
     width: 1px;
     height: 28px;
     background: #D8E0EA;
+    /* Línea vertical separadora */
 }
 
 .coredesk-header-timer {
     color: #5F6C7B;
+    /* Color del contador */
+
     font-size: 1rem;
+    /* Tamaño del contador */
+
     font-weight: 700;
+    /* Grosor del contador */
 }
 
 .coredesk-header-spacer {
     height: 165px;
+    /* Espacio que deja el header fijo para no tapar el contenido */
 }
 
 
 /* =========================================================
-   TARJETA DE SESIÓN
+   TARJETA DE SESIÓN REAL
    ========================================================= */
 
-.session-card {
+.session-card-hook {
+    display: none;
+    /* Hook invisible; solo se usa para detectar el contenedor correcto */
+}
+
+div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     background: #FFFFFF;
+    /* Fondo de la tarjeta de sesión */
+
     border: 1px solid #E4EAF2;
+    /* Borde de la tarjeta */
+
     border-radius: 18px;
+    /* Qué tan redondeada se ve la tarjeta */
+
     box-shadow: 0 12px 30px rgba(14, 50, 85, 0.08);
+    /* Sombra exterior de la tarjeta */
+
     padding: 22px 22px 18px 22px;
-    margin-bottom: 8px;
+    /* Espaciado interno: arriba derecha abajo izquierda */
+
+    margin-bottom: 16px;
+    /* Espacio inferior de la tarjeta */
 }
 
 .session-card-title {
     color: #0E3255;
+    /* Color del título */
+
     font-size: 1rem;
+    /* Tamaño del título */
+
     font-weight: 800;
+    /* Grosor del título */
+
     margin-bottom: 12px;
+    /* Espacio debajo del título */
 }
 
 .session-card-row {
     margin-bottom: 10px;
+    /* Separación entre filas */
+
     font-size: 1rem;
+    /* Tamaño general del texto */
 }
 
 .session-card-label {
     color: #5F6C7B;
+    /* Color de las etiquetas: 👤 Atendiendo a, etc. */
+
     font-weight: 700;
+    /* Grosor de las etiquetas */
 }
 
 .session-card-value {
     color: #1F2A37;
-    font-weight: 600;
-}
+    /* Color de los valores */
 
-.session-card-button-wrap {
-    margin-top: -4px;
-    margin-bottom: 16px;
+    font-weight: 600;
+    /* Grosor de los valores */
 }
 
 
 /* =========================================================
-   BOTÓN FINALIZAR
+   BOTÓN FINALIZAR DENTRO DE LA TARJETA
    ========================================================= */
+
+.st-key-finalizar-btn {
+    margin-top: 10px;
+    /* Espacio entre los datos y el botón */
+}
 
 .st-key-finalizar-btn button {
     background: linear-gradient(135deg, #FF6A6A 0%, #FF4B4B 100%) !important;
+    /* Color del botón */
+
     color: white !important;
+    /* Color del texto */
+
     border-radius: 999px !important;
+    /* Qué tan redondeado se ve el botón */
+
     width: 100% !important;
+    /* El botón usa todo el ancho de su columna */
+
     height: 48px !important;
+    /* Alto del botón */
+
     border: none !important;
+    /* Quita borde nativo */
+
     box-shadow: 0 10px 22px rgba(255, 75, 75, 0.22) !important;
+    /* Sombra del botón */
+
     font-weight: 800 !important;
+    /* Grosor del texto */
 }
 
 .st-key-finalizar-btn button:hover {
     transform: translateY(-1px);
+    /* Lo eleva ligeramente al pasar el mouse */
 }
 
 
 /* =========================================================
-   CHAT INPUT
+   CAJA DE ESCRITURA DEL CHAT
    ========================================================= */
 
 [data-testid="stChatInput"] {
     margin-bottom: 8px !important;
+    /* Espacio inferior del input */
 }
 
+/* Caja visible del input */
 [data-testid="stChatInput"] textarea,
 [data-testid="stChatInput"] input {
-    border: 1px solid #C9D2DE !important;
+    border: 1px solid #BFC9D6 !important;
+    /* Color y grosor del borde del input */
+
     border-radius: 14px !important;
+    /* Qué tan redondeadas son las esquinas del input */
+
     box-shadow: 0 2px 6px rgba(14, 50, 85, 0.04) !important;
+    /* Sombra suave del input */
+
     background: #FFFFFF !important;
+    /* Fondo del input */
+}
+
+/* Contenedor externo del input */
+[data-testid="stChatInput"] > div {
+    border: none !important;
+    /* Elimina bordes raros del wrapper */
+
+    background: transparent !important;
+    /* Quita fondos extra */
 }
 
 
@@ -165,47 +279,86 @@ div[data-testid="stSidebarNav"] {
 
 [data-testid="stChatMessageAssistant"] div[data-testid="stChatMessageAvatar"] {
     background-color: #FF8C00 !important;
+    /* Fondo del avatar del bot */
+
     border-radius: 12px !important;
+    /* Qué tan redondeado se ve el avatar del bot */
+
     padding: 4px !important;
+    /* Espacio interno del avatar */
 }
 
 [data-testid="stChatMessageUser"] div[data-testid="stChatMessageAvatar"] {
     background-color: #0E3255 !important;
+    /* Fondo del avatar del usuario */
+
     border-radius: 12px !important;
+    /* Qué tan redondeado se ve el avatar del usuario */
 }
 
 [data-testid="stIconMaterial"],
 span[data-testid="stWidgetLabel"] {
     display: none !important;
+    /* Oculta íconos/labels nativos que ensucian el diseño */
 }
 
 
 /* =========================================================
-   BOTÓN FLOTANTE SUBIR
+   BOTÓN FLOTANTE PARA SUBIR
    ========================================================= */
 
 .scroll-top-btn {
     position: fixed;
-    right: 18px;
-    bottom: 98px;
-    width: 44px;
-    height: 44px;
+    /* Botón fijo siempre visible */
+
+    right: 12px;
+    /* Qué tan pegado queda al borde derecho */
+
+    bottom: 104px;
+    /* Qué tan arriba queda del borde inferior */
+
+    width: 40px;
+    /* Ancho del botón flotante */
+
+    height: 40px;
+    /* Alto del botón flotante */
+
     border-radius: 999px;
+    /* Lo hace totalmente redondo */
+
     background: linear-gradient(135deg, #2FA6EB 0%, #1877F2 100%);
+    /* Color azul del botón */
+
     color: white;
+    /* Color de la flecha */
+
     text-decoration: none;
+    /* Quita subrayado del link */
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    /* Centra la flecha */
+
+    font-size: 1rem;
+    /* Tamaño de la flecha */
+
     font-weight: 800;
+    /* Grosor de la flecha */
+
     box-shadow: 0 12px 24px rgba(24, 119, 242, 0.25);
+    /* Sombra del botón flotante */
+
     z-index: 1002;
+    /* Lo deja por encima de otros elementos */
 }
 
 .scroll-top-btn:hover {
     transform: translateY(-1px);
+    /* Lo eleva ligeramente al pasar el mouse */
+
     color: white;
+    /* Mantiene la flecha blanca */
 }
 
 
@@ -216,22 +369,27 @@ span[data-testid="stWidgetLabel"] {
 @media (max-width: 900px) {
     .coredesk-header-brand {
         font-size: 1.45rem;
+        /* Tamaño del título del header en pantallas pequeñas */
     }
 
     .coredesk-header-content {
         padding: 0 18px;
+        /* Reduce padding lateral en móvil */
     }
 
     .coredesk-header-fixed {
         height: 84px;
+        /* Alto del header en pantallas pequeñas */
     }
 
     .coredesk-header-content {
         height: 84px;
+        /* Alinea el contenido con la nueva altura */
     }
 
     .coredesk-header-spacer {
         height: 150px;
+        /* Espacio para el header en móvil */
     }
 
     .scroll-top-btn {
@@ -239,5 +397,6 @@ span[data-testid="stWidgetLabel"] {
         height: 40px;
         right: 14px;
         bottom: 96px;
+        /* Ajusta posición del botón flotante en móvil */
     }
 }

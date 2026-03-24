@@ -165,7 +165,7 @@ def construir_mensaje_error_amigable(error: Exception):
 
     return (
         "🔴 **Ocurrió un problema al generar la respuesta de CoreDesk AI.**\n\n"
-        "Intenta nuevamente en unos momentos."
+        "Intenta nuevamente en unos momentos. Si no funciona, contacta a IT vía correo."
     )
 
 
@@ -211,27 +211,27 @@ def mostrar_tarjeta_usuario():
     empresa = user.get("empresa", "Sin empresa")
     correo = user.get("correo", "Sin correo")
 
-    st.markdown(
-        f"""
-        <div class="session-card">
+    with st.container():
+        # Hook invisible para aplicar estilo al contenedor correcto
+        st.markdown('<div class="session-card-hook"></div>', unsafe_allow_html=True)
+
+        st.markdown(
+            f"""
             <div class="session-card-title">Sesión activa</div>
             <div class="session-card-row"><span class="session-card-label">👤 Atendiendo a:</span> <span class="session-card-value">{nombre}</span></div>
             <div class="session-card-row"><span class="session-card-label">🏢 Empresa:</span> <span class="session-card-value">{empresa}</span></div>
             <div class="session-card-row"><span class="session-card-label">📧 Correo:</span> <span class="session-card-value">{correo}</span></div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
-    st.markdown('<div class="session-card-button-wrap">', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 1.2, 1])
-    with col2:
-        if st.button("Finalizar chat", key="finalizar-btn"):
-            st.session_state.user_data = None
-            st.session_state.messages = []
-            st.session_state.bienvenida_enviada = False
-            st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1, 1.1, 1])
+        with col2:
+            if st.button("Finalizar este chat", key="finalizar-btn", use_container_width=True):
+                st.session_state.user_data = None
+                st.session_state.messages = []
+                st.session_state.bienvenida_enviada = False
+                st.rerun()
 
     st.divider()
 
@@ -241,7 +241,7 @@ def enviar_bienvenida_si_falta():
         nombre = st.session_state.user_data["nombre"]
         saludo = (
             f"¡Hola **{nombre}**! 👋 Bienvenido al soporte técnico de CoreDesk. "
-            f"Por favor, describe tu problema y te ayudaremos a resolverlo."
+            f"Por favor, describe el problema que tienes con tu equipo y te ayudaremos a resolverlo."
         )
         st.session_state.messages.append({
             "role": "assistant",
@@ -282,7 +282,7 @@ def procesar_input_usuario():
         respuesta_generada = False
 
         with st.chat_message("assistant", avatar=avatar):
-            with st.spinner("CoreDesk AI analizando tu problema..."):
+            with st.spinner("CoreDesk AI está analizando tu problema..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
                     prompt_final = construir_prompt_soporte(nombre_usuario, prompt)
