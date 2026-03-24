@@ -30,7 +30,6 @@ def cargar_logo():
 
 
 def aplicar_estilos():
-    """Aplica los estilos CSS actuales de la app."""
     st.markdown("""
         <style>
         .stApp { background-color: #FFFFFF; }
@@ -40,17 +39,20 @@ def aplicar_estilos():
             display: none;
         }
         
-        /* --- COLOR DE ICONOS (NARANJA Y AZUL) --- */
-        /* Bot (Assistant) -> Naranja */
-        [data-testid="stChatMessageAssistant"] div[data-testid="stChatMessageAvatar"] {
+        /* --- AVATAR ASISTENTE --- */
+        [data-testid="stChatMessageAssistant"] 
+        div[data-testid="stChatMessageAvatar"] {
             background-color: #FF8C00 !important;
             color: white !important;
+            border-radius: 8px !important;
         }
 
-        /* Usuario -> Azul Marino */
-        [data-testid="stChatMessageUser"] div[data-testid="stChatMessageAvatar"] {
+        /* --- AVATAR USUARIO --- */
+        [data-testid="stChatMessageUser"] 
+        div[data-testid="stChatMessageAvatar"] {
             background-color: #0E3255 !important;
             color: white !important;
+            border-radius: 8px !important;
         }
 
         /* Limpieza visual */
@@ -58,10 +60,10 @@ def aplicar_estilos():
             display: none !important; 
         }
 
-        /* BOTÓN ROJO DE FINALIZAR */
+        /* BOTÓN FINALIZAR — SUBIDO PARA NO TAPAR INPUT */
         .st-key-finalizar-btn button {
             position: fixed !important;
-            bottom: 30px !important;
+            bottom: 90px !important;  /* ← antes 30px */
             left: 30px !important;
             background-color: #FF4B4B !important;
             color: white !important;
@@ -73,7 +75,7 @@ def aplicar_estilos():
             font-weight: bold !important;
         }
         
-        /* Estilo para el formulario de registro */
+        /* Estilo formulario */
         div[data-testid="stForm"] .stButton>button { 
             background-color: #0E3255 !important;
             color: white !important; 
@@ -185,7 +187,7 @@ def mostrar_header_chat(logo_img):
     )
 
     if logo_img:
-        st.image(logo_img, width=100)
+        st.image(logo_img, width=140)
 
     inicio_t = st.session_state.user_data.get("inicio", time.time())
     t_min = int((time.time() - inicio_t) / 60)
@@ -206,20 +208,20 @@ def mostrar_header_chat(logo_img):
 
 
 def mostrar_tarjeta_usuario():
-    """Muestra la tarjeta con los datos del usuario."""
     nombre = st.session_state.user_data["nombre"]
     empresa = st.session_state.user_data["empresa"]
 
     st.markdown(f"""
         <div style="
-            background:white;
-            padding:15px;
-            border-radius:10px;
-            border-left:5px solid #0E3255;
-            box-shadow:0 2px 5px rgba(0,0,0,0.05);
+            background:#F0F4F8;
+            padding:18px;
+            border-radius:12px;
+            border-left:6px solid #0E3255;
+            box-shadow:0 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 20px;
+            font-size: 16px;
         ">
-            👤 <b>{nombre}</b> | 🏢 {empresa}
+            👤 <b>{nombre}</b> &nbsp;&nbsp;|&nbsp;&nbsp; 🏢 {empresa}
         </div>
     """, unsafe_allow_html=True)
 
