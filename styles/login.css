@@ -70,7 +70,7 @@ div[data-testid="stForm"] {
    ========================================================= */
 
 div[data-testid="stTextInput"] input {
-    border-radius: 16px !important;
+    border-radius: 12px !important;
     border: 1px solid #C7D3E0 !important;
     background: #FFFFFF !important;
     padding: 0.92rem 1rem !important;
