@@ -1,11 +1,26 @@
+/* =========================================================
+   FONDO GENERAL Y ANCHO DE LA PÁGINA
+   ========================================================= */
+
 .block-container {
     padding-top: 4.2rem !important;
     max-width: 1400px !important;
 }
 
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL DEL LOGIN
+   ========================================================= */
+
 .login-wrapper {
     width: 100%;
+    text-align: center;
 }
+
+
+/* =========================================================
+   BLOQUE DEL LOGO Y TEXTO SUPERIOR
+   ========================================================= */
 
 .login-brand-block {
     text-align: center;
@@ -22,14 +37,26 @@
     text-align: center;
 }
 
-.login-form-card {
+
+/* =========================================================
+   FORMULARIO COMO TARJETA REAL
+   ========================================================= */
+
+div[data-testid="stForm"] {
     width: 100%;
-    background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%);
-    border: 1px solid #DCE3EB;
-    border-radius: 20px;
-    box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12);
-    padding: 22px 18px 16px 18px;
+    background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%) !important;
+    border: 1px solid #DCE3EB !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12) !important;
+    padding: 22px 18px 16px 18px !important;
+    margin: 0 !important;
+    text-align: left;
 }
+
+
+/* =========================================================
+   ETIQUETAS PERSONALIZADAS
+   ========================================================= */
 
 .login-field-label {
     color: #0E3255;
@@ -37,6 +64,11 @@
     font-size: 0.98rem;
     margin: 12px 0 8px 2px;
 }
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
 
 div[data-testid="stTextInput"] input {
     border-radius: 16px !important;
@@ -51,7 +83,12 @@ div[data-testid="stTextInput"] input:focus {
     box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.10) !important;
 }
 
-.st-key-login_submit button {
+
+/* =========================================================
+   BOTÓN PRINCIPAL
+   ========================================================= */
+
+.st-key-registro button {
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%) !important;
     color: white !important;
     border-radius: 15px !important;
@@ -65,10 +102,15 @@ div[data-testid="stTextInput"] input:focus {
     letter-spacing: 0.2px !important;
 }
 
-.st-key-login_submit button:hover {
+.st-key-registro button:hover {
     background: linear-gradient(135deg, #F08200 0%, #E35F00 100%) !important;
     transform: translateY(-1px);
 }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 900px) {
     .login-subtitle {
@@ -76,7 +118,7 @@ div[data-testid="stTextInput"] input:focus {
         max-width: 95%;
     }
 
-    .login-form-card {
-        padding: 18px 14px 14px 14px;
+    div[data-testid="stForm"] {
+        padding: 18px 14px 14px 14px !important;
     }
 }

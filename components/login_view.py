@@ -24,7 +24,6 @@ def mostrar_registro(logo_img):
     with outer_center:
         st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
 
-        # Logo centrado REAL
         logo_left, logo_center, logo_right = st.columns([1, 2, 1])
         with logo_center:
             if logo_img:
@@ -41,39 +40,40 @@ def mostrar_registro(logo_img):
             unsafe_allow_html=True
         )
 
-        # Tarjeta del formulario
-        st.markdown('<div class="login-form-card">', unsafe_allow_html=True)
+        with st.form("registro", border=False):
+            st.markdown(
+                '<div class="login-field-label">Nombre completo</div>',
+                unsafe_allow_html=True
+            )
+            nombre = st.text_input(
+                "Nombre completo",
+                label_visibility="collapsed",
+                placeholder="Escribe tu nombre completo"
+            )
 
-        st.markdown('<div class="login-field-label">Nombre completo</div>', unsafe_allow_html=True)
-        nombre = st.text_input(
-            "Nombre completo",
-            label_visibility="collapsed",
-            placeholder="Escribe tu nombre completo",
-            key="login_nombre"
-        )
+            st.markdown(
+                '<div class="login-field-label">Empresa o área</div>',
+                unsafe_allow_html=True
+            )
+            empresa = st.text_input(
+                "Empresa o área",
+                label_visibility="collapsed",
+                placeholder="Ej. Soporte, RH, Finanzas"
+            )
 
-        st.markdown('<div class="login-field-label">Empresa o área</div>', unsafe_allow_html=True)
-        empresa = st.text_input(
-            "Empresa o área",
-            label_visibility="collapsed",
-            placeholder="Ej. Soporte, RH, Finanzas",
-            key="login_empresa"
-        )
+            btn_left, btn_center, btn_right = st.columns([1, 1.2, 1])
+            with btn_center:
+                enviado = st.form_submit_button("Comenzar soporte")
 
-        btn_left, btn_center, btn_right = st.columns([1, 1.2, 1])
-        with btn_center:
-            enviado = st.button("Comenzar soporte", key="login_submit")
+            if enviado:
+                if nombre and empresa:
+                    st.session_state.user_data = {
+                        "nombre": nombre,
+                        "empresa": empresa,
+                        "inicio": time.time()
+                    }
+                    st.rerun()
+                else:
+                    st.warning("Por favor completa ambos campos para continuar.")
 
-        if enviado:
-            if nombre and empresa:
-                st.session_state.user_data = {
-                    "nombre": nombre,
-                    "empresa": empresa,
-                    "inicio": time.time()
-                }
-                st.rerun()
-            else:
-                st.warning("Por favor completa ambos campos para continuar.")
-
-        st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
