@@ -632,3 +632,157 @@ span[data-testid="stWidgetLabel"] {
     }
 
 }
+
+/* =========================================================
+   MOBILE FIX EXTRA — EVITAR QUE TODO SE VEA ENCIMADO
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- HEADER MÁS CHICO ---------- */
+
+    .coredesk-header-shell {
+        top: 16px !important;
+        /* Baja menos el header desde arriba */
+    }
+
+    .coredesk-header-fixed {
+        height: 64px !important;
+        /* Header más bajito */
+        border-radius: 14px !important;
+        /* Menos redondeado para ahorrar espacio */
+    }
+
+    .coredesk-header-content {
+        height: 64px !important;
+        /* Igual al alto del header */
+        padding: 0 14px !important;
+        /* Menos espacio lateral */
+    }
+
+    .coredesk-header-brand {
+        font-size: 1.05rem !important;
+        /* Texto más pequeño */
+        line-height: 1.05 !important;
+        /* Más compacto */
+    }
+
+    .coredesk-header-divider {
+        height: 22px !important;
+        /* Línea separadora más pequeña */
+    }
+
+    .coredesk-header-timer {
+        font-size: 0.78rem !important;
+        /* Tiempo más pequeño */
+        line-height: 1.1 !important;
+    }
+
+    .coredesk-header-spacer {
+        height: 84px !important;
+        /* Mucho menos espacio fantasma */
+    }
+
+    /* ---------- CONTENEDOR GENERAL ---------- */
+
+    .block-container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    /* ---------- TARJETA DE SESIÓN MÁS COMPACTA ---------- */
+
+    div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
+        padding: 14px !important;
+        /* Menos padding interno */
+        border-radius: 14px !important;
+        /* Menos curva */
+        margin-bottom: 10px !important;
+    }
+
+    .session-card-title {
+        font-size: 0.92rem !important;
+        /* Título más chico */
+        margin-bottom: 8px !important;
+    }
+
+    .session-card-row {
+        font-size: 0.88rem !important;
+        /* Texto más pequeño */
+        margin-bottom: 8px !important;
+    }
+
+    /* ---------- BOTÓN FINALIZAR MÁS COMPACTO ---------- */
+
+    .st-key-finalizar-btn {
+        margin-top: 6px !important;
+    }
+
+    .st-key-finalizar-btn button {
+        height: 44px !important;
+        /* Menos alto */
+        font-size: 0.95rem !important;
+        /* Texto más chico */
+    }
+
+    /* ---------- MENSAJES MÁS COMPACTOS ---------- */
+
+    [data-testid="stChatMessageAssistant"] [data-testid="stChatMessageContent"],
+    [data-testid="stChatMessageUser"] [data-testid="stChatMessageContent"] {
+        padding: 12px 13px !important;
+        /* Menos padding en burbujas */
+        border-radius: 14px !important;
+    }
+
+    [data-testid="stChatMessage"] {
+        margin-bottom: 8px !important;
+        /* Menos espacio entre mensajes */
+    }
+
+    /* ---------- INPUT MÁS ARRIBA Y COMPACTO ---------- */
+
+    [data-testid="stChatInput"] {
+        position: fixed !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 84px !important;
+        /* Lo sube para no chocar con Safari */
+        z-index: 1001 !important;
+    }
+
+    [data-testid="stChatInput"] > div {
+        padding: 8px 10px !important;
+        /* Menos padding del wrapper */
+        border-radius: 20px !important;
+        /* Más compacto */
+    }
+
+    [data-testid="stChatInput"] textarea,
+    [data-testid="stChatInput"] input {
+        min-height: 24px !important;
+        /* Menos alto del input */
+        padding: 8px 6px !important;
+        /* Menos padding interno */
+        font-size: 16px !important;
+        /* Importante en iPhone para evitar zoom */
+        border-radius: 14px !important;
+    }
+
+    [data-testid="stChatInput"] button {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        /* Botón enviar más compacto */
+    }
+
+    /* ---------- FLECHA NARANJA MÁS ARRIBA ---------- */
+
+    .scroll-top-btn {
+        width: 42px !important;
+        height: 42px !important;
+        right: 14px !important;
+        bottom: 142px !important;
+        /* La sube para que no se monte con el input */
+        font-size: 0.95rem !important;
+    }
+}
