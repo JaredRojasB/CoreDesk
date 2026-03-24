@@ -1,4 +1,5 @@
 import os
+import re
 import time
 import base64
 from io import BytesIO
@@ -134,6 +135,59 @@ INFORMACIÓN TÉCNICA EXTRA:
 PROBLEMA DEL USUARIO:
 {prompt_usuario}
 """
+
+
+def extraer_segundos_espera(error_texto: str):
+    """
+    Intenta extraer segundos de espera desde mensajes tipo:
+    'Please retry in 40.413...s' o 'retry_delay { seconds: 40 }'
+    """
+    if not error_texto:
+        return None
+
+    patron_retry = re.search(r"retry in ([0-9]+(?:\.[0-9]+)?)s", error_texto, re.IGNORECASE)
+    if patron_retry:
+        return max(1, round(float(patron_retry.group(1))))
+
+    patron_seconds = re.search(r"seconds:\s*([0-9]+)", error_texto, re.IGNORECASE)
+    if patron_seconds:
+        return max(1, int(patron_seconds.group(1)))
+
+    return None
+
+
+def construir_mensaje_error_amigable(error: Exception):
+    """
+    Convierte errores técnicos de Gemini en mensajes claros para el usuario.
+    """
+    texto_error = str(error).lower()
+
+    if "429" in texto_error or "quota" in texto_error or "rate limit" in texto_error:
+        segundos = extraer_segundos_espera(str(error))
+
+        if segundos:
+            return (
+                f"🟡 **CoreDesk AI alcanzó temporalmente su límite de solicitudes.**\n\n"
+                f"Por favor espera aproximadamente **{segundos} segundos** y vuelve a intentarlo.\n\n"
+                f"Tu mensaje se recibió correctamente, pero la IA no pudo responder en este momento."
+            )
+        else:
+            return (
+                "🟡 **CoreDesk AI alcanzó temporalmente su límite de solicitudes.**\n\n"
+                "Por favor espera unos momentos y vuelve a intentarlo.\n\n"
+                "Tu mensaje se recibió correctamente, pero la IA no pudo responder en este momento."
+            )
+
+    if "api key" in texto_error or "permission" in texto_error or "unauthorized" in texto_error:
+        return (
+            "🔴 **CoreDesk AI no pudo autenticarse correctamente.**\n\n"
+            "Revisa la configuración de la API y vuelve a intentarlo."
+        )
+
+    return (
+        "🔴 **Ocurrió un problema al generar la respuesta de CoreDesk AI.**\n\n"
+        "Intenta nuevamente en unos momentos."
+    )
 
 
 # =========================================================
@@ -283,7 +337,13 @@ def procesar_input_usuario():
                     respuesta_generada = True
 
                 except Exception as e:
-                    st.error(f"Error al generar respuesta: {e}")
+                    mensaje_error = construir_mensaje_error_amigable(e)
+                    st.markdown(mensaje_error)
+
+                    st.session_state.messages.append({
+                        "role": "assistant",
+                        "content": mensaje_error
+                    })
 
         if respuesta_generada:
             st.rerun()
