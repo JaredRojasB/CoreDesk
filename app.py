@@ -249,9 +249,9 @@ def mostrar_historial():
     """Muestra todos los mensajes guardados en la sesión."""
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-        avatar = "🤖" if rol == "assistant" else "👤"
 
-        with st.chat_message(rol, avatar=avatar):
+        # SIN avatar personalizado → iconos nativos
+        with st.chat_message(rol):
             st.markdown(mensaje["content"])
 
 
@@ -265,10 +265,10 @@ def procesar_input_usuario():
             "content": prompt
         })
 
-        with st.chat_message("user", avatar="👤"):
+        with st.chat_message("user"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant", avatar="🤖"):
+        with st.chat_message("assistant"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
