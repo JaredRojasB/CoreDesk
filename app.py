@@ -9,6 +9,8 @@ from PIL import Image
 import streamlit as st
 import google.generativeai as genai
 
+from components.login_view import mostrar_registro
+
 
 # =========================================================
 # 1. CONFIGURACIÓN GENERAL
@@ -138,10 +140,6 @@ PROBLEMA DEL USUARIO:
 
 
 def extraer_segundos_espera(error_texto: str):
-    """
-    Intenta extraer segundos de espera desde mensajes tipo:
-    'Please retry in 40.413...s' o 'retry_delay { seconds: 40 }'
-    """
     if not error_texto:
         return None
 
@@ -157,9 +155,6 @@ def extraer_segundos_espera(error_texto: str):
 
 
 def construir_mensaje_error_amigable(error: Exception):
-    """
-    Convierte errores técnicos de Gemini en mensajes claros para el usuario.
-    """
     texto_error = str(error).lower()
 
     if "429" in texto_error or "quota" in texto_error or "rate limit" in texto_error:
@@ -191,35 +186,8 @@ def construir_mensaje_error_amigable(error: Exception):
 
 
 # =========================================================
-# 3. FUNCIONES DE INTERFAZ
+# 3. FUNCIONES DE INTERFAZ CHAT
 # =========================================================
-def mostrar_registro(logo_img):
-    col1, col2, col3 = st.columns([1, 2, 1])
-
-    with col2:
-        if logo_img:
-            st.image(logo_img, width=180)
-
-        st.markdown(
-            "<h1 style='color:#0E3255; text-align:center;'>CoreDesk</h1>",
-            unsafe_allow_html=True
-        )
-
-        with st.form("registro"):
-            nombre = st.text_input("Nombre Completo:")
-            empresa = st.text_input("Empresa:")
-
-            if st.form_submit_button("INGRESAR AL SISTEMA"):
-                if nombre and empresa:
-                    st.session_state.user_data = {
-                        "nombre": nombre,
-                        "empresa": empresa,
-                        "inicio": time.time()
-                    }
-                else:
-                    st.warning("Por favor completa ambos campos.")
-
-
 def mostrar_header_chat(logo_img):
     inicio_t = st.session_state.user_data.get("inicio", time.time())
     t_min = int((time.time() - inicio_t) / 60)

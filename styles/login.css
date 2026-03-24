@@ -1,0 +1,63 @@
+/* Layout general del login */
+.block-container {
+    padding-top: 5rem !important;
+}
+
+/* Tarjeta principal */
+.login-card {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid #E7ECF2;
+    border-radius: 22px;
+    box-shadow: 0 16px 40px rgba(14, 50, 85, 0.08);
+    padding: 34px 30px 28px 30px;
+    text-align: center;
+}
+
+/* Título */
+.login-title {
+    color: #0E3255;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+/* Subtítulo */
+.login-subtitle {
+    color: #5F6C7B;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+/* Inputs */
+div[data-testid="stTextInput"] input {
+    border-radius: 12px !important;
+    border: 1px solid #D7DEE8 !important;
+    padding: 0.8rem 0.9rem !important;
+}
+
+/* Labels */
+div[data-testid="stTextInput"] label {
+    color: #0E3255 !important;
+    font-weight: 700 !important;
+}
+
+/* Botón del login */
+div[data-testid="stForm"] .stButton > button {
+    background-color: #0E3255 !important;
+    color: white !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    width: 100% !important;
+    height: 48px !important;
+    border: none !important;
+    box-shadow: 0 8px 20px rgba(14, 50, 85, 0.15) !important;
+    margin-top: 10px !important;
+}
+
+/* Ajuste visual del formulario */
+div[data-testid="stForm"] {
+    text-align: left;
+    margin-top: 18px;
+}
