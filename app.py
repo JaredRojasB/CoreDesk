@@ -1,5 +1,7 @@
 import os
 import time
+import base64
+from io import BytesIO
 from pathlib import Path
 from PIL import Image
 
@@ -32,6 +34,16 @@ def cargar_logo():
         return None
     except Exception:
         return None
+
+
+def logo_a_base64(img):
+    """Convierte la imagen PIL a base64 para incrustarla en HTML."""
+    if img is None:
+        return None
+
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return base64.b64encode(buffer.getvalue()).decode()
 
 
 def aplicar_estilos():
@@ -143,7 +155,7 @@ def mostrar_registro(logo_img):
 
     with col2:
         if logo_img:
-            st.image(logo_img, width=170)
+            st.image(logo_img, width=180)
 
         st.markdown(
             "<h1 style='color:#0E3255; text-align:center;'>CoreDesk</h1>",
@@ -167,31 +179,32 @@ def mostrar_registro(logo_img):
 
 
 def mostrar_header_chat(logo_img):
-    """Muestra el header fijo del chat."""
-    st.markdown(
-        """
-        <div class="coredesk-header">
-            <div class="coredesk-header-inner">
-        """,
-        unsafe_allow_html=True
-    )
-
-    if logo_img:
-        st.image(logo_img, width=150)
-
+    """Muestra el header fijo real del chat."""
     inicio_t = st.session_state.user_data.get("inicio", time.time())
     t_min = int((time.time() - inicio_t) / 60)
 
+    logo_b64 = logo_a_base64(logo_img)
+
+    logo_html = ""
+    if logo_b64:
+        logo_html = f"""
+            <img src="data:image/png;base64,{logo_b64}" class="coredesk-logo-fixed" alt="CoreDesk Logo">
+        """
+
     st.markdown(
         f"""
-                <div class="coredesk-timer">⏱️ {t_min} min activo</div>
+        <div class="coredesk-header-fixed">
+            <div class="coredesk-header-content">
+                {logo_html}
+                <div class="coredesk-header-right">
+                    <span class="coredesk-header-timer">⏱️ {t_min} min activo</span>
+                </div>
             </div>
         </div>
+        <div class="coredesk-header-spacer"></div>
         """,
         unsafe_allow_html=True
     )
-
-    st.markdown('<div class="coredesk-header-spacer"></div>', unsafe_allow_html=True)
 
 
 def mostrar_tarjeta_usuario():
@@ -200,20 +213,24 @@ def mostrar_tarjeta_usuario():
     empresa = st.session_state.user_data["empresa"]
 
     st.markdown(f"""
-        <div style="
-            background:#F0F4F8;
-            padding:18px;
-            border-radius:12px;
-            border-left:6px solid #0E3255;
-            box-shadow:0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-            font-size: 16px;
-        ">
+        <div class="coredesk-user-card">
             👤 <b>{nombre}</b> &nbsp;&nbsp;|&nbsp;&nbsp; 🏢 {empresa}
         </div>
     """, unsafe_allow_html=True)
 
     st.divider()
+
+
+def mostrar_boton_finalizar():
+    """Muestra el botón rojo debajo de la tarjeta del usuario."""
+    col1, col2, col3 = st.columns([1.2, 4, 1])
+
+    with col1:
+        if st.button("Finalizar Chat", key="finalizar-btn"):
+            st.session_state.user_data = None
+            st.session_state.messages = []
+            st.session_state.bienvenida_enviada = False
+            st.rerun()
 
 
 def enviar_bienvenida_si_falta():
@@ -276,26 +293,13 @@ def procesar_input_usuario():
         st.rerun()
 
 
-def mostrar_boton_finalizar():
-    """Muestra el botón para finalizar el chat y reinicia la sesión."""
-    if st.button("Finalizar Chat", key="finalizar-btn"):
-        st.session_state.user_data = None
-        st.session_state.messages = []
-        st.session_state.bienvenida_enviada = False
-        st.rerun()
-
-
 def mostrar_chat(logo_img):
     """Agrupa toda la vista del chat."""
     mostrar_header_chat(logo_img)
     mostrar_tarjeta_usuario()
+    mostrar_boton_finalizar()
     enviar_bienvenida_si_falta()
     mostrar_historial()
-
-    st.markdown('<div class="coredesk-bottom-space"></div>', unsafe_allow_html=True)
-
-    procesar_input_usuario()
-    mostrar_boton_finalizar()
 
 
 # =========================================================
@@ -311,6 +315,7 @@ def main():
         mostrar_registro(logo_img)
     else:
         mostrar_chat(logo_img)
+        procesar_input_usuario()
 
 
 # =========================================================
