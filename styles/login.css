@@ -27,6 +27,9 @@
 
     width: 100%;
     /* Permite que use todo el ancho disponible */
+
+    text-align: center;
+    /* Fuerza centrado general de elementos superiores */
 }
 
 
@@ -35,6 +38,18 @@
    ========================================================= */
 
 .login-brand-block {
+    display: flex;
+    /* Permite controlar alineación interna */
+
+    flex-direction: column;
+    /* Logo arriba, texto abajo */
+
+    align-items: center;
+    /* Centra horizontalmente todo el branding */
+
+    justify-content: center;
+    /* Centrado vertical interno */
+
     text-align: center;
     /* Centra el subtítulo */
 
@@ -45,30 +60,57 @@
     /* Ocupa todo el ancho del bloque */
 }
 
-/* Centra la imagen que renderiza Streamlit */
+
+/* Contenedor que Streamlit crea para la imagen */
 .login-brand-block [data-testid="stImage"] {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+    width: 100% !important;
+    /* Hace que el contenedor use todo el ancho */
+
+    display: flex !important;
+    /* Permite centrar con flex */
+
+    justify-content: center !important;
+    /* Centra horizontalmente */
+
+    align-items: center !important;
+    /* Centra verticalmente */
 }
 
-/* Centra el elemento interno de la imagen */
+
+/* Div interno que Streamlit mete dentro de la imagen */
 .login-brand-block [data-testid="stImage"] > div {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+    width: auto !important;
+    /* Evita que se estire raro */
+
+    display: flex !important;
+    /* Flex para centrar bien */
+
+    justify-content: center !important;
+    /* Centrado horizontal */
+
+    align-items: center !important;
+    /* Centrado vertical */
+
+    margin: 0 auto !important;
+    /* Refuerza centrado */
 }
 
+
+/* Imagen del logo */
 .login-brand-block img {
     display: block;
     /* Hace que la imagen se comporte como bloque */
 
-    margin: 0 auto 20px auto;
+    margin: 0 auto 20px auto !important;
     /* Centra el logo horizontalmente y deja espacio debajo */
 
     filter: drop-shadow(0 10px 22px rgba(14, 50, 85, 0.08));
     /* Sombra suave del logo */
+
+    max-width: 100%;
+    /* Evita desbordes */
 }
+
 
 .login-subtitle {
     color: #4F6072;
@@ -179,31 +221,40 @@ div[data-testid="stTextInput"] input:focus {
    ========================================================= */
 
 div[data-testid="stFormSubmitButton"] {
-    display: flex;
-    /* Activa flex */
-
-    justify-content: center !important;
-    /* Centra el botón */
-
-    align-items: center;
-    /* Centrado vertical */
-
     width: 100%;
     /* Usa todo el ancho disponible */
+
+    display: flex !important;
+    /* Permite centrar correctamente */
+
+    justify-content: center !important;
+    /* Centra horizontalmente */
+
+    align-items: center !important;
+    /* Centra verticalmente */
+
+    text-align: center !important;
+    /* Refuerzo de centrado */
 }
 
-/* También centra el div interno que Streamlit genera */
+
+/* Div interno que Streamlit genera */
 div[data-testid="stFormSubmitButton"] > div {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    width: 100% !important;
+    /* Usa todo el ancho */
+
+    display: flex !important;
+    /* Flex para centrar */
+
+    justify-content: center !important;
+    /* Centrado horizontal */
+
+    align-items: center !important;
+    /* Centrado vertical */
 }
 
 
-/* =========================================================
-   BOTÓN PRINCIPAL
-   ========================================================= */
-
+/* Botón real */
 div[data-testid="stFormSubmitButton"] button {
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%) !important;
     /* Fondo naranja degradado */
@@ -232,15 +283,26 @@ div[data-testid="stFormSubmitButton"] button {
     margin-top: 16px !important;
     /* Espacio arriba */
 
+    margin-left: auto !important;
+    /* Fuerza centrado */
+
+    margin-right: auto !important;
+    /* Fuerza centrado */
+
     font-size: 1rem !important;
     /* Tamaño del texto */
 
     letter-spacing: 0.2px !important;
     /* Espaciado entre letras */
 
-    display: inline-flex !important;
+    display: flex !important;
+    /* Permite centrar texto interno */
+
     justify-content: center !important;
+    /* Centra el texto horizontalmente */
+
     align-items: center !important;
+    /* Centra el texto verticalmente */
 }
 
 div[data-testid="stFormSubmitButton"] button:hover {
