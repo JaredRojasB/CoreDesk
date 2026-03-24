@@ -119,7 +119,7 @@ ESTRUCTURA QUE DEBES SEGUIR SIEMPRE:
 - Sección: "🟡 Qué está pasando"
 - Sección: "🟢 Qué debes hacer paso a paso"
 - Sección: "🔴 Qué no debes hacer" (solo si aplica)
-- Sección: "🟡 Qué necesito que me confirmes al final"
+- Sección: "🔵 Qué necesito que me confirmes al final"
 
 INFORMACIÓN TÉCNICA EXTRA:
 - Si no estás seguro del diagnóstico, dilo con honestidad y guía al usuario en verificaciones simples primero.
@@ -212,7 +212,7 @@ def mostrar_tarjeta_usuario():
     correo = user.get("correo", "Sin correo")
 
     with st.container():
-        # Hook invisible para aplicar estilo al contenedor correcto
+        # Hook invisible para que CSS detecte ESTE contenedor
         st.markdown('<div class="session-card-hook"></div>', unsafe_allow_html=True)
 
         st.markdown(
@@ -225,6 +225,7 @@ def mostrar_tarjeta_usuario():
             unsafe_allow_html=True
         )
 
+        # Botón dentro del mismo contenedor real de Streamlit
         col1, col2, col3 = st.columns([1, 1.1, 1])
         with col2:
             if st.button("Finalizar este chat", key="finalizar-btn", use_container_width=True):

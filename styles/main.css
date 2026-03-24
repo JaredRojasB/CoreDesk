@@ -4,7 +4,7 @@
 
 .stApp {
     background: #F5F7FB;
-    /* Color de fondo general del chat */
+    /* Fondo general del chat */
 }
 
 div[data-testid="stHeader"],
@@ -25,10 +25,10 @@ div[data-testid="stSidebarNav"] {
 
 .coredesk-header-shell {
     position: fixed;
-    /* Deja fijo el header al hacer scroll */
+    /* Deja el header fijo al hacer scroll */
 
     top: 48px;
-    /* Distancia desde arriba */
+    /* Distancia del header respecto a la parte superior */
 
     left: 0;
     width: 100%;
@@ -40,15 +40,15 @@ div[data-testid="stSidebarNav"] {
     justify-content: center;
 
     pointer-events: none;
-    /* Evita interacciones raras en el contenedor externo */
+    /* Evita clics raros en el contenedor externo */
 }
 
 .coredesk-header-fixed {
     width: calc(100% - 48px);
-    /* Ancho total del header, restando márgenes laterales */
+    /* Ancho del header, descontando márgenes laterales */
 
     max-width: 1800px;
-    /* Límite máximo de ancho */
+    /* Límite máximo del ancho */
 
     height: 92px;
     /* Alto del header */
@@ -69,12 +69,12 @@ div[data-testid="stSidebarNav"] {
     /* Desenfoque sutil del fondo */
 
     pointer-events: auto;
-    /* Permite interacción normal dentro del header */
+    /* Permite interacción dentro del header */
 }
 
 .coredesk-header-content {
     height: 92px;
-    /* Igual al alto del header para centrar verticalmente */
+    /* Debe coincidir con el alto del header */
 
     display: flex;
     align-items: center;
@@ -86,13 +86,13 @@ div[data-testid="stSidebarNav"] {
 
 .coredesk-header-brand {
     color: #0E3255;
-    /* Color del texto de marca */
+    /* Color del texto principal */
 
     font-size: 2rem;
-    /* Tamaño del texto "CoreDesk Support" */
+    /* Tamaño del texto CoreDesk Support */
 
     font-weight: 800;
-    /* Grosor del texto */
+    /* Grosor del título */
 
     letter-spacing: 0.2px;
     /* Separación entre letras */
@@ -102,7 +102,7 @@ div[data-testid="stSidebarNav"] {
     display: flex;
     align-items: center;
     gap: 16px;
-    /* Separación entre línea divisora y tiempo */
+    /* Espacio entre divisor y reloj */
 }
 
 .coredesk-header-divider {
@@ -114,53 +114,54 @@ div[data-testid="stSidebarNav"] {
 
 .coredesk-header-timer {
     color: #5F6C7B;
-    /* Color del contador */
+    /* Color del tiempo */
 
     font-size: 1rem;
-    /* Tamaño del contador */
+    /* Tamaño del tiempo */
 
     font-weight: 700;
-    /* Grosor del contador */
+    /* Grosor del tiempo */
 }
 
 .coredesk-header-spacer {
     height: 165px;
-    /* Espacio que deja el header fijo para no tapar el contenido */
+    /* Espacio para que el header fijo no tape el contenido */
 }
 
 
 /* =========================================================
-   TARJETA DE SESIÓN REAL
+   TARJETA DE SESIÓN
    ========================================================= */
 
 .session-card-hook {
     display: none;
-    /* Hook invisible; solo se usa para detectar el contenedor correcto */
+    /* Hook invisible; solo sirve para detectar este contenedor */
 }
 
+/* Esta regla aplica al contenedor REAL de Streamlit que contiene la tarjeta */
 div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     background: #FFFFFF;
-    /* Fondo de la tarjeta de sesión */
+    /* Fondo de la tarjeta */
 
     border: 1px solid #E4EAF2;
     /* Borde de la tarjeta */
 
     border-radius: 18px;
-    /* Qué tan redondeada se ve la tarjeta */
+    /* Qué tan redondeadas son las esquinas de la tarjeta */
 
     box-shadow: 0 12px 30px rgba(14, 50, 85, 0.08);
     /* Sombra exterior de la tarjeta */
 
     padding: 22px 22px 18px 22px;
-    /* Espaciado interno: arriba derecha abajo izquierda */
+    /* Espacio interno: arriba derecha abajo izquierda */
 
     margin-bottom: 16px;
-    /* Espacio inferior de la tarjeta */
+    /* Espacio debajo de la tarjeta */
 }
 
 .session-card-title {
     color: #0E3255;
-    /* Color del título */
+    /* Color del título Sesión activa */
 
     font-size: 1rem;
     /* Tamaño del título */
@@ -174,7 +175,7 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 .session-card-row {
     margin-bottom: 10px;
-    /* Separación entre filas */
+    /* Espacio entre cada línea */
 
     font-size: 1rem;
     /* Tamaño general del texto */
@@ -182,18 +183,18 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 .session-card-label {
     color: #5F6C7B;
-    /* Color de las etiquetas: 👤 Atendiendo a, etc. */
+    /* Color de etiquetas tipo Atendiendo a, Empresa, Correo */
 
     font-weight: 700;
-    /* Grosor de las etiquetas */
+    /* Grosor de la etiqueta */
 }
 
 .session-card-value {
     color: #1F2A37;
-    /* Color de los valores */
+    /* Color del valor */
 
     font-weight: 600;
-    /* Grosor de los valores */
+    /* Grosor del valor */
 }
 
 
@@ -203,7 +204,7 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 .st-key-finalizar-btn {
     margin-top: 10px;
-    /* Espacio entre los datos y el botón */
+    /* Espacio entre la info de sesión y el botón */
 }
 
 .st-key-finalizar-btn button {
@@ -234,7 +235,7 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 .st-key-finalizar-btn button:hover {
     transform: translateY(-1px);
-    /* Lo eleva ligeramente al pasar el mouse */
+    /* Eleva ligeramente el botón al pasar el mouse */
 }
 
 
@@ -251,23 +252,22 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 [data-testid="stChatInput"] textarea,
 [data-testid="stChatInput"] input {
     border: 1px solid #BFC9D6 !important;
-    /* Color y grosor del borde del input */
+    /* Color y grosor del borde de la caja */
 
     border-radius: 10px !important;
-    /* Qué tan redondeadas son las esquinas del input */
+    /* Qué tan redondeadas son las esquinas de la caja */
 
     box-shadow: 0 2px 6px rgba(14, 50, 85, 0.04) !important;
-    /* Sombra suave del input */
+    /* Sombra ligera del input */
 
     background: #FFFFFF !important;
-    /* Fondo del input */
+    /* Fondo blanco del input */
 }
 
-/* Contenedor externo del input */
+/* Wrapper del input */
 [data-testid="stChatInput"] > div {
     border: none !important;
-    /* Elimina bordes raros del wrapper */
-
+    /* Elimina bordes extra del wrapper */
 }
 
 
@@ -302,12 +302,56 @@ span[data-testid="stWidgetLabel"] {
 
 
 /* =========================================================
+   BURBUJAS DEL CHAT
+   ========================================================= */
+
+/* Contenedor del mensaje del asistente */
+[data-testid="stChatMessageAssistant"] [data-testid="stMarkdownContainer"] {
+    background: #FFFFFF;
+    /* Fondo del mensaje del bot */
+
+    border: 1px solid #E7EDF5;
+    /* Borde del mensaje del bot */
+
+    border-radius: 16px;
+    /* Qué tan redondeado se ve el mensaje del bot */
+
+    padding: 14px 16px;
+    /* Espaciado interno del mensaje */
+
+    box-shadow: 0 6px 14px rgba(14, 50, 85, 0.04);
+    /* Sombra ligera */
+}
+
+/* Contenedor del mensaje del usuario */
+[data-testid="stChatMessageUser"] [data-testid="stMarkdownContainer"] {
+    background: #EEF3F8;
+    /* Fondo del mensaje del usuario */
+
+    border: 1px solid #DCE6F0;
+    /* Borde del mensaje del usuario */
+
+    border-radius: 16px;
+    /* Qué tan redondeado se ve el mensaje del usuario */
+
+    padding: 14px 16px;
+    /* Espaciado interno del mensaje */
+}
+
+/* Limita ancho visual del texto para que sea más cómodo de leer */
+[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] {
+    max-width: 980px;
+    /* Máximo ancho del bloque de texto del chat */
+}
+
+
+/* =========================================================
    BOTÓN FLOTANTE PARA SUBIR
    ========================================================= */
 
 .scroll-top-btn {
     position: fixed;
-    /* Botón fijo siempre visible */
+    /* Lo deja fijo en pantalla */
 
     right: 25px;
     /* Qué tan pegado queda al borde derecho */
@@ -322,16 +366,16 @@ span[data-testid="stWidgetLabel"] {
     /* Alto del botón flotante */
 
     border-radius: 999px;
-    /* Lo hace totalmente redondo */
+    /* Lo hace completamente redondo */
 
-    background: linear-gradient(135deg, #2FA6EB 0%, #1877F2 100%);
-    /* Color azul del botón */
+    background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%);
+    /* Color naranja del botón flotante */
 
     color: white;
     /* Color de la flecha */
 
     text-decoration: none;
-    /* Quita subrayado del link */
+    /* Quita subrayado del enlace */
 
     display: flex;
     align-items: center;
@@ -344,7 +388,7 @@ span[data-testid="stWidgetLabel"] {
     font-weight: 800;
     /* Grosor de la flecha */
 
-    box-shadow: 0 12px 24px rgba(24, 119, 242, 0.25);
+    box-shadow: 0 12px 24px rgba(255, 122, 0, 0.24);
     /* Sombra del botón flotante */
 
     z-index: 1002;
@@ -382,12 +426,12 @@ span[data-testid="stWidgetLabel"] {
 
     .coredesk-header-content {
         height: 84px;
-        /* Alinea el contenido con la nueva altura */
+        /* Mantiene alineado el contenido */
     }
 
     .coredesk-header-spacer {
         height: 150px;
-        /* Espacio para el header en móvil */
+        /* Espacio para el header fijo en móvil */
     }
 
     .scroll-top-btn {
@@ -396,5 +440,10 @@ span[data-testid="stWidgetLabel"] {
         right: 14px;
         bottom: 96px;
         /* Ajusta posición del botón flotante en móvil */
+    }
+
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] {
+        max-width: 100%;
+        /* En móvil, el mensaje usa todo el ancho disponible */
     }
 }
