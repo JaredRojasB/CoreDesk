@@ -25,9 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent
 # 2. FUNCIONES BASE
 # =========================================================
 def cargar_logo():
-    """Carga el logo desde assets/logo.png si existe."""
     ruta_logo = BASE_DIR / "assets" / "logo.png"
-
     try:
         return Image.open(ruta_logo)
     except FileNotFoundError:
@@ -37,19 +35,15 @@ def cargar_logo():
 
 
 def logo_a_base64(img):
-    """Convierte la imagen PIL a base64 para incrustarla en HTML."""
     if img is None:
         return None
-
     buffer = BytesIO()
     img.save(buffer, format="PNG")
     return base64.b64encode(buffer.getvalue()).decode()
 
 
 def aplicar_estilos():
-    """Carga los estilos desde styles/main.css."""
     ruta_css = BASE_DIR / "styles" / "main.css"
-
     try:
         with open(ruta_css, "r", encoding="utf-8") as archivo_css:
             css = archivo_css.read()
@@ -59,7 +53,6 @@ def aplicar_estilos():
 
 
 def configurar_modelo():
-    """Configura Gemini y guarda el modelo en session_state."""
     api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
     if not api_key:
@@ -93,7 +86,6 @@ def configurar_modelo():
 
 
 def inicializar_sesion():
-    """Inicializa variables necesarias en session_state."""
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -105,7 +97,6 @@ def inicializar_sesion():
 
 
 def construir_prompt_soporte(nombre_usuario, prompt_usuario):
-    """Construye el prompt principal para respuestas de soporte más claras."""
     return f"""
 Eres un agente de soporte técnico llamado CoreDesk AI y estás ayudando a {nombre_usuario}.
 
@@ -125,7 +116,7 @@ REGLAS IMPORTANTES DE RESPUESTA:
    - 🟡 para verificaciones
    - 📂 para rutas o carpetas
    - ⚙️ para configuración
-7. Si el problema requiere varios pasos, sepáralos por secciones.
+7. Si el problema requiere varios pasos, sepáralos por secciones y espefica la sección.
 8. Si hay riesgo de que el usuario se equivoque, adviértelo claramente.
 9. No respondas de forma genérica. Sé específico y accionable.
 10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
@@ -138,7 +129,6 @@ ESTRUCTURA QUE DEBES SEGUIR SIEMPRE:
 - Sección: "🟡 Qué necesito que me confirmes al final"
 
 INFORMACIÓN TÉCNICA EXTRA:
-- Si se menciona "3 pitidos largos y 2 cortos", interprétalo como posible error relacionado con memoria RAM.
 - Si no estás seguro del diagnóstico, dilo con honestidad y guía al usuario en verificaciones simples primero.
 
 PROBLEMA DEL USUARIO:
@@ -150,7 +140,6 @@ PROBLEMA DEL USUARIO:
 # 3. FUNCIONES DE INTERFAZ
 # =========================================================
 def mostrar_registro(logo_img):
-    """Muestra la pantalla de registro/inicio."""
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
@@ -179,7 +168,6 @@ def mostrar_registro(logo_img):
 
 
 def mostrar_header_chat(logo_img):
-    """Muestra el header fijo real del chat."""
     inicio_t = st.session_state.user_data.get("inicio", time.time())
     t_min = int((time.time() - inicio_t) / 60)
 
@@ -191,13 +179,17 @@ def mostrar_header_chat(logo_img):
 
     st.markdown(
         f"""
-        <div class="coredesk-header-fixed">
-            <div class="coredesk-header-content">
-                <div class="coredesk-brand-area">
-                    {logo_html}
-                </div>
-                <div class="coredesk-header-right">
-                    <span class="coredesk-header-timer">⏱️ {t_min} min activo</span>
+        <div class="coredesk-header-shell">
+            <div class="coredesk-header-fixed">
+                <div class="coredesk-header-content">
+                    <div class="coredesk-brand-area">
+                        {logo_html}
+                    </div>
+                    <div class="coredesk-header-right">
+                        <span class="coredesk-header-title">CoreDesk Support</span>
+                        <span class="coredesk-header-divider"></span>
+                        <span class="coredesk-header-timer">⏱️ {t_min} min activo</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -208,7 +200,6 @@ def mostrar_header_chat(logo_img):
 
 
 def mostrar_tarjeta_usuario():
-    """Muestra la tarjeta con los datos del usuario."""
     nombre = st.session_state.user_data["nombre"]
     empresa = st.session_state.user_data["empresa"]
 
@@ -222,7 +213,6 @@ def mostrar_tarjeta_usuario():
 
 
 def mostrar_boton_finalizar():
-    """Muestra el botón fijo en esquina inferior derecha."""
     if st.button("Finalizar Chat", key="finalizar-btn"):
         st.session_state.user_data = None
         st.session_state.messages = []
@@ -231,12 +221,11 @@ def mostrar_boton_finalizar():
 
 
 def enviar_bienvenida_si_falta():
-    """Agrega el mensaje de bienvenida solo una vez."""
     if not st.session_state.bienvenida_enviada:
         nombre = st.session_state.user_data["nombre"]
         saludo = (
             f"¡Hola **{nombre}**! 👋 Bienvenido al soporte técnico de CoreDesk. "
-            f"Cuéntame tu problema y te lo explicaré paso a paso."
+            f"Por favor, describe tu problema y te ayudaremos a resolverlo"
         )
         st.session_state.messages.append({
             "role": "assistant",
@@ -246,18 +235,14 @@ def enviar_bienvenida_si_falta():
 
 
 def mostrar_historial():
-    """Muestra todos los mensajes guardados en la sesión."""
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-
-        # SIN avatar personalizado → iconos nativos
         with st.chat_message(rol):
             st.markdown(mensaje["content"])
 
 
 def procesar_input_usuario():
-    """Procesa el nuevo mensaje del usuario y genera respuesta de IA."""
-    prompt = st.chat_input("Escribe tu duda técnica aquí...")
+    prompt = st.chat_input("Escribe aquí")
 
     if prompt:
         st.session_state.messages.append({
@@ -291,7 +276,6 @@ def procesar_input_usuario():
 
 
 def mostrar_chat(logo_img):
-    """Agrupa toda la vista del chat."""
     mostrar_header_chat(logo_img)
     mostrar_tarjeta_usuario()
     enviar_bienvenida_si_falta()
