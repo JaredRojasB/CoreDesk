@@ -1,339 +1,82 @@
-/* =========================================================
-   FONDO GENERAL Y ANCHO DE LA PÁGINA
-   ========================================================= */
-
 .block-container {
     padding-top: 4.2rem !important;
-    /* Espacio superior de la pantalla */
-
     max-width: 1400px !important;
-    /* Ancho máximo general del login */
 }
-
-
-/* =========================================================
-   CONTENEDOR PRINCIPAL DEL LOGIN
-   ========================================================= */
 
 .login-wrapper {
-    display: flex;
-    /* Activa layout flexible */
-
-    flex-direction: column;
-    /* Coloca logo, texto y formulario uno debajo del otro */
-
-    align-items: center;
-    /* Centra horizontalmente todo el bloque */
-
     width: 100%;
-    /* Permite que use todo el ancho disponible */
-
-    text-align: center;
-    /* Fuerza centrado general de elementos superiores */
 }
-
-
-/* =========================================================
-   BLOQUE DEL LOGO Y TEXTO SUPERIOR
-   ========================================================= */
 
 .login-brand-block {
-    display: flex;
-    /* Permite controlar alineación interna */
-
-    flex-direction: column;
-    /* Logo arriba, texto abajo */
-
-    align-items: center;
-    /* Centra horizontalmente todo el branding */
-
-    justify-content: center;
-    /* Centrado vertical interno */
-
     text-align: center;
-    /* Centra el subtítulo */
-
-    margin-bottom: 22px;
-    /* Espacio antes del formulario */
-
-    width: 100%;
-    /* Ocupa todo el ancho del bloque */
+    margin: 18px 0 22px 0;
 }
-
-
-/* Contenedor que Streamlit crea para la imagen */
-.login-brand-block [data-testid="stImage"] {
-    width: 100% !important;
-    /* Hace que el contenedor use todo el ancho */
-
-    display: flex !important;
-    /* Permite centrar con flex */
-
-    justify-content: center !important;
-    /* Centra horizontalmente */
-
-    align-items: center !important;
-    /* Centra verticalmente */
-}
-
-
-/* Div interno que Streamlit mete dentro de la imagen */
-.login-brand-block [data-testid="stImage"] > div {
-    width: auto !important;
-    /* Evita que se estire raro */
-
-    display: flex !important;
-    /* Flex para centrar bien */
-
-    justify-content: center !important;
-    /* Centrado horizontal */
-
-    align-items: center !important;
-    /* Centrado vertical */
-
-    margin: 0 auto !important;
-    /* Refuerza centrado */
-}
-
-
-/* Imagen del logo */
-.login-brand-block img {
-    display: block;
-    /* Hace que la imagen se comporte como bloque */
-
-    margin: 0 auto 20px auto !important;
-    /* Centra el logo horizontalmente y deja espacio debajo */
-
-    filter: drop-shadow(0 10px 22px rgba(14, 50, 85, 0.08));
-    /* Sombra suave del logo */
-
-    max-width: 100%;
-    /* Evita desbordes */
-}
-
 
 .login-subtitle {
     color: #4F6072;
-    /* Color del texto descriptivo */
-
     font-size: 1.2rem;
-    /* Tamaño del subtítulo */
-
     font-weight: 600;
-    /* Grosor del texto */
-
     margin: 0 auto;
-    /* Centrado horizontal */
-
     line-height: 1.6;
-    /* Espaciado entre líneas */
-
     max-width: 720px;
-    /* Ancho máximo del párrafo */
-
     text-align: center;
-    /* Centra el texto */
 }
 
-
-/* =========================================================
-   FORMULARIO STREAMLIT ESTILIZADO COMO TARJETA
-   ========================================================= */
-
-div[data-testid="stForm"] {
+.login-form-card {
     width: 100%;
-    /* Hace que el form use todo el ancho disponible */
-
-    background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%) !important;
-    /* Fondo gris claro con degradado suave */
-
-    border: 1px solid #DCE3EB !important;
-    /* Borde sutil */
-
-    border-radius: 20px !important;
-    /* Bordes redondeados */
-
-    box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12) !important;
-    /* Sombra de tarjeta elevada */
-
-    padding: 22px 18px 16px 18px !important;
-    /* Espacio interior */
-
-    margin: 0 !important;
-    /* Quita margen externo */
-
-    text-align: left;
-    /* Mantiene labels e inputs a la izquierda */
+    background: linear-gradient(180deg, #F3F7FB 0%, #EDF2F7 100%);
+    border: 1px solid #DCE3EB;
+    border-radius: 20px;
+    box-shadow: 0 16px 34px rgba(14, 50, 85, 0.12);
+    padding: 22px 18px 16px 18px;
 }
-
-
-/* =========================================================
-   ETIQUETAS PERSONALIZADAS
-   ========================================================= */
 
 .login-field-label {
     color: #0E3255;
-    /* Azul corporativo */
-
     font-weight: 800;
-    /* Grosor fuerte */
-
     font-size: 0.98rem;
-    /* Tamaño de texto */
-
     margin: 12px 0 8px 2px;
-    /* Separación arriba y abajo */
 }
-
-
-/* =========================================================
-   INPUTS
-   ========================================================= */
 
 div[data-testid="stTextInput"] input {
     border-radius: 16px !important;
-    /* Redondea los inputs */
-
     border: 1px solid #C7D3E0 !important;
-    /* Borde gris suave */
-
     background: #FFFFFF !important;
-    /* Fondo blanco del campo */
-
     padding: 0.92rem 1rem !important;
-    /* Espacio interior */
-
     box-shadow: inset 0 1px 2px rgba(14, 50, 85, 0.03);
-    /* Sombra interna ligera */
 }
 
 div[data-testid="stTextInput"] input:focus {
     border: 1px solid #FF8C00 !important;
-    /* Color naranja al enfocar */
-
     box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.10) !important;
-    /* Halo naranja suave */
 }
 
-
-/* =========================================================
-   CONTENEDOR DEL BOTÓN
-   ========================================================= */
-
-div[data-testid="stFormSubmitButton"] {
-    width: 100%;
-    /* Usa todo el ancho disponible */
-
-    display: flex !important;
-    /* Permite centrar correctamente */
-
-    justify-content: center !important;
-    /* Centra horizontalmente */
-
-    align-items: center !important;
-    /* Centra verticalmente */
-
-    text-align: center !important;
-    /* Refuerzo de centrado */
-}
-
-
-/* Div interno que Streamlit genera */
-div[data-testid="stFormSubmitButton"] > div {
-    width: 100% !important;
-    /* Usa todo el ancho */
-
-    display: flex !important;
-    /* Flex para centrar */
-
-    justify-content: center !important;
-    /* Centrado horizontal */
-
-    align-items: center !important;
-    /* Centrado vertical */
-}
-
-
-/* Botón real */
-div[data-testid="stFormSubmitButton"] button {
+.st-key-login_submit button {
     background: linear-gradient(135deg, #FF8C00 0%, #FF6A00 100%) !important;
-    /* Fondo naranja degradado */
-
     color: white !important;
-    /* Texto blanco */
-
     border-radius: 15px !important;
-    /* Bordes redondeados */
-
     font-weight: 800 !important;
-    /* Texto fuerte */
-
-    width: 340px !important;
-    /* Ancho fijo del botón */
-
+    width: 100% !important;
     height: 52px !important;
-    /* Alto del botón */
-
     border: none !important;
-    /* Sin borde */
-
     box-shadow: 0 12px 24px rgba(255, 122, 0, 0.24) !important;
-    /* Sombra */
-
     margin-top: 16px !important;
-    /* Espacio arriba */
-
-    margin-left: auto !important;
-    /* Fuerza centrado */
-
-    margin-right: auto !important;
-    /* Fuerza centrado */
-
     font-size: 1rem !important;
-    /* Tamaño del texto */
-
     letter-spacing: 0.2px !important;
-    /* Espaciado entre letras */
-
-    display: flex !important;
-    /* Permite centrar texto interno */
-
-    justify-content: center !important;
-    /* Centra el texto horizontalmente */
-
-    align-items: center !important;
-    /* Centra el texto verticalmente */
 }
 
-div[data-testid="stFormSubmitButton"] button:hover {
+.st-key-login_submit button:hover {
     background: linear-gradient(135deg, #F08200 0%, #E35F00 100%) !important;
-    /* Color al pasar el mouse */
-
     transform: translateY(-1px);
-    /* Efecto de elevación */
 }
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 
 @media (max-width: 900px) {
     .login-subtitle {
         font-size: 1.05rem;
-        /* Reduce subtítulo en pantallas pequeñas */
-
         max-width: 95%;
-        /* Permite mejor ajuste */
     }
 
-    div[data-testid="stForm"] {
-        padding: 18px 14px 14px 14px !important;
-        /* Reduce padding del form en pantallas pequeñas */
-    }
-
-    div[data-testid="stFormSubmitButton"] button {
-        width: 100% !important;
-        /* En móvil, el botón usa todo el ancho */
+    .login-form-card {
+        padding: 18px 14px 14px 14px;
     }
 }
