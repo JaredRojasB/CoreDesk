@@ -29,7 +29,7 @@ def mostrar_registro(logo_img):
         img_col1, img_col2, img_col3 = st.columns([1, 2.2, 1])
         with img_col2:
             if logo_img:
-                st.image(logo_img, width=330)
+                st.image(logo_img, width=600)
 
         st.markdown(
             """
