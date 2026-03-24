@@ -100,79 +100,124 @@ def inicializar_sesion():
 
 
 # =========================================================
-# 3. LÓGICA HÍBRIDA DE CLASIFICACIÓN
+# 3. UTILIDADES
 # =========================================================
 def normalizar_texto(texto: str) -> str:
     return " ".join(texto.lower().strip().split())
 
 
+def formatear_tiempo_sesion(segundos_totales: int) -> str:
+    minutos = segundos_totales // 60
+    segundos = segundos_totales % 60
+    return f"{minutos:02d}:{segundos:02d}"
+
+
+def extraer_segundos_espera(error_texto: str):
+    if not error_texto:
+        return None
+
+    patron_retry = re.search(r"retry in ([0-9]+(?:\.[0-9]+)?)s", error_texto, re.IGNORECASE)
+    if patron_retry:
+        return max(1, round(float(patron_retry.group(1))))
+
+    patron_seconds = re.search(r"seconds:\s*([0-9]+)", error_texto, re.IGNORECASE)
+    if patron_seconds:
+        return max(1, int(patron_seconds.group(1)))
+
+    return None
+
+
+# =========================================================
+# 4. LÓGICA HÍBRIDA DE CLASIFICACIÓN
+# =========================================================
 def analizar_prioridad_por_palabras_clave(prompt_usuario: str):
     """
     Regla rápida por palabras clave.
-    Sirve como respaldo y como primera estimación.
+    Clasifica entre:
+    - resoluble por chat
+    - intentar remoto y escalar si falla
+    - escalar inmediato
     """
     texto = normalizar_texto(prompt_usuario)
 
-    palabras_criticas = [
-        "no puedo trabajar", "no enciende", "equipo no enciende", "huele a quemado",
+    palabras_escalado_inmediato = [
         "pantalla rota", "se rompio la pantalla", "pantalla quebrada", "quebrada",
-        "disco dañado", "disco danado", "motherboard", "placa madre", "fuente dañada",
-        "fuente danada", "ram dañada", "ram danada", "aumentar ram", "cambiar ram",
+        "huele a quemado", "olor a quemado", "equipo quemado",
+        "motherboard", "placa madre", "fuente dañada", "fuente danada",
+        "ram dañada", "ram danada", "aumentar ram", "cambiar ram",
         "cambiar disco", "disco duro roto", "ssd roto", "hace ruido el disco",
-        "equipo quemado", "equipo se apaga solo", "se apaga solo", "pantallazo azul constante",
-        "blue screen", "pantalla azul constante", "equipo muerto", "no arranca"
+        "disco dañado", "disco danado", "liquido derramado", "se mojo",
+        "se cayó", "se cayo", "golpe fuerte", "pieza rota", "carcasa rota",
+        "pantalla estrellada", "bisagra rota", "tecla rota"
     ]
 
-    palabras_altas = [
+    palabras_escalar_si_falla = [
+        "no enciende", "equipo no enciende", "no arranca", "equipo muerto",
+        "pantalla azul", "pantallazo azul constante", "blue screen",
+        "equipo se apaga solo", "se apaga solo", "se reinicia",
         "sin internet", "no tengo internet", "outlook no abre", "no puedo entrar",
-        "no tengo acceso", "error constante", "pantalla azul", "muy lento",
-        "equipo muy lento", "no abre office", "correo no funciona", "vpn no conecta",
-        "no puedo conectarme", "se reinicia", "se traba mucho"
+        "no tengo acceso", "correo no funciona", "vpn no conecta",
+        "no puedo conectarme", "error constante", "equipo muy lento",
+        "muy lento", "se traba mucho", "impresora no imprime", "luz roja parpadeante",
+        "no da imagen", "no prende bien", "no inicia windows"
     ]
 
     palabras_medias = [
         "impresora", "audio", "camara", "cámara", "office", "excel", "word",
         "instalar programa", "instalar software", "configurar", "microfono", "micrófono",
-        "periférico", "periferico", "monitor", "teclado", "mouse"
+        "periférico", "periferico", "monitor", "teclado", "mouse", "firma",
+        "correo", "outlook", "teams", "zoom"
     ]
 
     palabras_bajas = [
-        "duda", "consulta", "como", "cómo", "firma", "configurar firma",
+        "duda", "consulta", "como", "cómo", "configurar firma",
         "cambiar fondo", "personalizar", "quiero saber", "informacion", "información"
     ]
 
     categoria = "Software"
     prioridad = "Media"
-    escalado = False
+    escalado_inmediato = False
+    escalar_si_falla = False
     motivo = "Caso general pendiente de validación."
     confianza = "media"
 
-    if any(p in texto for p in palabras_criticas):
+    if any(p in texto for p in palabras_escalado_inmediato):
         prioridad = "Crítica"
-        escalado = True
         categoria = "Hardware"
-        motivo = "Se detectó una posible falla física o caso que requiere revisión presencial."
+        escalado_inmediato = True
+        escalar_si_falla = False
+        motivo = "Se detectó un caso físico o presencial que requiere intervención técnica directa."
         confianza = "alta"
-    elif any(p in texto for p in palabras_altas):
+
+    elif any(p in texto for p in palabras_escalar_si_falla):
         prioridad = "Alta"
-        categoria = "Software/Acceso/Red"
-        motivo = "Se detectó una afectación importante al trabajo del usuario."
+        categoria = "Soporte general"
+        escalado_inmediato = False
+        escalar_si_falla = True
+        motivo = "Primero pueden intentarse pruebas remotas seguras; si no funcionan, debe escalarse."
         confianza = "media"
+
     elif any(p in texto for p in palabras_medias):
         prioridad = "Media"
         categoria = "Soporte general"
+        escalado_inmediato = False
+        escalar_si_falla = False
         motivo = "Caso operativo que probablemente puede resolverse por guía remota."
         confianza = "media"
+
     elif any(p in texto for p in palabras_bajas):
         prioridad = "Baja"
         categoria = "Consulta"
+        escalado_inmediato = False
+        escalar_si_falla = False
         motivo = "Se detectó una solicitud informativa o de baja urgencia."
         confianza = "media"
 
     return {
         "categoria": categoria,
         "prioridad": prioridad,
-        "escalado": escalado,
+        "escalado_inmediato": escalado_inmediato,
+        "escalar_si_falla": escalar_si_falla,
         "motivo_escalado": motivo,
         "confianza": confianza,
         "fuente": "palabras_clave"
@@ -189,7 +234,8 @@ Analiza el siguiente ticket de soporte y responde SOLO en JSON válido.
 Debes devolver exactamente estas claves:
 - categoria
 - prioridad
-- escalado
+- escalado_inmediato
+- escalar_si_falla
 - motivo_escalado
 - confianza
 
@@ -200,33 +246,49 @@ Reglas:
 - prioridad debe ser una de estas:
   "Baja", "Media", "Alta", "Crítica"
 
-- escalado debe ser true o false
+- escalado_inmediato debe ser true o false
+- escalar_si_falla debe ser true o false
 
-- motivo_escalado debe explicar brevemente por qué se escala o por qué no
-
+- motivo_escalado debe explicar brevemente la decisión
 - confianza debe ser una de estas:
   "baja", "media", "alta"
 
-Criterios importantes:
-- Escala si el caso parece requerir revisión física, piezas, daño físico, pantalla rota,
-  no enciende, aumento de RAM, disco duro/SSD, motherboard, olor a quemado, fallas eléctricas,
-  problemas físicos de laptop/PC, reparación presencial.
-- No escales si el caso parece resoluble por pasos remotos.
+Criterios IMPORTANTES:
+1. escalado_inmediato = true SOLO si el caso parece físico, riesgoso o claramente presencial:
+   - pantalla rota
+   - olor a quemado
+   - piezas dañadas
+   - aumento/cambio de RAM o disco
+   - motherboard
+   - fallas eléctricas
+   - daño físico
+   - ruido mecánico del disco
+   - líquido derramado
+2. escalar_si_falla = true si el caso parece serio, pero todavía admite pruebas remotas iniciales seguras:
+   - no enciende
+   - no arranca
+   - pantalla azul
+   - equipo lento
+   - sin internet
+   - Outlook no abre
+   - errores de acceso
+   - impresora no imprime
+3. Si puede resolverse completamente por chat, ambos deben ser false.
+4. Nunca pongas escalado_inmediato y escalar_si_falla como true al mismo tiempo.
 
 TICKET:
 {prompt_usuario}
 """
     respuesta = st.session_state.model.generate_content(instruccion)
     texto = respuesta.text.strip()
-
-    # Intenta limpiar respuesta si viene dentro de ```json
     texto = texto.replace("```json", "").replace("```", "").strip()
     data = json.loads(texto)
 
     return {
         "categoria": str(data.get("categoria", "Otro")).strip(),
         "prioridad": str(data.get("prioridad", "Media")).strip(),
-        "escalado": bool(data.get("escalado", False)),
+        "escalado_inmediato": bool(data.get("escalado_inmediato", False)),
+        "escalar_si_falla": bool(data.get("escalar_si_falla", False)),
         "motivo_escalado": str(data.get("motivo_escalado", "Sin motivo especificado.")).strip(),
         "confianza": str(data.get("confianza", "media")).strip(),
         "fuente": "ia"
@@ -244,33 +306,44 @@ def analizar_ticket_hibrido(prompt_usuario: str):
     try:
         analisis_ia = analizar_ticket_con_ia(prompt_usuario)
 
-        # Si la IA detecta algo más serio, respetamos la IA
         prioridad_orden = {"Baja": 1, "Media": 2, "Alta": 3, "Crítica": 4}
 
         prioridad_base = prioridad_orden.get(analisis_base["prioridad"], 2)
         prioridad_ia = prioridad_orden.get(analisis_ia["prioridad"], 2)
 
-        # Escalado conservador: si cualquiera detecta escalado, escalamos
-        escalado_final = analisis_base["escalado"] or analisis_ia["escalado"]
-
-        # Prioridad más alta gana
         prioridad_final = analisis_ia["prioridad"] if prioridad_ia >= prioridad_base else analisis_base["prioridad"]
-
-        # Categoría IA si existe
         categoria_final = analisis_ia["categoria"] or analisis_base["categoria"]
 
-        # Motivo: si escala IA, usamos el de IA; si no, el base
-        if analisis_ia["escalado"]:
-            motivo_final = analisis_ia["motivo_escalado"]
-        elif analisis_base["escalado"]:
-            motivo_final = analisis_base["motivo_escalado"]
+        escalado_inmediato_final = (
+            analisis_base["escalado_inmediato"] or analisis_ia["escalado_inmediato"]
+        )
+
+        escalar_si_falla_final = False
+        if not escalado_inmediato_final:
+            escalar_si_falla_final = (
+                analisis_base["escalar_si_falla"] or analisis_ia["escalar_si_falla"]
+            )
+
+        if escalado_inmediato_final:
+            motivo_final = (
+                analisis_ia["motivo_escalado"]
+                if analisis_ia["escalado_inmediato"]
+                else analisis_base["motivo_escalado"]
+            )
+        elif escalar_si_falla_final:
+            motivo_final = (
+                analisis_ia["motivo_escalado"]
+                if analisis_ia["escalar_si_falla"]
+                else analisis_base["motivo_escalado"]
+            )
         else:
             motivo_final = analisis_ia["motivo_escalado"] or analisis_base["motivo_escalado"]
 
         return {
             "categoria": categoria_final,
             "prioridad": prioridad_final,
-            "escalado": escalado_final,
+            "escalado_inmediato": escalado_inmediato_final,
+            "escalar_si_falla": escalar_si_falla_final,
             "motivo_escalado": motivo_final,
             "confianza": analisis_ia["confianza"],
             "fuente": "hibrido"
@@ -283,29 +356,44 @@ def analizar_ticket_hibrido(prompt_usuario: str):
 def construir_prompt_soporte_hibrido(nombre_usuario, prompt_usuario, analisis_ticket):
     categoria = analisis_ticket["categoria"]
     prioridad = analisis_ticket["prioridad"]
-    escalado = analisis_ticket["escalado"]
+    escalado_inmediato = analisis_ticket["escalado_inmediato"]
+    escalar_si_falla = analisis_ticket["escalar_si_falla"]
     motivo_escalado = analisis_ticket["motivo_escalado"]
 
-    modo_escalado = ""
-    if escalado:
-        modo_escalado = f"""
+    if escalado_inmediato:
+        modo = f"""
 IMPORTANTE:
-Este ticket YA fue clasificado como caso ESCALADO.
+Este ticket fue clasificado como ESCALADO INMEDIATO.
 
 CATEGORÍA DETECTADA: {categoria}
 PRIORIDAD DETECTADA: {prioridad}
-MOTIVO DE ESCALAMIENTO: {motivo_escalado}
+MOTIVO: {motivo_escalado}
 
 INSTRUCCIONES ESPECIALES:
-1. NO intentes resolver por completo el caso como si fuera 100% remoto.
-2. Explica brevemente por qué se escalará a soporte técnico.
-3. Puedes dar recomendaciones preventivas o inmediatas simples y seguras.
+1. NO intentes resolverlo por completo como si fuera 100% remoto.
+2. Explica brevemente por qué requiere revisión técnica/presencial.
+3. Puedes dar recomendaciones seguras y básicas mientras espera soporte.
 4. No prometas reparación inmediata.
-5. Indica claramente que el caso requiere revisión técnica/presencial o seguimiento especializado.
-6. Sé claro, profesional y tranquilizador.
+5. Sé claro, profesional y tranquilizador.
+"""
+    elif escalar_si_falla:
+        modo = f"""
+IMPORTANTE:
+Este ticket NO debe escalarse de inmediato.
+Primero deben intentarse pruebas remotas iniciales seguras.
+
+CATEGORÍA DETECTADA: {categoria}
+PRIORIDAD DETECTADA: {prioridad}
+MOTIVO: {motivo_escalado}
+
+INSTRUCCIONES ESPECIALES:
+1. Da pasos iniciales simples, seguros y muy claros.
+2. Prioriza verificaciones básicas primero.
+3. Al final, indica claramente que si esas pruebas no funcionan, el caso deberá escalarse a soporte técnico.
+4. No declares escalamiento inmediato desde el inicio.
 """
     else:
-        modo_escalado = f"""
+        modo = f"""
 CATEGORÍA DETECTADA: {categoria}
 PRIORIDAD DETECTADA: {prioridad}
 
@@ -318,7 +406,7 @@ INSTRUCCIONES ESPECIALES:
     return f"""
 Eres un agente de soporte técnico llamado CoreDesk AI y estás ayudando a {nombre_usuario}.
 
-{modo_escalado}
+{modo}
 
 REGLAS IMPORTANTES DE RESPUESTA:
 1. Responde siempre en español.
@@ -353,18 +441,21 @@ PROBLEMA DEL USUARIO:
 
 
 def construir_resumen_analisis(analisis):
-    etiqueta_escalado = "Sí" if analisis["escalado"] else "No"
+    escalado_inmediato = "Sí" if analisis["escalado_inmediato"] else "No"
+    escalar_si_falla = "Sí" if analisis["escalar_si_falla"] else "No"
+
     return (
         f"**Clasificación del ticket**\n\n"
         f"- Categoría: **{analisis['categoria']}**\n"
         f"- Prioridad: **{analisis['prioridad']}**\n"
-        f"- Escalado: **{etiqueta_escalado}**\n"
+        f"- Escalado inmediato: **{escalado_inmediato}**\n"
+        f"- Escalar si falla: **{escalar_si_falla}**\n"
         f"- Motivo: {analisis['motivo_escalado']}"
     )
 
 
 # =========================================================
-# 4. MENSAJES DE ERROR
+# 5. MENSAJES DE ERROR
 # =========================================================
 def construir_mensaje_error_amigable(error: Exception):
     texto_error = str(error).lower()
@@ -390,14 +481,9 @@ def construir_mensaje_error_amigable(error: Exception):
         "Intenta nuevamente en unos momentos. Si no funciona, contacta a IT vía correo."
     )
 
-def formatear_tiempo_sesion(segundos_totales: int) -> str:
-    minutos = segundos_totales // 60
-    segundos = segundos_totales % 60
-    return f"{minutos:02d}:{segundos:02d}"
-
 
 # =========================================================
-# 5. CIERRE DE CHAT
+# 6. CIERRE DE CHAT
 # =========================================================
 def mostrar_overlay_cierre():
     st.markdown(
@@ -429,7 +515,7 @@ def cerrar_chat():
 
 
 # =========================================================
-# 6. INTERFAZ CHAT
+# 7. INTERFAZ CHAT
 # =========================================================
 def mostrar_header_chat():
     inicio_t = st.session_state.user_data.get("inicio", time.time())
@@ -532,8 +618,6 @@ def procesar_input_usuario():
         avatar_path = BASE_DIR / "assets" / "bot.png"
         avatar = str(avatar_path) if avatar_path.exists() else None
 
-        respuesta_generada = False
-
         with st.chat_message("assistant", avatar=avatar):
             with st.spinner("CoreDesk AI está analizando tu problema..."):
                 try:
@@ -559,12 +643,20 @@ def procesar_input_usuario():
                     respuesta = st.session_state.model.generate_content(prompt_final)
                     texto_respuesta = respuesta.text
 
-                    # 4. Si el ticket fue escalado, prepend visual útil
-                    if analisis_ticket["escalado"]:
+                    # 4. Encabezado visual según estrategia
+                    if analisis_ticket["escalado_inmediato"]:
                         encabezado = (
-                            f"🟠 **Este caso fue marcado para escalamiento técnico.**\n\n"
+                            f"🟠 **Este caso fue marcado para escalamiento técnico inmediato.**\n\n"
                             f"**Prioridad:** {analisis_ticket['prioridad']}\n\n"
                             f"**Motivo:** {analisis_ticket['motivo_escalado']}\n\n"
+                        )
+                        texto_respuesta = encabezado + texto_respuesta
+
+                    elif analisis_ticket["escalar_si_falla"]:
+                        encabezado = (
+                            f"🟡 **Este caso primero intentará resolverse por chat.**\n\n"
+                            f"**Prioridad:** {analisis_ticket['prioridad']}\n\n"
+                            f"**Nota:** si las pruebas iniciales no funcionan, el caso deberá escalarse.\n\n"
                         )
                         texto_respuesta = encabezado + texto_respuesta
 
@@ -575,8 +667,6 @@ def procesar_input_usuario():
                         "content": texto_respuesta
                     })
 
-                    respuesta_generada = True
-
                 except Exception as e:
                     mensaje_error = construir_mensaje_error_amigable(e)
                     st.markdown(mensaje_error)
@@ -585,9 +675,6 @@ def procesar_input_usuario():
                         "role": "assistant",
                         "content": mensaje_error
                     })
-
-        if respuesta_generada:
-            st.rerun()
 
 
 def mostrar_boton_subir():
@@ -611,7 +698,7 @@ def mostrar_chat():
 
 
 # =========================================================
-# 7. FUNCIÓN PRINCIPAL
+# 8. FUNCIÓN PRINCIPAL
 # =========================================================
 def main():
     logo_img = cargar_logo()
@@ -627,7 +714,7 @@ def main():
 
 
 # =========================================================
-# 8. EJECUCIÓN
+# 9. EJECUCIÓN
 # =========================================================
 if __name__ == "__main__":
     main()
