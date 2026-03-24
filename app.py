@@ -609,16 +609,25 @@ def mover_vista_al_inicio_respuesta():
         """
         <script>
             const scrollToAssistantStart = () => {
-                const markers = window.parent.document.querySelectorAll('.assistant-start-marker');
+                const doc = window.parent.document;
+                const markers = doc.querySelectorAll('.assistant-start-marker');
+
                 if (markers.length > 0) {
                     const lastMarker = markers[markers.length - 1];
-                    lastMarker.scrollIntoView({ behavior: "smooth", block: "start" });
+                    const rect = lastMarker.getBoundingClientRect();
+                    const absoluteTop = window.parent.scrollY + rect.top - 110;
+
+                    window.parent.scrollTo({
+                        top: Math.max(0, absoluteTop),
+                        behavior: "smooth"
+                    });
                 }
             };
 
-            setTimeout(scrollToAssistantStart, 150);
-            setTimeout(scrollToAssistantStart, 350);
+            setTimeout(scrollToAssistantStart, 100);
+            setTimeout(scrollToAssistantStart, 300);
             setTimeout(scrollToAssistantStart, 700);
+            setTimeout(scrollToAssistantStart, 1200);
         </script>
         """,
         height=0,
@@ -639,10 +648,9 @@ def procesar_input_usuario():
         avatar_path = BASE_DIR / "assets" / "bot.png"
         avatar = str(avatar_path) if avatar_path.exists() else None
 
-        
         with st.chat_message("assistant", avatar=avatar):
             st.markdown('<div class="assistant-start-marker"></div>', unsafe_allow_html=True)
-            
+
             with st.spinner("CoreDesk AI está analizando tu problema..."):
                 try:
                     # 1. Analizar ticket
@@ -690,6 +698,8 @@ def procesar_input_usuario():
                         "role": "assistant",
                         "content": texto_respuesta
                     })
+
+                    mover_vista_al_inicio_respuesta()
 
                 except Exception as e:
                     mensaje_error = construir_mensaje_error_amigable(e)
