@@ -285,13 +285,14 @@ span[data-testid="stWidgetLabel"] {
 
 
 /* =========================================================
-   PANTALLA LIMPIA DE CIERRE
+   OVERLAY DE CIERRE DE CHAT
    ========================================================= */
 
-.closing-screen {
+.closing-overlay {
     position: fixed;
     inset: 0;
-    background: #F5F7FB;
+    background: rgba(15, 23, 42, 0.30);
+    backdrop-filter: blur(3px);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -477,4 +478,10 @@ span[data-testid="stWidgetLabel"] {
     .closing-subtitle {
         font-size: 0.9rem;
     }
+}
+
+/* Evita animaciones raras de enfoque en la caja del chat */
+[data-testid="stChatInput"] textarea:focus,
+[data-testid="stChatInput"] input:focus {
+    scroll-margin-bottom: 0 !important;
 }

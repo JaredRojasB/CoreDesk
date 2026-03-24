@@ -608,26 +608,34 @@ def mover_vista_al_inicio_respuesta():
     components.html(
         """
         <script>
-            const scrollToAssistantStart = () => {
-                const doc = window.parent.document;
+            const doc = window.parent.document;
+            const win = window.parent;
+
+            const restoreScroll = () => {
                 const markers = doc.querySelectorAll('.assistant-start-marker');
+                if (!markers.length) return;
 
-                if (markers.length > 0) {
-                    const lastMarker = markers[markers.length - 1];
-                    const rect = lastMarker.getBoundingClientRect();
-                    const absoluteTop = window.parent.scrollY + rect.top - 110;
+                const lastMarker = markers[markers.length - 1];
+                const rect = lastMarker.getBoundingClientRect();
+                const targetTop = win.scrollY + rect.top - 110;
 
-                    window.parent.scrollTo({
-                        top: Math.max(0, absoluteTop),
-                        behavior: "smooth"
-                    });
+                // Quita foco del input para que no empuje la vista hacia abajo
+                if (doc.activeElement) {
+                    doc.activeElement.blur();
                 }
+
+                // Fuerza scroll al inicio de la respuesta
+                win.scrollTo({
+                    top: Math.max(0, targetTop),
+                    behavior: "auto"
+                });
             };
 
-            setTimeout(scrollToAssistantStart, 100);
-            setTimeout(scrollToAssistantStart, 300);
-            setTimeout(scrollToAssistantStart, 700);
-            setTimeout(scrollToAssistantStart, 1200);
+            setTimeout(restoreScroll, 50);
+            setTimeout(restoreScroll, 150);
+            setTimeout(restoreScroll, 300);
+            setTimeout(restoreScroll, 600);
+            setTimeout(restoreScroll, 1000);
         </script>
         """,
         height=0,
