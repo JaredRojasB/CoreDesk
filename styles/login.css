@@ -1,40 +1,63 @@
 /* Layout general del login */
 .block-container {
-    padding-top: 5rem !important;
+    padding-top: 3.8rem !important;
+    max-width: 1200px !important;
+}
+
+/* Barra superior visual */
+.login-topbar {
+    width: 100%;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid #E7ECF2;
+    border-radius: 22px;
+    box-shadow: 0 10px 28px rgba(14, 50, 85, 0.06);
+    margin-bottom: 22px;
 }
 
 /* Tarjeta principal */
 .login-card {
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid #E7ECF2;
-    border-radius: 22px;
-    box-shadow: 0 16px 40px rgba(14, 50, 85, 0.08);
-    padding: 34px 30px 28px 30px;
-    text-align: center;
+    background: transparent;
+    padding: 0;
 }
 
-/* Título */
+/* Bloque branding */
+.login-brand-block {
+    margin-bottom: 26px;
+}
+
 .login-title {
-    color: #0E3255;
-    font-size: 2rem;
+    color: #202636;
+    font-size: 3rem;
     font-weight: 800;
     margin-top: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    line-height: 1.05;
 }
 
-/* Subtítulo */
 .login-subtitle {
     color: #5F6C7B;
-    font-size: 1rem;
-    margin-bottom: 24px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
     line-height: 1.5;
+    max-width: 650px;
+}
+
+/* Tarjeta del formulario */
+.login-form-shell {
+    background: #EEF2F6;
+    border: 1px solid #DCE3EB;
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(14, 50, 85, 0.10);
+    padding: 18px 16px 14px 16px;
 }
 
 /* Inputs */
 div[data-testid="stTextInput"] input {
-    border-radius: 12px !important;
-    border: 1px solid #D7DEE8 !important;
-    padding: 0.8rem 0.9rem !important;
+    border-radius: 14px !important;
+    border: 1px solid #C9D4E0 !important;
+    background: #FFFFFF !important;
+    padding: 0.85rem 0.95rem !important;
 }
 
 /* Labels */
@@ -43,21 +66,38 @@ div[data-testid="stTextInput"] label {
     font-weight: 700 !important;
 }
 
-/* Botón del login */
-div[data-testid="stForm"] .stButton > button {
-    background-color: #0E3255 !important;
-    color: white !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    width: 100% !important;
-    height: 48px !important;
-    border: none !important;
-    box-shadow: 0 8px 20px rgba(14, 50, 85, 0.15) !important;
-    margin-top: 10px !important;
-}
-
-/* Ajuste visual del formulario */
+/* Formulario alineado */
 div[data-testid="stForm"] {
     text-align: left;
-    margin-top: 18px;
+    margin-top: 2px;
+}
+
+/* Botón principal */
+div[data-testid="stForm"] .stButton > button {
+    background-color: #FF8C00 !important;
+    color: white !important;
+    border-radius: 14px !important;
+    font-weight: 700 !important;
+    width: 100% !important;
+    height: 50px !important;
+    border: none !important;
+    box-shadow: 0 10px 22px rgba(255, 140, 0, 0.22) !important;
+    margin-top: 12px !important;
+    font-size: 1rem !important;
+}
+
+/* Hover del botón */
+div[data-testid="stForm"] .stButton > button:hover {
+    background-color: #E67E00 !important;
+}
+
+/* Responsive suave */
+@media (max-width: 900px) {
+    .login-title {
+        font-size: 2.4rem;
+    }
+
+    .login-subtitle {
+        font-size: 1rem;
+    }
 }
