@@ -225,7 +225,7 @@ def enviar_bienvenida_si_falta():
         nombre = st.session_state.user_data["nombre"]
         saludo = (
             f"¡Hola **{nombre}**! 👋 Bienvenido al soporte técnico de CoreDesk. "
-            f"Por favor, describe tu problema y te ayudaremos a resolverlo"
+            f"Por favor, describe tu problema y te ayudaremos a resolverlo."
         )
         st.session_state.messages.append({
             "role": "assistant",
@@ -254,7 +254,7 @@ def procesar_input_usuario():
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("CoreDesk AI analizando..."):
+            with st.spinner("CoreDesk AI analizando tu problema..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
                     prompt_final = construir_prompt_soporte(nombre_usuario, prompt)
