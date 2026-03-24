@@ -209,7 +209,7 @@ div[data-testid="stFormSubmitButton"] > button {
     font-weight: 800 !important;
     /* Texto fuerte */
 
-    width: 260px !important;
+    width: 300px !important;
     /* Ancho fijo del botón para que no se estire */
 
     height: 52px !important;
