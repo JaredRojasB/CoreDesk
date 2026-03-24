@@ -162,7 +162,6 @@ def mostrar_registro(logo_img):
                         "empresa": empresa,
                         "inicio": time.time()
                     }
-                    st.rerun()
                 else:
                     st.warning("Por favor completa ambos campos.")
 
@@ -263,6 +262,8 @@ def procesar_input_usuario():
         avatar_path = BASE_DIR / "assets" / "bot.png"
         avatar = str(avatar_path) if avatar_path.exists() else None
 
+        respuesta_generada = False
+
         with st.chat_message("assistant", avatar=avatar):
             with st.spinner("CoreDesk AI analizando tu problema..."):
                 try:
@@ -279,10 +280,13 @@ def procesar_input_usuario():
                         "content": texto_respuesta
                     })
 
-                except Exception as e:
-                    st.error(f"Error: {e}")
+                    respuesta_generada = True
 
-        st.rerun()
+                except Exception as e:
+                    st.error(f"Error al generar respuesta: {e}")
+
+        if respuesta_generada:
+            st.rerun()
 
 
 def mostrar_chat(logo_img):
