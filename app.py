@@ -1,3 +1,4 @@
+import streamlit.components.v1 as components
 import os
 import re
 import time
@@ -603,6 +604,26 @@ def mostrar_historial():
             st.markdown(mensaje["content"])
 
 
+def mover_vista_al_inicio_respuesta():
+    components.html(
+        """
+        <script>
+            const scrollToAssistantStart = () => {
+                const markers = window.parent.document.querySelectorAll('.assistant-start-marker');
+                if (markers.length > 0) {
+                    const lastMarker = markers[markers.length - 1];
+                    lastMarker.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            };
+
+            setTimeout(scrollToAssistantStart, 150);
+            setTimeout(scrollToAssistantStart, 350);
+            setTimeout(scrollToAssistantStart, 700);
+        </script>
+        """,
+        height=0,
+    )
+
 def procesar_input_usuario():
     prompt = st.chat_input("Escribe aquí")
 
@@ -618,7 +639,10 @@ def procesar_input_usuario():
         avatar_path = BASE_DIR / "assets" / "bot.png"
         avatar = str(avatar_path) if avatar_path.exists() else None
 
+        
         with st.chat_message("assistant", avatar=avatar):
+            st.markdown('<div class="assistant-start-marker"></div>', unsafe_allow_html=True)
+            
             with st.spinner("CoreDesk AI está analizando tu problema..."):
                 try:
                     # 1. Analizar ticket
