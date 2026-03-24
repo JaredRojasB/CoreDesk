@@ -253,7 +253,7 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     border: 1px solid #BFC9D6 !important;
     /* Color y grosor del borde del input */
 
-    border-radius: 14px !important;
+    border-radius: 10px !important;
     /* Qué tan redondeadas son las esquinas del input */
 
     box-shadow: 0 2px 6px rgba(14, 50, 85, 0.04) !important;
@@ -268,8 +268,6 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     border: none !important;
     /* Elimina bordes raros del wrapper */
 
-    background: transparent !important;
-    /* Quita fondos extra */
 }
 
 
