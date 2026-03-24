@@ -305,26 +305,32 @@ span[data-testid="stWidgetLabel"] {
    BURBUJAS DEL CHAT
    ========================================================= */
 
-/* Contenedor del mensaje del asistente */
-[data-testid="stChatMessageAssistant"] [data-testid="stMarkdownContainer"] {
+/* Contenedor general del contenido del mensaje */
+[data-testid="stChatMessageContent"] {
+    max-width: 980px;
+    /* Ancho máximo del bloque de conversación */
+}
+
+/* Mensaje del bot */
+[data-testid="stChatMessageAssistant"] [data-testid="stChatMessageContent"] {
     background: #FFFFFF;
     /* Fondo del mensaje del bot */
 
     border: 1px solid #E7EDF5;
-    /* Borde del mensaje del bot */
+    /* Borde suave */
 
     border-radius: 16px;
-    /* Qué tan redondeado se ve el mensaje del bot */
+    /* Redondez de la burbuja */
 
     padding: 14px 16px;
-    /* Espaciado interno del mensaje */
+    /* Espaciado interno */
 
     box-shadow: 0 6px 14px rgba(14, 50, 85, 0.04);
     /* Sombra ligera */
 }
 
-/* Contenedor del mensaje del usuario */
-[data-testid="stChatMessageUser"] [data-testid="stMarkdownContainer"] {
+/* Mensaje del usuario */
+[data-testid="stChatMessageUser"] [data-testid="stChatMessageContent"] {
     background: #EEF3F8;
     /* Fondo del mensaje del usuario */
 
@@ -332,16 +338,10 @@ span[data-testid="stWidgetLabel"] {
     /* Borde del mensaje del usuario */
 
     border-radius: 16px;
-    /* Qué tan redondeado se ve el mensaje del usuario */
+    /* Redondez de la burbuja */
 
     padding: 14px 16px;
-    /* Espaciado interno del mensaje */
-}
-
-/* Limita ancho visual del texto para que sea más cómodo de leer */
-[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] {
-    max-width: 980px;
-    /* Máximo ancho del bloque de texto del chat */
+    /* Espaciado interno */
 }
 
 
@@ -403,6 +403,11 @@ span[data-testid="stWidgetLabel"] {
     /* Mantiene la flecha blanca */
 }
 
+/* Espacio entre mensajes */
+[data-testid="stChatMessage"] {
+    margin-bottom: 12px;
+}
+
 
 /* =========================================================
    RESPONSIVE
@@ -447,3 +452,4 @@ span[data-testid="stWidgetLabel"] {
         /* En móvil, el mensaje usa todo el ancho disponible */
     }
 }
+
