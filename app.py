@@ -93,6 +93,48 @@ def inicializar_sesion():
         st.session_state.bienvenida_enviada = False
 
 
+def construir_prompt_soporte(nombre_usuario, prompt_usuario):
+    """Construye el prompt principal para respuestas de soporte más claras."""
+    return f"""
+Eres un agente de soporte técnico llamado CoreDesk AI y estás ayudando a {nombre_usuario}.
+
+REGLAS IMPORTANTES DE RESPUESTA:
+1. Responde siempre en español.
+2. Explica todo paso a paso, como si la persona no supiera casi nada de computadoras.
+3. Nunca des pasos ambiguos como "revisa la carpeta" o "abre configuración" sin explicar exactamente cómo hacerlo.
+4. Cuando menciones una ruta o una carpeta, explica cómo llegar:
+   - qué tecla presionar,
+   - qué escribir,
+   - dónde dar clic,
+   - qué debería ver el usuario.
+5. Usa formato visual ordenado con títulos y viñetas.
+6. Usa emojis simples para hacer clara la respuesta, por ejemplo:
+   - 🟢 para pasos recomendados
+   - 🔴 para advertencias o errores
+   - 🟡 para verificaciones
+   - 📂 para rutas o carpetas
+   - ⚙️ para configuración
+7. Si el problema requiere varios pasos, sepáralos por secciones.
+8. Si hay riesgo de que el usuario se equivoque, adviértelo claramente.
+9. No respondas de forma genérica. Sé específico y accionable.
+10. Si el usuario habla de hardware físico, daño físico, pantalla rota, aumento de RAM, piezas, reparación, motherboard, disco dañado o algo que requiera revisión presencial, aclara que probablemente será necesario escalar con soporte técnico presencial.
+
+ESTRUCTURA QUE DEBES SEGUIR SIEMPRE:
+- Una línea breve de diagnóstico inicial
+- Sección: "🟡 Qué está pasando"
+- Sección: "🟢 Qué debes hacer paso a paso"
+- Sección: "🔴 Qué no debes hacer" (solo si aplica)
+- Sección: "🟡 Qué necesito que me confirmes al final"
+
+INFORMACIÓN TÉCNICA EXTRA:
+- Si se menciona "3 pitidos largos y 2 cortos", interprétalo como posible error relacionado con memoria RAM.
+- Si no estás seguro del diagnóstico, dilo con honestidad y guía al usuario en verificaciones simples primero.
+
+PROBLEMA DEL USUARIO:
+{prompt_usuario}
+"""
+
+
 # =========================================================
 # 3. FUNCIONES DE INTERFAZ
 # =========================================================
@@ -163,7 +205,6 @@ def mostrar_header_chat(logo_img):
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Margen para no chocar con el header
     st.markdown('<div style="margin-top: 90px;"></div>', unsafe_allow_html=True)
 
 
@@ -195,7 +236,7 @@ def enviar_bienvenida_si_falta():
         nombre = st.session_state.user_data["nombre"]
         saludo = (
             f"¡Hola **{nombre}**! 👋 Bienvenido al soporte técnico de CoreDesk. "
-            f"¿En qué puedo ayudarte?"
+            f"Cuéntame tu problema y te lo explicaré paso a paso."
         )
         st.session_state.messages.append({
             "role": "assistant",
@@ -208,7 +249,7 @@ def mostrar_historial():
     """Muestra todos los mensajes guardados en la sesión."""
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-        avatar = "🧑" if rol == "user" else "🛠️"
+        avatar = "🧑" if rol == "user" else "🤖"
 
         with st.chat_message(rol, avatar=avatar):
             st.markdown(mensaje["content"])
@@ -227,20 +268,13 @@ def procesar_input_usuario():
         with st.chat_message("user", avatar="🧑"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant", avatar="🛠️"):
+        with st.chat_message("assistant", avatar="🤖"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
+                    prompt_final = construir_prompt_soporte(nombre_usuario, prompt)
 
-                    contexto = (
-                        f"Eres experto de CoreDesk ayudando a {nombre_usuario}. "
-                        f"Explica paso a paso. "
-                        f"3 pitidos largos y 2 cortos indican error de memoria RAM."
-                    )
-
-                    respuesta = st.session_state.model.generate_content(
-                        f"{contexto}\n\nProblema: {prompt}"
-                    )
+                    respuesta = st.session_state.model.generate_content(prompt_final)
 
                     texto_respuesta = respuesta.text
                     st.markdown(texto_respuesta)

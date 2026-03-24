@@ -34,12 +34,12 @@ span[data-testid="stWidgetLabel"] {
 /* Botón finalizar flotante */
 .st-key-finalizar-btn button {
     position: fixed !important;
-    bottom: 90px !important;
-    left: 30px !important;
+    bottom: 115px !important;
+    left: 22px !important;
     background-color: #FF4B4B !important;
     color: white !important;
     border-radius: 50px !important;
-    width: 160px !important;
+    width: 170px !important;
     z-index: 1000 !important;
     border: none !important;
     box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3) !important;
