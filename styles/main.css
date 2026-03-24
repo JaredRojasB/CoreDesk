@@ -138,7 +138,6 @@ div[data-testid="stSidebarNav"] {
     /* Hook invisible; solo sirve para detectar este contenedor */
 }
 
-/* Esta regla aplica al contenedor REAL de Streamlit que contiene la tarjeta */
 div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     background: #FFFFFF;
     /* Fondo de la tarjeta */
@@ -153,7 +152,7 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
     /* Sombra exterior de la tarjeta */
 
     padding: 22px 22px 18px 22px;
-    /* Espacio interno: arriba derecha abajo izquierda */
+    /* Espacio interno */
 
     margin-bottom: 16px;
     /* Espacio debajo de la tarjeta */
@@ -183,7 +182,7 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 .session-card-label {
     color: #5F6C7B;
-    /* Color de etiquetas tipo Atendiendo a, Empresa, Correo */
+    /* Color de etiquetas */
 
     font-weight: 700;
     /* Grosor de la etiqueta */
@@ -240,34 +239,119 @@ div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
 
 
 /* =========================================================
-   CAJA DE ESCRITURA DEL CHAT
+   CAJA DE ESCRITURA DEL CHAT - ESTILO PREMIUM
    ========================================================= */
 
+/* Contenedor general del chat input */
 [data-testid="stChatInput"] {
-    margin-bottom: 8px !important;
-    /* Espacio inferior del input */
+    margin-bottom: 10px !important;
+    /* Espacio inferior */
+
+    background: transparent !important;
+    /* Sin fondo extra */
 }
 
-/* Caja visible del input */
+/* Wrapper principal de la caja */
+[data-testid="stChatInput"] > div {
+    background: #FFFFFF !important;
+    /* Fondo principal de la barra */
+
+    border: 1px solid #E1E7F0 !important;
+    /* Borde general del contenedor */
+
+    border-radius: 26px !important;
+    /* Qué tan redondeada se ve toda la barra */
+
+    box-shadow: 0 10px 28px rgba(14, 50, 85, 0.08) !important;
+    /* Sombra externa */
+
+    padding: 10px 14px !important;
+    /* Espaciado interno general */
+}
+
+/* Área donde se escribe */
 [data-testid="stChatInput"] textarea,
 [data-testid="stChatInput"] input {
-    border: 1px solid #BFC9D6 !important;
-    /* Color y grosor del borde de la caja */
+    background: transparent !important;
+    /* Deja que el fondo lo maneje el contenedor */
 
-    border-radius: 10px !important;
-    /* Qué tan redondeadas son las esquinas de la caja */
+    border: none !important;
+    /* Quita el borde interno del input */
 
-    box-shadow: 0 2px 6px rgba(14, 50, 85, 0.04) !important;
-    /* Sombra ligera del input */
+    outline: none !important;
+    /* Quita borde azul del navegador */
 
-    background: #FFFFFF !important;
-    /* Fondo blanco del input */
+    box-shadow: none !important;
+    /* Quita sombras internas */
+
+    border-radius: 18px !important;
+    /* Redondez del área de texto */
+
+    font-size: 1.02rem !important;
+    /* Tamaño del texto escrito */
+
+    line-height: 1.5 !important;
+    /* Altura entre líneas */
+
+    min-height: 34px !important;
+    /* Altura mínima del campo */
+
+    padding: 10px 8px !important;
+    /* Espaciado interno del texto */
+
+    color: #1F2A37 !important;
+    /* Color del texto */
 }
 
-/* Wrapper del input */
-[data-testid="stChatInput"] > div {
+/* Placeholder */
+[data-testid="stChatInput"] textarea::placeholder,
+[data-testid="stChatInput"] input::placeholder {
+    color: #98A6B7 !important;
+    /* Color del placeholder */
+
+    opacity: 1 !important;
+    /* Lo deja visible */
+}
+
+/* Botón de enviar nativo */
+[data-testid="stChatInput"] button {
+    background: linear-gradient(135deg, #0E3255 0%, #153E68 100%) !important;
+    /* Color del botón enviar */
+
+    color: white !important;
+    /* Color del ícono */
+
     border: none !important;
-    /* Elimina bordes extra del wrapper */
+    /* Sin borde */
+
+    border-radius: 999px !important;
+    /* Botón completamente redondo */
+
+    width: 44px !important;
+    /* Ancho del botón */
+
+    height: 44px !important;
+    /* Alto del botón */
+
+    min-width: 44px !important;
+    /* Asegura tamaño fijo */
+
+    box-shadow: 0 10px 18px rgba(14, 50, 85, 0.18) !important;
+    /* Sombra del botón enviar */
+}
+
+[data-testid="stChatInput"] button:hover {
+    transform: translateY(-1px);
+    /* Eleva ligeramente al pasar el mouse */
+}
+
+/* Si el input está enfocado, resalta toda la cápsula */
+[data-testid="stChatInput"]:focus-within > div {
+    border: 1px solid #C9D6E5 !important;
+    /* Borde al enfocar */
+
+    box-shadow: 0 14px 30px rgba(14, 50, 85, 0.10) !important;
+    /* Sombra un poco más marcada al enfocar */
 }
 
 
@@ -305,13 +389,11 @@ span[data-testid="stWidgetLabel"] {
    BURBUJAS DEL CHAT
    ========================================================= */
 
-/* Contenedor general del contenido del mensaje */
 [data-testid="stChatMessageContent"] {
     max-width: 980px;
     /* Ancho máximo del bloque de conversación */
 }
 
-/* Mensaje del bot */
 [data-testid="stChatMessageAssistant"] [data-testid="stChatMessageContent"] {
     background: #FFFFFF;
     /* Fondo del mensaje del bot */
@@ -329,7 +411,6 @@ span[data-testid="stWidgetLabel"] {
     /* Sombra ligera */
 }
 
-/* Mensaje del usuario */
 [data-testid="stChatMessageUser"] [data-testid="stChatMessageContent"] {
     background: #EEF3F8;
     /* Fondo del mensaje del usuario */
@@ -342,6 +423,11 @@ span[data-testid="stWidgetLabel"] {
 
     padding: 14px 16px;
     /* Espaciado interno */
+}
+
+/* Espacio entre mensajes */
+[data-testid="stChatMessage"] {
+    margin-bottom: 12px;
 }
 
 
@@ -403,11 +489,6 @@ span[data-testid="stWidgetLabel"] {
     /* Mantiene la flecha blanca */
 }
 
-/* Espacio entre mensajes */
-[data-testid="stChatMessage"] {
-    margin-bottom: 12px;
-}
-
 
 /* =========================================================
    RESPONSIVE
@@ -447,9 +528,13 @@ span[data-testid="stWidgetLabel"] {
         /* Ajusta posición del botón flotante en móvil */
     }
 
-    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] {
+    [data-testid="stChatMessageContent"] {
         max-width: 100%;
-        /* En móvil, el mensaje usa todo el ancho disponible */
+        /* En móvil el mensaje puede ocupar todo el ancho */
+    }
+
+    [data-testid="stChatInput"] > div {
+        border-radius: 22px !important;
+        /* Redondez de la barra en móvil */
     }
 }
-
