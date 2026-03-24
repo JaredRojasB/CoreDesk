@@ -1,0 +1,56 @@
+/* Fondo general */
+.stApp {
+    background-color: #FFFFFF;
+}
+
+/* Ocultar header y sidebar nativos */
+div[data-testid="stHeader"],
+div[data-testid="stSidebarNav"] {
+    display: none;
+}
+
+/* Avatar asistente */
+[data-testid="stChatMessageAssistant"] 
+div[data-testid="stChatMessageAvatar"] {
+    background-color: #FF8C00 !important;
+    color: white !important;
+    border-radius: 8px !important;
+}
+
+/* Avatar usuario */
+[data-testid="stChatMessageUser"] 
+div[data-testid="stChatMessageAvatar"] {
+    background-color: #0E3255 !important;
+    color: white !important;
+    border-radius: 8px !important;
+}
+
+/* Limpieza visual */
+[data-testid="stIconMaterial"],
+span[data-testid="stWidgetLabel"] {
+    display: none !important;
+}
+
+/* Botón finalizar flotante */
+.st-key-finalizar-btn button {
+    position: fixed !important;
+    bottom: 90px !important;
+    left: 30px !important;
+    background-color: #FF4B4B !important;
+    color: white !important;
+    border-radius: 50px !important;
+    width: 160px !important;
+    z-index: 1000 !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3) !important;
+    font-weight: bold !important;
+}
+
+/* Botón del formulario */
+div[data-testid="stForm"] .stButton > button {
+    background-color: #0E3255 !important;
+    color: white !important;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+}

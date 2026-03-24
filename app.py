@@ -20,9 +20,9 @@ st.set_page_config(
 # 2. FUNCIONES BASE
 # =========================================================
 def cargar_logo():
-    """Carga el logo si existe."""
+    """Carga el logo desde assets/logo.png si existe."""
     try:
-        return Image.open("logo.png")
+        return Image.open("assets/logo.png")
     except FileNotFoundError:
         return None
     except Exception:
@@ -30,61 +30,13 @@ def cargar_logo():
 
 
 def aplicar_estilos():
-    st.markdown("""
-        <style>
-        .stApp { background-color: #FFFFFF; }
-        
-        /* Ocultar elementos nativos */
-        div[data-testid="stHeader"], div[data-testid="stSidebarNav"] {
-            display: none;
-        }
-        
-        /* --- AVATAR ASISTENTE --- */
-        [data-testid="stChatMessageAssistant"] 
-        div[data-testid="stChatMessageAvatar"] {
-            background-color: #FF8C00 !important;
-            color: white !important;
-            border-radius: 8px !important;
-        }
-
-        /* --- AVATAR USUARIO --- */
-        [data-testid="stChatMessageUser"] 
-        div[data-testid="stChatMessageAvatar"] {
-            background-color: #0E3255 !important;
-            color: white !important;
-            border-radius: 8px !important;
-        }
-
-        /* Limpieza visual */
-        [data-testid="stIconMaterial"], span[data-testid="stWidgetLabel"] { 
-            display: none !important; 
-        }
-
-        /* BOTÓN FINALIZAR — SUBIDO PARA NO TAPAR INPUT */
-        .st-key-finalizar-btn button {
-            position: fixed !important;
-            bottom: 90px !important;  /* ← antes 30px */
-            left: 30px !important;
-            background-color: #FF4B4B !important;
-            color: white !important;
-            border-radius: 50px !important;
-            width: 160px !important;
-            z-index: 1000 !important;
-            border: none !important;
-            box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3) !important;
-            font-weight: bold !important;
-        }
-        
-        /* Estilo formulario */
-        div[data-testid="stForm"] .stButton>button { 
-            background-color: #0E3255 !important;
-            color: white !important; 
-            border-radius: 8px;
-            font-weight: bold;
-            width: 100%;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+    """Carga los estilos desde styles/main.css."""
+    try:
+        with open("styles/main.css", "r", encoding="utf-8") as archivo_css:
+            css = archivo_css.read()
+            st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("No se encontró el archivo styles/main.css")
 
 
 def configurar_modelo():
@@ -208,6 +160,7 @@ def mostrar_header_chat(logo_img):
 
 
 def mostrar_tarjeta_usuario():
+    """Muestra la tarjeta con los datos del usuario."""
     nombre = st.session_state.user_data["nombre"]
     empresa = st.session_state.user_data["empresa"]
 
@@ -247,7 +200,7 @@ def mostrar_historial():
     """Muestra todos los mensajes guardados en la sesión."""
     for mensaje in st.session_state.messages:
         rol = mensaje["role"]
-        avatar = "🤖" if rol == "assistant" else "👤"
+        avatar = "🧑" if rol == "user" else "🛠️"
 
         with st.chat_message(rol, avatar=avatar):
             st.markdown(mensaje["content"])
@@ -263,10 +216,10 @@ def procesar_input_usuario():
             "content": prompt
         })
 
-        with st.chat_message("user", avatar="👤"):
+        with st.chat_message("user", avatar="🧑"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant", avatar="🤖"):
+        with st.chat_message("assistant", avatar="🛠️"):
             with st.spinner("CoreDesk AI analizando..."):
                 try:
                     nombre_usuario = st.session_state.user_data["nombre"]
