@@ -538,3 +538,97 @@ span[data-testid="stWidgetLabel"] {
         /* Redondez de la barra en móvil */
     }
 }
+
+/* =========================================================
+   MOBILE OPTIMIZATION — CORE DESK
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- CONTENEDOR GENERAL ---------- */
+
+    .block-container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        max-width: 100% !important;
+    }
+
+    /* ---------- HEADER MÁS COMPACTO ---------- */
+
+    .coredesk-header-fixed {
+        height: 72px;
+        border-radius: 16px;
+    }
+
+    .coredesk-header-content {
+        height: 72px;
+        padding: 0 16px;
+    }
+
+    .coredesk-header-brand {
+        font-size: 1.35rem;
+        line-height: 1.1;
+    }
+
+    .coredesk-header-timer {
+        font-size: 0.9rem;
+    }
+
+    .coredesk-header-spacer {
+        height: 120px;
+    }
+
+    /* ---------- TARJETA DE SESIÓN ---------- */
+
+    div[data-testid="stVerticalBlock"]:has(.session-card-hook) {
+        padding: 18px !important;
+        border-radius: 16px;
+    }
+
+    .session-card-title {
+        font-size: 1rem;
+    }
+
+    .session-card-row {
+        font-size: 0.95rem;
+    }
+
+    /* ---------- MENSAJES ---------- */
+
+    [data-testid="stChatMessageContent"] {
+        max-width: 100% !important;
+    }
+
+    /* ---------- INPUT TIPO APP ---------- */
+
+    [data-testid="stChatInput"] {
+        position: fixed;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        z-index: 1001;
+    }
+
+    /* Caja del input */
+
+    [data-testid="stChatInput"] textarea,
+    [data-testid="stChatInput"] input {
+
+        border-radius: 22px !important;
+        padding: 14px 16px !important;
+        font-size: 16px !important;
+
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
+        border: 1px solid #E1E6ED !important;
+    }
+
+    /* ---------- BOTÓN SUBIR ---------- */
+
+    .scroll-top-btn {
+        width: 46px;
+        height: 46px;
+        right: 16px;
+        bottom: 90px; /* por encima del input */
+    }
+
+}
