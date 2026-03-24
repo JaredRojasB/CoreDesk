@@ -24,10 +24,8 @@ def mostrar_registro(logo_img):
     with outer_center:
         st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
 
-        logo_left, logo_center, logo_right = st.columns([1, 2, 1])
-        with logo_center:
-            if logo_img:
-                st.image(logo_img, width=650)
+        if logo_img:
+            st.image(logo_img, width=650)
 
         st.markdown(
             """
@@ -72,7 +70,6 @@ def mostrar_registro(logo_img):
                         "empresa": empresa,
                         "inicio": time.time()
                     }
-                    st.rerun()
                 else:
                     st.warning("Por favor completa ambos campos para continuar.")
 
