@@ -77,7 +77,33 @@ html, body, .stApp {
 
 
 
+/* =========================================================
+   📦 TARJETA DEL FORMULARIO
+   ========================================================= */
 
+.login-card {
+
+    background: #EEF2F7;
+    /* 🔵 Gris claro para diferenciar del fondo */
+
+    border-radius: 18px;
+    /* 🔵 Bordes suaves */
+
+    padding: 36px;
+    /* 🔵 Espacio interno */
+
+    box-shadow: 0 16px 40px rgba(14, 50, 85, 0.12);
+    /* 🔵 Sombra flotante tipo tarjeta elevada */
+
+    max-width: 640px;
+    /* 🔵 Ancho máximo */
+
+    margin: 0 auto;
+    /* 🔵 Centrado horizontal */
+
+    border: 1px solid #E1E7EF;
+    /* 🔵 Borde sutil */
+}
 
 
 
