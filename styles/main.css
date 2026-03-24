@@ -46,7 +46,7 @@ div[data-testid="stSidebarNav"] {
     min-width: 220px;
 }
 
-.coredesk-logo-fixed {
+.coredesk-logo-fixed { /* Cambiar tamaño de logo en el chat */
     height: 98px;
     width: auto;
     display: block;
@@ -57,22 +57,22 @@ div[data-testid="stSidebarNav"] {
     align-items: center;
     gap: 18px;
     color: #425466;
-    font-weight: 700;
+    font-weight: 710;
 }
 
-.coredesk-header-title {
-    font-size: 20px;
+.coredesk-header-title { /* Texto antes del timer */
+    font-size: 25px;
     color: #0E3255;
 }
 
-.coredesk-header-divider {
+.coredesk-header-divider { /* Divisor de el titulo y de el timer */
     width: 1px;
     height: 28px;
     background: #D7DEE8;
     display: inline-block;
 }
 
-.coredesk-header-timer {
+.coredesk-header-timer { /* Cambiar tamaño reloj */
     font-size: 18px;
     color: #5F6C7B;
 }
